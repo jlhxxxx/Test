@@ -28,16 +28,18 @@
 ### 2.2 录制脚本(重点关联及参数化)
 **循环：录制-调试-修改（参数化、关联）**
 * JMeter执行顺序
-<p align="center"><img src=2017-10-24-09-12-37.png> </p>
+
+  <p align="center"><img src=pic/2017-10-24-09-12-37.png> </p>
 
 * 使用Badboy：[Jmeter脚本录制方法（一）——分别使用Badboy录制和Jmeter自带的代理服务器录制](http://www.cnblogs.com/hong-fithing/p/7645145.html)
-* 使用自带的代理服务器录制：同上
-* 手工编写脚本：[Jmeter脚本录制方法（二）——手工编写脚本（jmeter与fiddler结合使用）](http://www.cnblogs.com/hong-fithing/p/7668258.html)
-* 正则表达式：[Jmeter脚本调试——关联（正则表达式）](http://www.cnblogs.com/hong-fithing/p/7650762.html#3807619)
-  
-<p align="center">
-<img src=2017-10-23-17-35-51.png> </p>
 
+* 使用自带的代理服务器录制：同上
+
+* 手工编写脚本：[Jmeter脚本录制方法（二）——手工编写脚本（jmeter与fiddler结合使用）](http://www.cnblogs.com/hong-fithing/p/7668258.html)
+
+* 正则表达式：[Jmeter脚本调试——关联（正则表达式）](http://www.cnblogs.com/hong-fithing/p/7650762.html#3807619)
+
+  <p align="center"><img src=pic/2017-10-23-17-35-51.png> </p>
 ### 2.3 运行脚本
 * 压力由小到大：GUI-非GUI-远程
 * Ant：批量测试和报表生成（第三章）
@@ -59,7 +61,7 @@
     1. 聚合图形：寻找加载最慢的页面，可用yslow工具
 
 * 性能测试报告内容
-    <p align="center"><img src=2017-10-24-09-14-32.png></p>
+    <p align="center"><img src=pic/2017-10-24-09-14-32.png></p>
 
 ## 三、基于 Ant 的 JMeter 性能自动化测试初探
 * 参考文章：[基于 Ant 的 JMeter 性能自动化测试](http://blog.csdn.net/wetest_tencent/article/details/51154419)
