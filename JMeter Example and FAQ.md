@@ -181,7 +181,8 @@
       运行脚本，测试通过。
     * 修改图片同理，增加 n 张图片参数名称也会增加：attachments[n][file]；删除图片同删除问题类似，在 `/redmine/attachments/${img_issue}`页面传参: `_method=delete`。
 
-## JMeter 测试 sybx
+## 提取 json 数据
+
 * 有些 method 不写在路径里会报错（_原因暂时未分析_）
 
     ![](pic/2017-11-02-11-29-44.png)
@@ -229,7 +230,8 @@
 * sybx 压力测试分析
     * 可以以 plxcb--plcbnyxg（plcbsfxg）--pltb 流程建立线程组（数据经过一个循环可以重复测试，这样稳定性测试就可简单通过增加循环次数来搞定）
 
-## JMeter 路径设置
+## 参数化路径设置
+
 * CSV Date Set Config 支持相对路径，但是 file upload 不支持，这样每次拷贝测试脚本到不同计算机都要修改路径，对于我这样的懒人来说是很麻烦的。  
 
     **思考与解决**
@@ -239,3 +241,131 @@
 
       ![](pic/2017-11-06-11-15-52.png)
       ![](pic/2017-11-06-11-16-27.png)
+
+## JDBC 连接 oracle
+
+* 安装jdbc驱动
+  * JDK 1.6以上下载`ojdbc6.jar`[官网下载](http://www.oracle.com/technetwork/cn/articles/oem/jdbc-112010-094555-zhs.html) ，也可以到 PLSQL--instantclient_11_2 中找，然后放到 JMeter--lib 文件夹中
+
+
+* 在线程组下，选择“添加--配置元件--JDBC Connection Configuration”
+
+  * Variable Name Bound to Pool：`自定的连接池名称`
+
+  * Max Number of Connections：`10`
+
+  * Pool Timeout：连接超时可以修改此时间
+
+  * Validation Query：`Select 1 from dual`
+
+    > 这里一开始填`Select 1`，后面运行时会报错：`Cannot create PoolableConnectionFactory (ORA-00923: FROM keyword not found where expected)`
+
+  * Database URL：`jdbc:oracle:thin:@{host_IP_or_machine_name}:{Oracle 监听器监听的端口}:{你的Oracle实例的名字}`
+
+  * JDBC Driver class：`oracle.jdbc.driver.OracleDriver`
+
+  * Username：`访问上面Oracle实例的用户名`
+
+  * Password：`对应的密码`
+
+    ![02882-20171024102243582-126809673](pic/702882-20171024102243582-1268096734.png)
+
+    | **Datebase**  | **Driver class**                                             | **Database URL**                                             |
+    | ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | MySQL         | com.mysql.jdbc.Driver                                        | jdbc:mysql://host:port/{dbname}                              |
+    | PostgreSQL    | org.postgresql.Driver                                        | jdbc:postgresql:{dbname}                                     |
+    | Oracle        | oracle.jdbc.driver.OracleDriver                              | jdbc:oracle:thin:user/pass@//host:port/service               |
+    | Ingres (2006) | ingres.jdbc.IngresDriver                                     | jdbc:ingres://host:port/db[;attr=value]                      |
+    | MSSQL         | com.microsoft.sqlserver.jdbc.SQLServerDriver或者net.sourceforge.jtds.jdbc.Driver | jdbc:sqlserver://IP:1433;databaseName=DBname或者jdbc:jtds:sqlserver://localhost:1433/"+"library" |
+
+* 在线程组下，选择“添加--配置元件--JDBC request“
+
+  * Variable Name：`同JDBC Connection Configuration中设置的连接池名称一致`
+
+  * Query Type：SQL的类型，查询选择`Select Statement`；查询SQL需传递参数选择`Prepared Select Statement`；多个查询语句（不使用参数的情况下）放在一起执行选择`Callable statement`；
+
+  * Query：输入对应SQL，SQL后不要添加分号（;）
+
+    可以使用CONCAT函数方便使用正则表达式提取响应数据：如：
+
+    ```sql
+    SELECT CONCAT('"NAME":',NAME) FROM TABLE_A，正则表达式为："NAME":(.*)；
+    SELECT CONCAT('NUM=',NUM) FROM TABLE_B，正则表达式为：NUM=(.*)
+    ```
+
+  * Parameter values：若要传递参数入SQL中，可输入相关值或者参数化的变量
+
+  * Parameter types：参数化对应的数据类型
+
+    ![3111248154889](pic/131112481548899.jpg)
+
+## 响应结果 unicode 转成中文显示
+
+* 修改Jmeter根目录下的jmeter.properties文件，把编码格式改为utf-8
+
+  ```properties
+  sampleresult.default.encoding=UTF-8
+  ```
+
+* 添加后置处理器 BeanShell PostProcessor，并加入代码
+
+  ```javascript
+  String s=new String(prev.getResponseData(),"UTF-8");
+  char aChar;
+  int len= s.length();
+  StringBuffer outBuffer=new StringBuffer(len);
+  for(int x =0; x <len;){
+      aChar= s.charAt(x++);
+      if(aChar=='\\'){
+          aChar= s.charAt(x++);
+          if(aChar=='u'){
+              int value =0;
+              for(int i=0;i<4;i++){
+                  aChar= s.charAt(x++);
+                  switch(aChar){
+                      case'0':
+                      case'1':
+                      case'2':
+                      case'3':
+                      case'4':
+                      case'5':
+                      case'6':
+                      case'7':
+                      case'8':
+                      case'9':
+                          value=(value <<4)+aChar-'0';
+                          break;
+                      case'a':
+                      case'b':
+                      case'c':
+                      case'd':
+                      case'e':
+                      case'f':
+                          value=(value <<4)+10+aChar-'a';
+                          break;
+                      case'A':
+                      case'B':
+                      case'C':
+                      case'D':
+                      case'E':
+                      case'F':
+                          value=(value <<4)+10+aChar-'A';
+                          break;
+                      default:
+                          throw new IllegalArgumentException(
+                                  "Malformed   \\uxxxx  encoding.");}}
+              outBuffer.append((char) value);}else{
+              if(aChar=='t')
+                  aChar='\t';
+              else if(aChar=='r')
+              aChar='\r';
+              else if(aChar=='n')
+              aChar='\n';
+              else if(aChar=='f')
+              aChar='\f';
+              outBuffer.append(aChar);}}else
+          outBuffer.append(aChar);}
+  prev.setResponseData(outBuffer.toString());
+  ```
+
+  > **在进行正式压力测试时，要记得把 BeanShell PostProcessor 禁用掉，否则影响测试结果**
