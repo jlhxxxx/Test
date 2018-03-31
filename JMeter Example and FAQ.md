@@ -37,6 +37,7 @@
     * 修改之后重新运行脚本，测试通过，没有报错，问题解决。
 
 ### 录制“新建问题”脚本
+
 * badboy 录制传参乱码（_挂起_）
 
     ![](pic/2017-10-26-21-49-05.png)
@@ -162,6 +163,7 @@
       ![](pic/2017-10-31-08-56-32.png)
 
 ### 录制“上传图片”脚本
+
 *   
     **分析与解决**  
     * 录制新建问题脚本，这次加上上传图片，发现多了几个参数，我们重点调整的地方在 Files Upload ：
@@ -230,7 +232,7 @@
 * sybx 压力测试分析
     * 可以以 plxcb--plcbnyxg（plcbsfxg）--pltb 流程建立线程组（数据经过一个循环可以重复测试，这样稳定性测试就可简单通过增加循环次数来搞定）
 
-## 参数化路径设置
+## 参数化路径思路
 
 * CSV Date Set Config 支持相对路径，但是 file upload 不支持，这样每次拷贝测试脚本到不同计算机都要修改路径，对于我这样的懒人来说是很麻烦的。  
 
@@ -242,31 +244,53 @@
       ![](pic/2017-11-06-11-15-52.png)
       ![](pic/2017-11-06-11-16-27.png)
 
-## JDBC 连接 oracle
+## JDBC 连接 oracle 详解
+
+参考文章：[jmeter 性能测试 JDBC Request （查询数据库获取数据库数据） 的使用](http://www.cnblogs.com/0201zcr/p/5280090.html) 
+
+### 主要流程
 
 * 安装jdbc驱动
   * JDK 1.6以上下载`ojdbc6.jar`[官网下载](http://www.oracle.com/technetwork/cn/articles/oem/jdbc-112010-094555-zhs.html) ，也可以到 PLSQL--instantclient_11_2 中找，然后放到 JMeter--lib 文件夹中
 
 
-* 在线程组下，选择“添加--配置元件--JDBC Connection Configuration”
+* 添加--配置元件--JDBC Connection Configuration
 
-  * Variable Name Bound to Pool：`自定的连接池名称`
+  * **Parameter valus**：参数值
 
-  * Max Number of Connections：`10`
+  * **Parameter types**：参数类型，可参考：Javadoc for java.sql.Types
 
-  * Pool Timeout：连接超时可以修改此时间
+  * **Variable names**：保存sql语句返回结果的变量名
 
-  * Validation Query：`Select 1 from dual`
+  * **Result variable name**：创建一个对象变量，保存所有返回的结果
+
+  * **Query timeout**：查询超时时间
+
+  * **Handle result set**：定义如何处理由callable statements语句返回的结果：自定的连接池名称
+
+  * **Max Number of Connections**：`10`
+
+  * **Max Wait**：连接超时可以修改此时间
+
+  * **Auto Commit**：可配合`JDBC request`中特定的`Query Type`设置
+
+  * **Validation Query**：`Select 1 from dual`
 
     > 这里一开始填`Select 1`，后面运行时会报错：`Cannot create PoolableConnectionFactory (ORA-00923: FROM keyword not found where expected)`
 
-  * Database URL：`jdbc:oracle:thin:@{host_IP_or_machine_name}:{Oracle 监听器监听的端口}:{你的Oracle实例的名字}`
+  * **Database URL**：`jdbc:oracle:thin:@{host_IP_or_machine_name}:{Oracle 监听器监听的端口}:{你的Oracle实例的名字}`
 
-  * JDBC Driver class：`oracle.jdbc.driver.OracleDriver`
+    > oracle只允许一个request执行一条sql语句；
+    >
+    > （未验证）mysql后面加上`?allowMultiQueries=true`可以允许一个request执行多条sql语句；
+    >
+    > [Oracle与mysql官方jdbc的一些区别](https://blog.csdn.net/mikyz/article/details/69398207?locationNum=2&fps=1)
 
-  * Username：`访问上面Oracle实例的用户名`
+  * **JDBC Driver class**：`oracle.jdbc.driver.OracleDriver`
 
-  * Password：`对应的密码`
+  * **Username**：`访问上面Oracle实例的用户名`
+
+  * **Password**：`对应的密码`
 
     ![02882-20171024102243582-126809673](pic/702882-20171024102243582-1268096734.png)
 
@@ -278,26 +302,103 @@
     | Ingres (2006) | ingres.jdbc.IngresDriver                                     | jdbc:ingres://host:port/db[;attr=value]                      |
     | MSSQL         | com.microsoft.sqlserver.jdbc.SQLServerDriver或者net.sourceforge.jtds.jdbc.Driver | jdbc:sqlserver://IP:1433;databaseName=DBname或者jdbc:jtds:sqlserver://localhost:1433/"+"library" |
 
-* 在线程组下，选择“添加--配置元件--JDBC request“
+* 添加--Sampler--JDBC request
 
-  * Variable Name：`同JDBC Connection Configuration中设置的连接池名称一致`
+  * **Variable Name**：`同JDBC Connection Configuration中设置的连接池名称一致`
 
-  * Query Type：SQL的类型，查询选择`Select Statement`；查询SQL需传递参数选择`Prepared Select Statement`；多个查询语句（不使用参数的情况下）放在一起执行选择`Callable statement`；
+    > **容易漏填**，不填会报错：`Variable Name must not be null in JDBC Request`
 
-  * Query：输入对应SQL，SQL后不要添加分号（;）
+  * **Query Type**：SQL的类型，查询选择 **Select Statement**；查询SQL需 **传递参数** 选择**Prepared Select Statement**
 
-    可以使用CONCAT函数方便使用正则表达式提取响应数据：如：
+    > [JDBC Request之Query Type](http://www.cnblogs.com/imyalost/p/6498029.html)
+
+  * **Query**：输入对应SQL，SQL后不需要添加分号`;`
+
+  * **Parameter valus**：参数值
+
+  * **Parameter types**：参数类型，可参考[Javadoc for java.sql.Types](https://docs.oracle.com/javase/6/docs/api/java/sql/Types.html)，多个变量使用`，` 分隔。
+
+    > （未验证）这里假如你有数据是`int`类型的，也要在Parameter types 那里标示为`varchar`类型，否则无法运行。
+
+  * **Variable names**：保存sql语句返回结果的变量名
+
+  * **Result variable name**：创建一个对象变量，保存所有返回的结果
+
+  * **Query timeout**：查询超时时间
+
+  * **Handle result set**：定义如何处理由callable statements语句返回的结果
+
+### JDBC Request 参数化
+
+* 可以在**Query** 或 **Parameter valus** 中使用`${变量名}`的方式引用
+* 也可以在**Query** 中使用`?`作为占位符，并在**Parameter valus**和**Parameter types**中传递参数值和参数类型![meter-jdbc-0](pic/jmeter-jdbc-01.jpg)
+
+### 提取响应数据
+
+* 使用**Variables names** 方法
+
+  * 如果给这个参数设置了值，它会保存sql语句返回的数据和返回数据的总行数。例如，sql语句返回2行3列，且variables names设置为`aab001,,aab003`，那么如下变量会被设置为：
 
     ```sql
-    SELECT CONCAT('"NAME":',NAME) FROM TABLE_A，正则表达式为："NAME":(.*)；
-    SELECT CONCAT('NUM=',NUM) FROM TABLE_B，正则表达式为：NUM=(.*)
+    aab001_#=2 (总行数)
+    aab001_1=第1列, 第1行
+    aab001_2=第1列, 第2行 
+    aab003_#=2 (总行数) 
+    aab003_1=第3列, 第1行
+    aab003_2=第3列, 第2行
     ```
 
-  * Parameter values：若要传递参数入SQL中，可输入相关值或者参数化的变量
+  * 如果返回结果为`0`，那么`aab001_#`和`aab003_#`会被设置为`0`，其它变量不会设置值。
 
-  * Parameter types：参数化对应的数据类型
+  * 如果第一次返回6行数据，第二次只返回3行数据，那么第一次那多的3行数据变量会被清除。
 
-    ![3111248154889](pic/131112481548899.jpg)
+  * 可以使用`${aab001_#}`、`${aab001_1}`...来调用相应的值
+
+* 使用**Result variable name**方法
+
+  * 如果给这个参数设置值，它会创建一个对象变量，保存所有返回的结果，获取具体值的方法：`columnValue = vars.getObject("resultObject").get(0).get("Column Name")`，下例设置变量名称为`res`
+
+    ![018033113563](pic/20180331135639.png)
+
+  * 添加**BeanShell Sampler**，在**Scrip**中输入：
+
+    ```javascript
+    aac001 = vars.getObject("res").get(0).get("AAC001");
+    ```
+
+    即可获得响应数据为第一行AAC001的值即`110101198801010078`，可以再用正则提取器再去提取；也可以在**Scrip**中输入：
+
+    ```javascript
+    String aac001 = vars.getObject("res").get(0).get("AAC001");
+    vars.put("aac001",aac001);
+    ```
+
+    即将`110101198801010078`存入名为`aac001`变量中，可以通过`${aac001}`直接调用。注意这时响应数据为空。
+
+* 还可以使用CONCAT函数方便使用正则表达式提取响应数据，如：
+
+  ```sql
+  SELECT CONCAT('"NAME":',NAME) FROM TABLE_A;--正则表达式为："NAME":(.*)
+  SELECT CONCAT('NUM=',NUM) FROM TABLE_B;--正则表达式为：NUM=(.*)
+  ```
+
+  注意这里如果同时设置**Result variable name**其返回值会不一样：![018033114221](pic/20180331142214.png)
+
+  ​
+
+### 执行存储过程
+
+* 执行带参数存储过程
+
+  * 参考：[Oracle存储过程写法小例子](http://www.cnblogs.com/Zeros/p/8081080.html)
+
+  * 首先查看存储过程，执行时`in`的参数是我们需要传入的
+
+    ![018033117561](pic/20180331175618.png)
+
+  * 新建**JDBC Request**，`in`参数可以在declare后声明并赋值，然后将名称带入存储过程（如`PI_CAE026`）;也可以不声明直接带入存储过程;`out`参数是一定要声明的
+
+    ![018033118054](pic/20180331180547.png)
 
 ## 响应结果 unicode 转成中文显示
 
