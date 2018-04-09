@@ -1,4 +1,4 @@
-# oracle奇淫巧技
+# oracle奇技淫巧
 
 ## select 1 from dual
 
