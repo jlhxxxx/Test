@@ -256,19 +256,11 @@
 
 * 添加--配置元件--JDBC Connection Configuration
 
-  * **Parameter valus**：参数值
+  ![20180412084712](pic/20180412084712.png)
 
-  * **Parameter types**：参数类型，可参考：Javadoc for java.sql.Types
+  * **Variable name**：保存sql语句返回结果的变量名
 
-  * **Variable names**：保存sql语句返回结果的变量名
-
-  * **Result variable name**：创建一个对象变量，保存所有返回的结果
-
-  * **Query timeout**：查询超时时间
-
-  * **Handle result set**：定义如何处理由callable statements语句返回的结果：自定的连接池名称
-
-  * **Max Number of Connections**：`10`
+  * **Max Number of Connections**：默认就好
 
   * **Max Wait**：连接超时可以修改此时间
 
@@ -302,6 +294,8 @@
 
 * 添加--Sampler--JDBC request
 
+  ![20180412084924](pic/20180412084924.png)
+
   * **Variable Name**：`同JDBC Connection Configuration中设置的连接池名称一致`
 
     > **容易漏填**，不填会报错：`Variable Name must not be null in JDBC Request`
@@ -310,7 +304,7 @@
 
     > [JDBC Request之Query Type](http://www.cnblogs.com/imyalost/p/6498029.html)
 
-  * **Query**：输入对应SQL，SQL后不需要添加分号`;`
+  * **Query**：输入对应SQL，单条SQL语句后不能加分号`;`
 
   * **Parameter valus**：参数值
 

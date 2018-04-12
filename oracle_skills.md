@@ -31,7 +31,6 @@
   ELSE null END
   ```
 
-  ​
 
 
 * SELECT CASE WHEN 用法
@@ -102,5 +101,3 @@
   --另外一种实现方法
   select decode(aac004,'1','male','2','female',null) sex,count(*) from ac01 where aac002 like '%19940911%' group by decode(aac004,'1','male','2','female',null)；
   ```
-
-  ​
