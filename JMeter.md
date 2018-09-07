@@ -1,6 +1,6 @@
 # JMeter
 
-[本文链接](https://github.com/jlhxxxx/Test/blob/master/JMeter.md) [测试笔记](https://github.com/jlhxxxx/Test/blob/master/JMeter%20Example%20and%20FAQ.md)
+[本文链接](https://github.com/jlhxxxx/Test/blob/master/JMeter.md) [JMeter 脚本录制实例及常用技巧](https://github.com/jlhxxxx/Test/blob/master/JMeter%20Example%20and%20FAQ.md)
 
 ## 一、操作手册解读 [User's Manual](http://jmeter.apache.org/usermanual/index.html)
 

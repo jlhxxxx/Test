@@ -1,10 +1,13 @@
-## JMeter 测试 redmine
+# JMeter 脚本录制实例及常用技巧
 
-[本文链接](https://github.com/jlhxxxx/JSTest-study-tag/blob/master/JMeter%E5%AE%9E%E8%B7%B5%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.md)
+[本文链接](https://github.com/jlhxxxx/Test/blob/master/JMeter%20Example%20and%20FAQ.md)
+
+## 完整录制redmine脚本全攻略
 
 > 说明：本文实例部分内容基于JMeter3.3，JMeter更新部分内容可能会不一致，实践时应灵活处置
 
 ### 录制“登录”脚本
+
 * badbody 录制没问题，脚本执行报错
 
     ![](pic/2017-10-26-16-29-29.png)
@@ -241,6 +244,7 @@
       ![](pic/2017-11-03-10-35-15.png)
 
 * sybx 压力测试分析
+
     * 可以以 plxcb--plcbnyxg（plcbsfxg）--pltb 流程建立线程组（数据经过一个循环可以重复测试，这样稳定性测试就可简单通过增加循环次数来搞定）
 
 ## 参数化路径思路
