@@ -1,8 +1,9 @@
 # JMeter
 
-[本文链接](https://github.com/jlhxxxx/JSTest-study-tag/blob/master/JMeter%E5%AD%A6%E4%B9%A0.md) [测试笔记](https://github.com/jlhxxxx/JSTest-study-tag/blob/master/JMeter%E5%AE%9E%E8%B7%B5%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.md)
+[本文链接](https://github.com/jlhxxxx/Test/blob/master/JMeter.md) [测试笔记](https://github.com/jlhxxxx/Test/blob/master/JMeter%20Example%20and%20FAQ.md)
 
 ## 一、操作手册解读 [User's Manual](http://jmeter.apache.org/usermanual/index.html)
+
 * 基础：1、2、3、4、5；
 * 特定实例：6、7、8；
 * test plan：9、10、11；
@@ -20,9 +21,11 @@
     * 10% 为假定所有用户中只有10%在同一时刻做同一件事
 
 2. 确定性能测试持续时长
+
     * 找到操作集中时间
 1. 确定性能测试的存量数据
-1. 确定测试人员重点观察的性能指标
+4. 确定测试人员重点观察的性能指标
+
     * 平均响应时长、90%阈值、吞吐率、错误率
 
 ### 2.2 录制脚本(重点关联及参数化)
@@ -61,6 +64,7 @@
     1. 聚合图形：寻找加载最慢的页面，可用yslow工具
 
 * 性能测试报告内容
+
     <p align="center"><img src=pic/2017-10-24-09-14-32.png></p>
 
 ## 三、基于 Ant 的 JMeter 性能自动化测试初探
