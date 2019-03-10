@@ -1,11 +1,10 @@
-
 # 20. 函数和变量
 
 JMeter 的函数是一些特殊值，它们可以填充在测试树的任何采样器或其他元件中。函数调用的语法如下：
 
 `${__functionName(var1,var2,var3)}`
 
-其中“__functionName”匹配函数的名称。  
+其中“\_\_functionName”匹配函数的名称。
 圆括号内为函数参数，不同函数的参数也不同，例如 `${__time(YMD)}`。没有参数的函数可以不需要圆括号，例如 `${__threadNum}`。
 
 如果函数的参数包含逗号，需要加上“`\`”来转义，否则 JMeter 会把逗号当做参数的分隔符。例如：
@@ -13,33 +12,33 @@ JMeter 的函数是一些特殊值，它们可以填充在测试树的任何采�
     ${__time(EEE\, d MMM yyyy)}
 如果逗号没有被转义——例如 `${__javaScript(Math.max(2,5))}` ——你会得到像这样的错误信息：
 
-    ERROR - jmeter.functions.JavaScript: Error processing Javascript: [Math.max(2]
-    org.mozilla.javascript.EvaluatorException: missing ) after argument list (<cmd>#1)
-这是因为字符串“`Math.max(2,5)`”被当做`__javascript` 函数的两个参数：  
-`Math.max(2` 和 `5)`  
+    ERROR - jmeter.functions.JavaScript: Error processing Javascript: [Math.max(2] org.mozilla.javascript.EvaluatorException: missing ) after argument list (<cmd>#1)
+这是因为字符串“`Math.max(2,5)`”被当做`__javascript` 函数的两个参数： 
+`Math.max(2` 和 `5)` 
 其他错误信息也是有可能的。
 
 变量的引用如下：
 
     ${VARIABLE}
-**如果引用了未定义的变量或函数，那么 JMeter 并不会报告或者记录错误信息——引用返回值就是引用自身。例如，如果 `UNDEF` 没有被定义为变量，`${UNDEF}` 的返回值就是 `${UNDEF}`。** 变量和函数（包括属性）都是区分大小写的。**JMeter 会剔除变量名称中的空格，例如 `${__Random(1,63, LOTTERY )}` 中的变量‘　`LOTTERY `　’会被‘`LOTTERY`’取代。**
+**如果引用了未定义的变量或函数，那么 JMeter 并不会报告或者记录错误信息——引用返回值就是引用自身。例如，如果 `UNDEF` 没有被定义为变量，`${UNDEF}` 的返回值就是 `${UNDEF}`。** 变量和函数（包括属性）都是区分大小写的。**JMeter 会剔除变量名称中的空格，例如 `${__Random(1,63, LOTTERY )}` 中的变量‘ `LOTTERY ` ’会被‘`LOTTERY`’取代。**
 
 >属性与变量不一样。变量对线程而言是局部的；属性是针对所有线程的，属性需要使用 `__P` 或 `__property` 函数来引用。
 
 >在 Windows 路径变量（例如 `C:\test\${test}`）前使用 `\` 时，要确保加上 `\` 来转义，否则 JMeter 将不能解释变量，所以要这样写：`C:\\test\\${test}`。  
->还有一种方法，就是使用 `/` 作为路径分隔符，例如 `C:/test/${test}`——Windows 的 Java 虚拟机在必要时会将它转换成路径分隔符。
+>还有一种方法，就是使用 `/` 作为路径分隔符，例如 `C:/test/${test}`——Windows 的 JVMs 在必要时会将它转换成路径分隔符。
 
 <p id="functions_list">函数列表，不严格的按类型划分：</p>
 
 
 |  函数类型   |          名称          |                                              注释                                              | 开始使用版本 |
-| ----------- | ---------------------- | ---------------------------------------------------------------------------------------------- | ------------ |
+| ----------- | ---------------------- | ---------------------------------------------------------------------------------------------- | :----------- |
 | 信息 | [threadNum](#threadNum)              | 获得线程编号                                                                              | 1.X          |
+| 信息 | [threadGroupName](#threadGroupName)  | 获得线程组名称                                                                              | 4.1          |
 | 信息 | [samplerName](#samplerName)            | 获得采样器名称（标签）                                                                   | 2.5          |
 | 信息 | [machineIP](#machineIP)              | 获得本地 IP 地址                                                               | 2.6          |
 | 信息 | [machineName](#machineName)            | 获得本地主机名称                                                                     | 1.X          |
 | 信息 | [time](#time)                   | 以各种格式返回当前时间                                                         | 2.2          |
-| 信息 | [timeShift](#timeShift)              | 返回各种格式的日期，并添加指定的秒数，分钟数，小时数，天数或月数 | 3.3          |
+| 信息 | [timeShift](#timeShift)              | 返回各种格式的日期加上指定的秒数/分钟数/小时数/天数或月数 | 3.3          |
 | 信息 | [log](#log)                    | 记录（或显示）一条日志（并返回其值）                          | 2.2          |
 | 信息 | [logn](#logn)                   | 记录（或显示）一条日志（并返回空值）                                                | 2.2          |
 | 输入       | [StringFromFile](#StringFromFile)         | 从文件中读取一行                                                                        | 1.9          |
@@ -47,6 +46,8 @@ JMeter 的函数是一些特殊值，它们可以填充在测试树的任何采�
 | 输入       | [CSVRead](#CSVRead)                | 从 CSV 分隔文件中读取                                                                   | 1.9          |
 | 输入       | [XPath](#XPath)                  | 使用 XPath 表达式从文件中读取                                                    | 2.0.3        |
 | 计算 | [counter](#counter)                | 	生成递增的数字                                                                | 1.X          |
+| 格式化 | [dateTimeConvert](#dateTimeConvert)   | 将日期或时间从源格式转换为目标格式                                            | 4.0          |
+| 计算 | [digest](#digest)   | 	生成摘要（SHA-1, SHA-256, MD5...）                                                             | 4.0          |
 | 计算 | [intSum](#intSum)                 | 计算整形数（int）的和                                                                                | 1.8.1        |
 | 计算 | [longSum](#longSum)                | 计算长整形数（long）的和                                                                               | 2.3.2        |
 | 计算 | [Random](#Random)                 | 生成随机数                                                                       | 1.9          |
@@ -59,20 +60,23 @@ JMeter 的函数是一些特殊值，它们可以填充在测试树的任何采�
 | 脚本   | [javaScript](#javaScript)             | 处理 JavaScript (Nashorn)                                                                   | 1.9          |
 | 脚本   | [jexl2](#jexl2)                  | 执行通用 Jexl2 表达式                                                            | jexl2(2.1.1) |
 | 脚本   | [jexl3](#jexl3)                  | 执行通用 Jexl3 表达式                                                            | jexl3 (3.0)  |
+| 属性   | [isPropDefined](#isPropDefined)  | 测试属性是否存在                                                            | 4.0  |
 | 属性  | [property](#property)               | 读取属性                                                                                | 2.0          |
 | 属性  | [P](#P)                      | 读取属性（速记方式）                                                             | 2.0          |
-| 属性  | [setProperty](#setProperty)            | 设置 JMeter 属性                                                                          | 2.1          |
+| 属性  | [setProperty](#setProperty)            | 设置 JMeter 属性                                                                  | 2.1          |
 | 变量   | [split](#split)                  | 将字符串拆分为变量                                                                  | 2.0.2        |
-| 变量   | [V](#V)                      | 执行变量名称                                                                       | 2.3RC3       |
 | 变量   | [eval](#eval)                   | 执行变量表达式                                                                 | 2.3.1        |
 | 变量   | [evalVar](#evalVar)                | 存储在变量中的表达式                                                    | 2.3.1        |
-| 字符串      | [regexFunction](#regexFunction)          | 使用正则表达式解析之前的响应                                             | 1.X          |
-| 字符串      | [escapeOroRegexpChars](#escapeOroRegexpChars)   | 引用 ORO 正则表达式使用的元字符                                                | 2.9          |
+| 属性  | [isVarDefined](#isVarDefined)            | 测试变量是否存在                                                          | 4.0          |
+| 变量   | [V](#V)                      | 执行变量名称                                                                        | 2.3RC3       |
 | 字符串      | [char](#char)                   | 将相应的编码转换成 Unicode 字符值                                            | 2.3.3        |
+| 字符串      | [changeCase](#changeCase)        | 改变大小写模式                                          | 2.3.3        |
+| 字符串      | [escapeHtml](#escapeHtml)             | 使用 HTML 编码对字符串进行编码                                                             | 2.3.3        |
+| 字符串      | [escapeOroRegexpChars](#escapeOroRegexpChars)   | 引用 ORO 正则表达式使用的元字符                                                | 2.9          |
+| 字符串      | [escapeXml](#escapeXml)              | 使用 XMl 编码对字符串进行编码                                                              | 3.2          |
+| 字符串      | [regexFunction](#regexFunction)          | 使用正则表达式解析之前的响应                                             | 1.X          |
 | 字符串      | [unescape](#unescape)               | 将 Java 转义过的字符串（例如 \n & \t）反转义                                         | 2.3.3        |
 | 字符串      | [unescapeHtml](#unescapeHtml)           | 将 HTML 编码的字符串解码                                                                    | 2.3.3        |
-| 字符串      | [escapeHtml](#escapeHtml)             | 使用 HTML 编码对字符串进行编码                                                             | 2.3.3        |
-| 字符串      | [escapeXml](#escapeXml)              | 使用 XMl 编码对字符串进行编码                                                              | 3.2          |
 | 字符串      | [urldecode](#urldecode)              | 对 application/x-www-form-urlencoded 字符串解码                                              | 2.10         |
 | 字符串      | [urlencode](#urlencode)              | 将字符串编码成 application/x-www-form-urlencoded 字符串                                  | 2.10         |
 | 字符串      | [TestPlanName](#TestPlanName)           | 返回当前测试计划的名称                                                               | 2.6          |
@@ -115,6 +119,7 @@ JMeter 有两种函数：用户定义的静态值（或变量）和内建函数�
 >而不是：
 >
 >       SELECT item from table where name=${VAR}
+>
 >（除非 `VAR` 本身包含引号）
 
 ## 20.3 如何引用变量和函数
@@ -123,7 +128,7 @@ JMeter 有两种函数：用户定义的静态值（或变量）和内建函数�
 
 函数引用的方法相同，但是按照惯例，函数名称以“`__`”开头来和变量名称区分开。一些函数带参数，参数放在圆括号中，用逗号分隔。如果函数不带参数，可以省略圆括号。
 
-**如果参数本身带逗号，必须将其转义。可以使用‘`\,`’来转义。** 这适用于例如脚本函数 - Javascript, Beanshell, Jexl, groovy - 有必要对所有脚本函数调用中的逗号加以转义，例如：
+**如果参数本身带逗号，必须将其转义。可以使用‘`\,`’来转义。** 这适用于例如脚本函数 - Javascript，Beanshell，Jexl，groovy - 有必要对所有脚本函数调用中的逗号加以转义，例如：
 
     ${__BeanShell(vars.put("name"\,"value"))}
 换一种方法，你也可以将你的脚本定义为一个变量，例如在测试计划中定义：
@@ -132,7 +137,7 @@ JMeter 有两种函数：用户定义的静态值（或变量）和内建函数�
 定义过的脚本可以像下面这样被引用：
 
     ${__BeanShell(${SCRIPT})}
-在 `SCRIPT` 变量中就没有必要对逗号进行转义了，因为函数的调用在变量用其值替换之前被解析。该方法适用于 JSR223 或者 BeanShell 采样器，这两种采样器可用来测试 Javascript, Jexl 和 BeanShell 脚本。
+在 `SCRIPT` 变量中就没有必要对逗号进行转义了，因为函数的调用在变量用其值替换之前被解析。该方法适用于 JSR223 或者 BeanShell 采样器，这两种采样器可用来测试 Javascript，Jexl 和 BeanShell 脚本。
 
 函数可以引用参数和其他函数，例如 `${__XPath(${__P(xpath.file),${XPATH})}` 使用“`xpath.file`”的值作为文件名，使用变量 `XPATH` 的内容作为搜索表达式。
 
@@ -140,7 +145,7 @@ JMeter 提供一个工具来帮助建立各种内置函数的函数调用，只�
 
 >如果一个字符串既包含反斜杠（‘`\`’）又包含函数或者变量引用，出现在‘`$`’或‘`,`’或‘`\`’之前的反斜杠会被移除。这种操作对于包含逗号或者 `${` 的嵌套函数是有必要的。如果一个字符串不包含函数或者变量引用，那么在‘`$`’或‘`,`’或‘`\`’之前的反斜杠不会被移除。
 
-变量或函数的值可以用 [`__logn()`](#logn) 函数来报告，`__logn()` 函数在要报告的变量被定义之后可以在测试计划的任何地方被引用。除此之外，Java 请求采样器可以用来生成一个包含变量引用的采样；其输出能在合适的监听器中显示。注意也可以通过在查看结果树中使用 [Debug Sampler](http://jmeter.apache.org/usermanual/component_reference.html#Debug_Sampler) 来显示变量的值。
+**变量或函数的值可以用 [`__logn()`](#logn) 函数来报告**，`__logn()` 函数在要报告的变量被定义之后可以在测试计划的任何地方被引用。除此之外，Java 请求采样器可以用来生成一个包含变量引用的采样；其输出能在合适的监听器中显示。注意也可以通过在查看结果树中使用 [Debug Sampler](http://jmeter.apache.org/usermanual/component_reference.html#Debug_Sampler) 来显示变量的值。
 
 >如果用和内建函数同样的名称定义一个用户静态变量，那么定义的静态变量将覆盖同名内建函数。
 
@@ -170,13 +175,13 @@ regexFunction 函数可以使用任意正则表达式（用户提供的）来解
 
 >如果是分布式测试，要切换模式（见 `jmeter.properties`）确保它不在剥离模式下，参见 [`Bug 56376`](https://bz.apache.org/bugzilla/show_bug.cgi?id=56376)。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
  第一个参数 | 第一个参数是解析响应数据的正则表达式。它会抓取所有匹配。请在模版字符串中给该表达式中想要使用的部分加上括号。例如：`<a href="(.*)">`。它将抓取链接值并储存在第一个匹配组合中（这里只有一个匹配组合）。另一个例子：`<input type="hidden" name="(.*)" value="(.*)">`。它将抓取 name 的值作为第一个匹配组合，value 的值作为第二个匹配组合。这些匹配的值可以用在模版字符串中。| 是
  第二个参数| 这是一个运行时会替换函数的模版字符串。要引用正则表达式中捕获的匹配组合，使用下面的句法：`$[group_number]$`。例如 `$1$` 或者 `$2$`。你的模版可以是任意字符串。 |是
- 第三个参数 | 第三个参数告诉 JMeter 使用第几个匹配。你的正则表达式可能找到多个匹配。对此有四个选项：<br><ul><li> 整数——直接告诉 JMeter 使用第几个匹配。‘`1`’对应第一个，‘`2`’对应第二个，以此类推。 </li><li> `RAND`——告诉 JMeter 使用随机匹配。</li><li> `ALL`——告诉 JMeter 使用所有匹配，对应每个匹配生成一个模版字符串并将它们组合到一起。这个选项很少用到。</li><li> 0 到 1 之间的浮点数——告诉 JMeter 根据公式（总的匹配个数*浮点值）计算使用第几个匹配项，计算值向最近的整数取整</li></ul> | 否，默认值 = 1
+ 第三个参数 | 第三个参数告诉 JMeter 使用第几个匹配。你的正则表达式可能找到多个匹配。对此有四个选项：<br/><ul><li> 整数——直接告诉 JMeter 使用第几个匹配。‘`1`’对应第一个，‘`2`’对应第二个，以此类推。 </li><li> `RAND`——告诉 JMeter 使用随机匹配。</li><li> `ALL`——告诉 JMeter 使用所有匹配，对应每个匹配生成一个模版字符串并将它们组合到一起。这个选项很少用到。</li><li> 0 到 1 之间的浮点数——告诉 JMeter 根据公式（总的匹配个数*浮点值）计算使用第几个匹配项，计算值向最近的整数取整</li></ul> | 否，默认值 = 1
  第四个参数 | 如果上一个参数选择 `ALL`，这个参数会被插入到每个附加的模版值副本之间 | 否
  第五个参数 | 如果没有匹配项返回的默认值| 否
  第六个参数 | 重用此函数解析的值的引用名称,储存的值包括 `${refName}`（替换的模版字符串）和 `${refName_g#}` ,其中“`#`”代表正则表达式匹配分组的序号（“`0`”可以用来引用整个匹配） | 否
@@ -192,15 +197,15 @@ regexFunction 函数可以使用任意正则表达式（用户提供的）来解
 
 计数器函数实例是完全独立的。全局计数器 - “`FALSE`” - 的每个实例都是独立维护的。
 
-**`__counter` 函数在同一个迭代中的多次调用不会进一步增加值。**  
+**`__counter` 函数在同一个迭代中的多次调用不会进一步增加值。** 
 如果您想对每个采样器计数，请使用前置处理器（例如[用户参数](http://jmeter.apache.org/usermanual/component_reference.html#User_Parameters)）中的功能。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
 第一个参数 | `TRUE` 如果您希望每个虚拟用户的计数器保持独立并与其他用户分开。 `FLASE` 全局计数器。 | 是
-第二个参数 | 重用此函数创建的值的引用名称。<br>存储的值的格式为 `${refName}`。<br>这允许你保留一个计数器，并在多个地方引用它的值。 | 否
+第二个参数 | 重用此函数创建的值的引用名称。<br/>存储的值的格式为 `${refName}`。这允许你保留一个计数器，并在多个地方引用它的值。 | 否
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
@@ -219,13 +224,29 @@ threadNum 函数只是返回当前正在执行的线程编号。线程编号独�
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
+<h3 id="threadGroupName">__threadGroupName</h3>
+
+threadGroupName 函数只返回正在执行的线程组的名称。 
+
+这个函数没有参数。
+
+用法示例：
+
+```
+${__threadGroupName}
+```
+
+> 这个函数在任何配置元件（例如用户定义的变量）中都不起作用，因为它们是在一个单独的线程中运行的。在测试计划中也不能使用。
+
+[【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
+
 <h3 id="intSum">__intSum</h3>
 
 intSum 函数可用于计算两个或更多个整数值之和。
 
 >引用名称是可选的，但不能是有效的整数。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -251,7 +272,7 @@ intSum 函数可用于计算两个或更多个整数值之和。
 
 longSum 函数可用于计算两个或更多个长整型值之和，当计算值不在 -2147483648 到 2147483647 之间，使用此函数而不是 __intSum。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -285,7 +306,7 @@ StringFromFile 函数可以用来从文本文件中读取字符串。这对于�
 
 如果打开或读取文件时发生错误，函数会返回字符串“`**ERR**`”。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -302,32 +323,38 @@ StringFromFile 函数可以用来从文本文件中读取字符串。这对于�
 
 使用可选的序列号时，路径名称将使用 `java.text.DecimalFormat` 的格式字符串。当前的序列号将作为唯一的参数传入。如果没有指定可选的开始序列号，就使用路径名称作为起始值。有用的格式序列如下：
 
-  * `#` 插入不带前导零或空格的数字
-  * `000` 插入带有前导零的三位数字，如果需要的话
+`#`
 
-  ><h4>格式字符串的使用</h4>
-  >以下是几个格式字符串以及它们将生成的对应序列。
-  >
-  > * `pin#'.'dat`
-  >
-  >   生成不带前导零的序列，`.` 还是 `.`：`pin1.dat`，...，`pin9.dat`，`pin10.dat`，...，`pin9999.dat`
-  >
-  > * `pin000'.'dat`
-  >
-  >   生成带前导零的序列，同时保持 `.`。当数字位数超过三位时，序列将使用更多位数的数字：`pin001.dat`，... `pin099.dat`，...，`pin999.dat`，...，`pin9999.dat`
-  >
-  > * `pin'.'dat#`
-  >
-  >   生成不带前导零的附加数字，同时保持 `.`：`pin.dat1`，...，`pin.dat9`，...，`pin.dat999`
+  * 插入不带前导零或空格的数字
 
-如果需要的位数多于格式字符数，数字将根据需要进行扩展。  
-**要防止格式字符被解释，请将其包含在单引号中。请注意，“`.`”是一个格式字符，必须用单引号引起来** （尽管 `#.` 和 `000.` 在工作区能按预期的方式工作，因为它被视为小数点，而小数点也是“`.`”）。  
-在其他语言环境（例如 `fr`）中，小数点是“`,`” - 这意味着“`#.`”会变成“`nnn,`”。  
-有关完整的细节，请参阅 DecimalFormat （十进制格式）的文档。  
-如果路径名称不包含任何特殊的格式字符，则将当前的序号直接附加到名称上，否则将根据格式化指令插入数字。  
-如果起始序列号被忽略，并且指定了结束序列号，则结束序列号将被解释为循环计数，并且该文件将被使用循环计数的最大次数。在这种情况下，文件名不是格式化的。  
-`${__StringFromFile(PIN#'.'DAT,,1,2)}` 读取 `PIN1.DAT`, `PIN2.DAT`  
-`${__StringFromFile(PIN.DAT,,,2)}` 读取 `PIN.DAT` 两次  
+`000` 
+
+  * 插入带有前导零的三位数字，如果需要的话
+
+> <h4>格式字符串的使用</h4>
+> 
+> 以下是几个格式字符串以及它们将生成的对应序列。
+>
+> `pin#'.'dat`
+>
+> * 生成不带前导零的序列，`.` 还是 `.`：`pin1.dat`，...，`pin9.dat`，`pin10.dat`，...，`pin9999.dat`
+>
+> `pin000'.'dat`
+>
+> * 生成带前导零的序列，同时保持 `.`。当数字位数超过三位时，序列将使用更多位数的数字：`pin001.dat`，... `pin099.dat`，...，`pin999.dat`，...，`pin9999.dat`
+>
+> `pin'.'dat#`
+>
+> * 生成不带前导零的附加数字，同时保持 `.`：`pin.dat1`，...，`pin.dat9`，...，`pin.dat999`
+
+如果需要的位数多于格式字符数，数字将根据需要进行扩展。
+**要防止格式字符被解释，请将其包含在单引号中。请注意，“`.`”是一个格式字符，必须用单引号引起来** （尽管 `#.` 和 `000.` 在工作区能按预期的方式工作，因为它被视为小数点，而小数点也是“`.`”）。
+在其他语言环境（例如 `fr`）中，小数点是“`,`” - 这意味着“`#.`”会变成“`nnn,`”。
+有关完整的细节，请参阅 DecimalFormat （十进制格式）的文档。
+如果路径名称不包含任何特殊的格式字符，则将当前的序号直接附加到名称上，否则将根据格式化指令插入数字。 
+如果起始序列号被忽略，并且指定了结束序列号，则结束序列号将被解释为循环计数，并且该文件将被使用循环计数的最大次数。在这种情况下，文件名不是格式化的。
+`${__StringFromFile(PIN#'.'DAT,,1,2)}` 读取 `PIN1.DAT`, `PIN2.DAT` 
+`${__StringFromFile(PIN.DAT,,,2)}` 读取 `PIN.DAT` 两次 
 注意上面 `PIN.DAT` 中的“`.`”不应被引号包含。在这种起始序列号被省略的情况下，文件名完全按原样使用。
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -336,18 +363,20 @@ StringFromFile 函数可以用来从文本文件中读取字符串。这对于�
 
 machineName 函数返回本地主机名称。它使用 Java 方法 `InetAddress.getLocalHost()` 并将值传递给 `getHostName()`。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
 变量名称 | 重用此函数计算的值的引用名称 | 否
 
 例子：
-​    
+
     ${__machineName()}
+
 返回机器的主机名称
 
     ${__machineName}
+
 返回机器的主机名称
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -356,7 +385,7 @@ machineName 函数返回本地主机名称。它使用 Java 方法 `InetAddress.
 
 machineIP 函数返回本地 IP 地址。它使用 Java 方法`InetAddress.getLocalHost()` 并将其值传递给 `getHostAddress()`。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -365,9 +394,11 @@ machineIP 函数返回本地 IP 地址。它使用 Java 方法`InetAddress.getLo
 例子：
 
     ${__machineIP()}
+
 返回机器的 IP 地址
 
     ${__machineIP}
+
 返回机器的 IP 地址
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -397,33 +428,39 @@ Rhinoscript 允许通过其 Packages 对象访问静态方法。请参阅 [Java 
 
 >JMeter 不是浏览器，不能解释下载页面中的 JavaScript。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
-表达式 | 要执行的JavaScript表达式。例如：<br><ul><li>`new Date()` - 返回当前日期和时间</li><li>`Math.floor(Math.random()*(${maxRandom}+1))` - 一个介于 `0` 和变量 `maxRandom` 之间的随机数</li><li>`${minRandom}+Math.floor(Math.random()*(${maxRandom}-${minRandom}+1))` - 介于变量 `minRandom` 和 `maxRandom` 之间的随机数</li><li>`"${VAR}"=="abcd"`</li></ul> | 是
+表达式 | 要执行的JavaScript表达式。例如：<br/><ul><li>`new Date()` - 返回当前日期和时间</li><li>`Math.floor(Math.random()*(${maxRandom}+1))` - 一个介于 `0` 和变量 `maxRandom` 之间的随机数</li><li>`${minRandom}+Math.floor(Math.random()*(${maxRandom}-${minRandom}+1))` - 介于变量 `minRandom` 和 `maxRandom` 之间的随机数</li><li>`"${VAR}"=="abcd"`</li></ul> | 是
 变量名称 | 重用此函数计算的值的引用名称 | 否
 
 >请记住为文本字符串和 JMeter 变量添加必要的引号。另外，如果表达式有逗号，请确保将其转义。例如：
 >
 >     ${__javaScript('${sp}'.slice(7\,99999))}
->`7` 之后的逗号被转义了。
+>
+> `7` 之后的逗号被转义了。
 
 例子：
 
     ${__javaScript(new Date())}
+
 返回 `Sat Jan 09 2016 16:22:15 GMT+0100 (CET)` 
 
     ${__javaScript(new Date(),MYDATE)}
+
 返回 `Sat Jan 09 2016 16:22:15 GMT+0100 (CET)` 并将其存储在变量 `MYDATE` 下 
 
     ${__javaScript(Math.floor(Math.random()*(${maxRandom}+1)),MYRESULT)}
+
 使用 `maxRandom` 变量，返回 `0` 和 `maxRandom` 之间的随机值并将其存储在  `MYRESULT` 中
 
     ${__javaScript(${minRandom}+Math.floor(Math.random()*(${maxRandom}-${minRandom}+1)),MYRESULT)}
+
 使用 `maxRandom` 和 `minRandom` 变量，返回 `maxRandom` 和 `minRandom` 之间的随机值并将其存储在 `MYRESULT` 中
 
     ${__javaScript("${VAR}"=="abcd",MYRESULT)}
+
 将 `VAR` 变量的值与 `abcd` 进行比较，返回 `true` 或 `false` 并将结果存储在 `MYRESULT` 中
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -432,7 +469,7 @@ Rhinoscript 允许通过其 Packages 对象访问静态方法。请参阅 [Java 
 
 random 函数返回一个介于给定最小值和最大值之间的随机数。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -443,9 +480,11 @@ random 函数返回一个介于给定最小值和最大值之间的随机数。
 例子：
 
     ${__Random(0,10)}
+
 返回一个 0 到 10 之间的随机数
 
     ${__Random(0,10, MYVAR)}
+
 返回一个 0 到 10 之间的随机数，并将其存储在 `MYVAR`中。`${MYVAR}`将包含此随机数。
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -454,7 +493,7 @@ random 函数返回一个介于给定最小值和最大值之间的随机数。
 
 RandomDate 函数返回一个位于给定开始日期和结束日期值之间的随机日期。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -467,9 +506,11 @@ RandomDate 函数返回一个位于给定开始日期和结束日期值之间的
 例子：
 
     ${__RandomDate(,,2050-07-08,,)}
+
 返回从现在到 `2050-07-08` 之间一个随机的日期。例如 `2039-06-21` 
 
     ${__RandomDate(dd MM yyyy,,08 07 2050,,)}
+
 将返回一个自定义格式的随机日期，例如 `04 03 2034`
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -478,7 +519,7 @@ RandomDate 函数返回一个位于给定开始日期和结束日期值之间的
 
 RandomString 函数返回一个 chars 长度内的随机字符串。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -489,44 +530,52 @@ RandomString 函数返回一个 chars 长度内的随机字符串。
 例子：
 
     ${__RandomString(5)}
+
 返回随机的可读或不可读的 5 个字符
 
     ${__RandomString(10,abcdefg)}
+
 将返回从 `abcdefg` 集合中挑选的 10 个字符的随机字符串，如 `cdbgdbeebd` 或 `adbfeggfad`，...
 
     ${__RandomString(6,a12zeczclk, MYVAR)}
+
 从 `a12zeczclk` 集合中返回一个由 6 个字符组成的随机字符串，并将结果存储在 `MYVAR` 中，`MYVAR` 将包含像 `2z22ak` 或 `z11kce` 这样的字符串，...
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
 <h3 id="RandomFromMultipleVars">__RandomFromMultipleVars</h3>
 
-RandomFromMultipleVars 函数根据 Source Variables 提供的变量值返回一个随机值。
+RandomFromMultipleVars 函数根据`源变量`提供的变量值返回一个随机值。
 
 变量可以是单值或多值的，它们可以由以下提取器生成：
+  * [边界提取器](http://jmeter.apache.org/usermanual/component_reference.html#Boundary_Extractor)
   * [正则表达式提取器](http://jmeter.apache.org/usermanual/component_reference.html#Regular_Expression_Extractor)
-  * [CSS/JQuery 提取器](http://jmeter.apache.org/usermanual/component_reference.html#CSS/JQuery_Extractor)
+  * [CSS 提取器](http://jmeter.apache.org/usermanual/component_reference.html#CSS_Selector_Extractor)
   * [JSON 提取器](http://jmeter.apache.org/usermanual/component_reference.html#JSON_Extractor)
-  * [XPath 断言](http://jmeter.apache.org/usermanual/component_reference.html#XPath_Assertion)
+  * [XPath 提取器](http://jmeter.apache.org/usermanual/component_reference.html#XPath_Extractor)
+  * [XPath2 提取器](http://jmeter.apache.org/usermanual/component_reference.html#XPath2_Extractor)
 
-多值变量就是，当你设置 `-1` 作为`匹配数字`所提取的值。当n = 1，2，3...时会创建相应匹配号变量 `varName_matchNr`，并为每个值创建变量 `varName_n`。
+多值变量就是，当你设置 `-1` 作为`匹配数字`所提取的值。当n = 1，2，3...时会创建相应匹配号变量 `varName_matchNr`，并为每个值创建变量 `varName_n`，其中n = 1，2，3 等 。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
-来源变量 | 变量名称包含的值将用作随机计算的输入，用 <code>\|</code> 分隔 | 是
+源变量 | 变量名称包含的值将用作随机计算的输入，用 <code>\|</code> 分隔 | 是
 变量名称 | 重用此函数计算的值的引用名称 | 否
 
 例子：
 
     ${__RandomFromMultipleVars(val)}
+
 根据变量 val 的内容返回一个随机的字符串，不管它们是否是多值的
 
     ${__RandomFromMultipleVars(val1|val2)}
+
 根据变量 val1 和 val2 的内容返回一个随机字符串，不管它们是否为多值
 
     ${__RandomFromMultipleVars(val1|val2, MYVAR)}
+
 根据变量 val1 和 val2 的内容返回一个随机字符串，不管它们是否为多值，并将结果存储在 `MYVAR` 中 
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -540,6 +589,7 @@ UUID 函数返回伪随机类型为 4 的通用唯一标识符（UUID）。
 例子：
 
     ${UUID()}
+
 将返回具有以下格式的 UUID：`c69e0dd1-ac6b-4f2b-8d59-5d4e8743eecd`
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
@@ -562,7 +612,7 @@ CSVRead 函数从 CSV 文件返回一个字符串（注意与 [StringFromFile](#
 
 >该函数默认情况下以逗号分割行。如果要输入包含逗号的列，需要通过设置 `csvread.delimiter` 属性将分隔符更改为不出现在任何列数据中的字符。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -592,7 +642,7 @@ property 函数返回 JMeter 属性的值。如果找不到属性值，并且没
   * `${__property(abcd,ABCD,atod)}` - 返回属性 `abcd` 的值（如果没有定义，则返回“`atod`”）并保存在 `ABCD` 中
   * `${__property(abcd,,atod)}` - 返回属性 `abcd`的值（如果未定义，则返回“`atod`”）但不保存
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -616,7 +666,7 @@ property 函数返回 JMeter 属性的值。如果找不到属性值，并且没
   * `${__P(group1.loops)}` - 返回 `group1.loops` 的值
   * `${__P(hostname,www.dummy.org)}` - 返回属性的值的 `hostname`（主机名）或 `www.dummy.org` 。如果在上面的例子中没有定义，第一个函数调用将返回`7`，第二个返回 `1`，最后一个将返回 `www.dummy.org` （除非这些属性在别处有定义！）
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -629,7 +679,7 @@ property 函数返回 JMeter 属性的值。如果找不到属性值，并且没
 
 log 函数记录一条日志，并返回它的输入字符串。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -649,7 +699,7 @@ log 函数记录一条日志，并返回它的输入字符串。
 
 logn 函数记录一条日志，并返回空字符串。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -665,6 +715,8 @@ logn 函数记录一条日志，并返回空字符串。
 <h3 id="BeanShell">__BeanShell</h3>
 
 BeanShell 函数执行传递给它的脚本，并返回结果。
+
+> 为了更好的性能，请使用[`__groovy`](#groovy)函数 
 
 **有关使用 BeanShell 的完整详细信息，请参考 BeanShell 网站：[http://www.beanshell.org/](http://www.beanshell.org/)**
 
@@ -684,7 +736,7 @@ BeanShell 函数执行传递给它的脚本，并返回结果。
   * `SampleResult` - 当前的 [SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)，如果有的话
 
 （*）表示这是在 init 文件（如果有的话）被处理之前设置的。其他变量因调用而异。
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -717,18 +769,35 @@ groovy 函数执行 [Apache Groovy](http://groovy-lang.org/) 传递给它的脚�
 
 （*）表示这是在 init 文件（如果有的话）被处理之前设置的。其他变量因调用而异。
 
-#### 参数（Parameters）
+> 使用此函数时，请使用之前定义的变量而不是使用字符串替换来访问脚本中的变量。遵循此模式以确保缓存Groovy，从而确保您的测试具有高效性。 
+
+例如**，不要**执行以下操作： 
+
+    ${__groovy("${myVar}".substring(0\,2))}
+
+想象一下，变量myVar随每个事务而变化，上面的Groovy无法缓存，因为脚本每次都会更改。
+但是执行下面的操作，就可以缓存：
+
+    ${__groovy(vars.get("myVar").substring(0\,2))}
+
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
-要计算的表达式 | 一个 groovy 脚本（不是文件名）<br><blockquote>本身包含逗号的参数值应根据需要进行转义。如果需要在参数值中包含逗号，请像这样转义： ‘`\,`’</blockquote> | 是
+要计算的表达式 | 一个 groovy 脚本（不是文件名）<br/><blockquote>本身包含逗号的参数值应根据需要进行转义。如果需要在参数值中包含逗号，请像这样转义： ‘`\,`’</blockquote> | 是
 变量名称 | 重用此函数计算的值的引用名称 | 否
 
 例子：
-  * `${__groovy(123*456)}` 返回 `56088`
-  * `${__groovy("${var}".substring(0\,2))}` 如果 var 的值是 `JMeter`，它会在调用 `String.substring(0,2)` 后返回 `JM`。注意 `,` 已经被 `\,` 转义。
 
->请记住为文本字符串和表示文本字符串的 JMeter 变量添加必要的引号。
+    ${__groovy(123*456)}
+
+返回 `56088`
+
+    ${__groovy("${var}".substring(0\,2))}
+
+如果 var 的值是 `JMeter`，它会在调用 `String.substring(0,2)` 后返回 `JM`。注意 `,` 已经被 `\,` 转义。
+
+> 请记住为文本字符串和表示文本字符串的 JMeter 变量添加必要的引号。
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
@@ -736,18 +805,20 @@ groovy 函数执行 [Apache Groovy](http://groovy-lang.org/) 传递给它的脚�
 
 split 函数根据分隔符拆分传递给它的字符串，并返回原始字符串。如果分隔符与分隔符是相邻的，则返回“`？`”作为值。拆分出来的字符串将返回到 `${VAR_1}`，`${VAR_2}`……这些变量中。变量的计数将返回到 `${VAR_n}` 中。拖尾分隔符被视为缺失变量，并返回“`？`”。此外，为了使它在 ForEach 控制器上更好地工作， `__split` 现在会删除第一个不使用的变量，以防它是上一次拆分所设置的。
 
-例子：  
-在测试计划中定义 `VAR`="`a||c|`"。  
-`${__split(${VAR},VAR,|)} `  
-这将返回 `VAR` 的内容，即“`a||c|`”并设置以下变量：  
-VAR_n=4  
-VAR_1=a  
-VAR_2=?  
-VAR_3=c  
-VAR_4=?  
-VAR_5=null
+例子：
+在测试计划中定义 `VAR`="`a||c|`"。
 
-#### 参数（Parameters）
+    ${__split(${VAR},VAR,|)}
+
+这将返回 `VAR` 的内容，即“`a||c|`”并设置以下变量：
+`VAR_n`=`4 `
+`VAR_1`=`a `
+`VAR_2`=`? `
+`VAR_3`=`c `
+`VAR_4`=`? `
+`VAR_5`=`null`
+
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -766,9 +837,10 @@ XPath 函数读取一个 XML 文件并匹配 XPath。每次调用该函数时，
 例子：
 
     ${__XPath(/path/to/build.xml, //target/@name)}
+
 这将匹配 `build.xml` 中的所有 `target` 节点，并返回下一个 `name` 属性的内容
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -785,7 +857,7 @@ setProperty 函数用来设置 JMeter 属性的值。函数的默认返回值是
 
 属性对 JMeter 来说是全局的，所以可以用在线程和线程组之间的通信上。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -799,14 +871,14 @@ True/False | 是否返回原始值？ | 否
 
 time 函数以各种格式返回当前时间。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
-格式 | 要传递给 SimpleDateFormat 的格式。该函数支持各种速记别名，见下文。如果省略，该函数将返回自纪元以来的当前时间（以毫秒为单位）。 | 否
+格式 | 要传递给 [SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) 的格式。该函数支持各种速记别名，见下文。如果省略，该函数将返回自纪元开始至今的时间（以毫秒为单位）。 | 否
 变量名称 | 要设置的变量名称 | 否
 
-如果省略了格式字符串，则该函数返回自纪元以来的当前时间（以毫秒为单位）。如果格式匹配“`/ddd`”（其中 `ddd` 是十进制数字），则该函数返回以毫秒为单位的当前时间除以 `ddd` 的值。例如，“`/1000`”将返回自纪元以来的当前时间（以秒为单位）。否则，当前时间传递给 SimpleDateFormat。支持以下简写别名：
+如果省略了格式字符串，则该函数返回自纪元开始至今的时间（以毫秒为单位）。如果格式匹配“`/ddd`”（其中 `ddd` 是十进制数字），则该函数返回以毫秒为单位的至今的时间除以 `ddd` 的值。例如，“`/1000`”将返回自纪元开始至今的时间（以秒为单位）。否则，当前时间传递给 SimpleDateFormat。支持以下简写别名：
   * `YMD` = `yyyyMMdd`
   * `HMS` = `HHmmss`
   * `YMDHMS` = `yyyyMMdd-HHmmss`
@@ -814,6 +886,19 @@ time 函数以各种格式返回当前时间。
   * `USER2` = JMeter 属性 `time.USER2`
 
 默认值可以通过设置适当的 JMeter 属性来改变，例如 `time.YMD=yyMMdd`
+
+    ${__time(dd/MM/yyyy,)}
+
+如果在2018年1月21日运行，将返回`21/01/2018`
+
+    ${__time(YMD,)}
+
+如果在2018年1月21日运行，将返回`20180121`
+
+    ${__time()}
+
+
+将返回以毫秒表示的时间`1516540541624`
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
@@ -825,7 +910,7 @@ jexl2 函数使用通用 JEXL 2
   * [JEXL 语法描述](http://commons.apache.org/proper/commons-jexl/reference/syntax.html)
   * [JEXL 的例子](http://commons.apache.org/proper/commons-jexl/reference/examples.html#Example_Expressions)
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -849,7 +934,7 @@ Jexl 也可以创建类和调用其方法，例如：
 注意，网站上的 Jexl 文档错误地建议使用“`div`”做整数除法。实际上“`div`”和“`/`”都执行普通除法。下面的操作可以得到整数除法的效果：
 
     i= 5 / 2;
-    i.intValue(); // or use i.longValue()
+    i.intValue(); // 或使用 i.longValue()
 
 > JMeter 允许表达式包含多个语句。
 
@@ -863,7 +948,7 @@ jexl3 函数使用通用 JEXL 3
   * [JEXL 语法描述](http://commons.apache.org/proper/commons-jexl/reference/syntax.html)
   * [JEXL 的例子](http://commons.apache.org/proper/commons-jexl/reference/examples.html#Example_Expressions)
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -887,7 +972,7 @@ Jexl 也可以创建类和调用其方法，例如：
 注意，网站上的 Jexl 文档错误地建议使用“`div`”做整数除法。实际上“`div`”和“`/`”都执行普通除法。下面的操作可以得到整数除法的效果：
 
     i= 5 / 2;
-    i.intValue(); // or use i.longValue()
+    i.intValue(); // 或使用 i.longValue()
 
 >JMeter 允许表达式包含多个语句。
 
@@ -902,11 +987,12 @@ V（变量）函数返回执行变量名称表达式的结果。这可以用来�
   * `${A${N}}` - 不起作用（嵌套变量引用）
   * `${__V(A${N})}` - 可以使用。`${N}` 变成 `A1`，`__V` 函数返回 `A1` 的值
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
 变量名称 | 待执行的变量 | 是
+默认值 | 未找到变量时的默认值，如果它为空且没有找到变量函数，则返回变量名称 | 否 
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
@@ -916,7 +1002,7 @@ evalVar 函数返回执行存储在变量中的表达式的结果。
 
 这允许从文件读取字符串，并处理其中的任何变量引用。例如，如果变量“`query`”包含“`select ${column} from ${table}`”，并且“`column`”和“`table`”分别包含“`name`”和“`customers`”，那么 `${__evalVar(query)}` 将会执行“`select name from customers`”。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -938,7 +1024,7 @@ eval 函数返回执行字符串表达式的结果。
 
 这可以与 CSV 数据集结合使用，例如在数据文件中定义 SQL 语句和值。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -952,7 +1038,7 @@ char 函数将一个数字转换成 Unicode 字符。另外请参阅下面的`__
 
 这允许将任意字符值添加到字段中。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -970,7 +1056,7 @@ unescape 函数将返回将 Java 转义过的字符串反转义的结果。另�
 
 这允许添加字符到字段，否则通过 GUI 定义是非常困难的（或不可能的）。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -978,7 +1064,7 @@ unescape 函数将返回将 Java 转义过的字符串反转义的结果。另�
 
 例子：
   * `${__unescape(\r\n)}` = `CRLF` 
-  * `${__unescape(1\t2)}` = `1[tab]2`
+  * `${__unescape(1\t2)}` = `1`[tab]`2`
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
@@ -986,13 +1072,17 @@ unescape 函数将返回将 Java 转义过的字符串反转义的结果。另�
 
 函数将包含 HTML 实体的字符串反转义为包含对应于转义符的实际 Unicode 字符的字符串。支持 HTML 4.0 实体。
 
-例如，字符串`"&lt;Fran&ccedil;ais&gt;"` 反转义成 `"<Français>"`。
+例如，字符串
 
-如果某个实体无法识别，则将其保留，并逐字地插入结果字符串中。例如 `"&gt;&zzzz;x"` 反转义为 `">&zzzz;x"`。
+    ${__unescapeHtml(&lt;Fran&ccedil;ais&gt;)}
+
+将返回`<Français>`。
+
+如果某个实体无法识别，则将其保留，并逐字地插入结果字符串中。例如 `${__unescapeHtml(&gt;&zzzz;x)}` 将返回 `">&zzzz;x"`。
 
 使用 Commons Lang 的 `StringEscapeUtils#unescapeHtml(String)`。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1004,10 +1094,14 @@ unescape 函数将返回将 Java 转义过的字符串反转义的结果。另�
 
 函数用于转义使用 HTML 实体的字符串。支持HTML 4.0 实体。
 
-例如，`"bread" & "butter"` 转义成 `&quot;bread&quot; &amp; &quot;butter&quot;`。
+例如，
+
+    ${__escapeHtml("bread" & "butter")}
+
+将返回 `&quot;bread&quot; &amp; &quot;butter&quot;`。
 
 使用 Commons Lang 的 `StringEscapeUtils#escapeHtml(String)`。
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1019,11 +1113,15 @@ unescape 函数将返回将 Java 转义过的字符串反转义的结果。另�
 
 函数用来解码 `application/x-www-form-urlencoded` 字符串，注意：使用 UTF-8 作为编码方案。
 
-例如，字符串 `Word+%22school%22+is+%22%C3%A9cole%22+in+french` 会转换成 `Word "school" is "école" in french`。
+例如，字符串
+
+    ${__urldecode(Word+%22school%22+is+%22%C3%A9cole%22+in+french)}
+
+将返回 `Word "school" is "école" in french`。
 
 使用 Java 类 [URLDecoder](https://docs.oracle.com/javase/7/docs/api/java/net/URLDecoder.html)。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1035,11 +1133,15 @@ unescape 函数将返回将 Java 转义过的字符串反转义的结果。另�
 
 函数用来将字符串转码成 `application/x-www-form-urlencoded` 字符串。
 
-例如，字符串 `Word "school" is "école" in french` 会转换成 `Word+%22school%22+is+%22%C3%A9cole%22+in+french`。
+例如，字符串
+
+    ${__urlencode(Word "school" is "école" in french)}
+
+将返回 `Word+%22school%22+is+%22%C3%A9cole%22+in+french`。
 
 使用 Java 类 [URLDecoder](https://docs.oracle.com/javase/7/docs/api/java/net/URLDecoder.html)。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1053,7 +1155,7 @@ FileToString 函数可以用来读取整个文件。每次调用时读取整个�
 
 如果打开或读取文件时发生错误，函数会返回字符串“`**ERR**`”
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1071,7 +1173,11 @@ samplerName 函数返回当前采样器的名称（即标签）。
 
 该函数在没有关联采样器的测试元件中不起作用。例如测试计划。配置元件也没有关联的采样器。但是一些配置元件会被采样器直接引用，例如 HTTP 信息头管理器和 Http Cookie 管理器，这种情况下，函数在 Http 采样器的上下文中被解析。前置处理器，后置处理器和断言总是有一个关联的采样器。
 
-#### 参数（Parameters）
+例子：
+
+    ${__samplerName()}
+
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1094,11 +1200,15 @@ TestPlanName 函数返回当前测试计划的名称（可用于内部计划以�
 
 函数用于转义 ORO 正则表达式元字符，相当于 Java 正则表达式引擎中的 `\Q` `\E` 。
 
-例如：`[^"].+?` 转换成 `\[\^\"\]\.\+\?`。
+例如：
+
+    ${__escapeOroRegexpChars([^"].+?,)}
+
+将返回 `\[\^\"\]\.\+\?`。
 
 使用 ORO 的 `Perl5Compiler#quotemeta(String)`。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1111,11 +1221,15 @@ TestPlanName 函数返回当前测试计划的名称（可用于内部计划以�
 
 函数用来转义使用 XML 1.0 实体的字符串中的字符。
 
-例如，`"bread" & 'butter'` 转义成 `&quot;bread&quot; &amp; &apos;butter&apos;`。
+例如，
+
+    ${__escapeXml("bread" & 'butter')}
+
+将返回 `&quot;bread&quot; &amp; &apos;butter&apos;`。
 
 使用 Commons Lang 的 `StringEscapeUtils#escapeXml10(String)`。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
@@ -1125,17 +1239,162 @@ TestPlanName 函数返回当前测试计划的名称（可用于内部计划以�
 
 <h3 id="timeShift">__timeShift</h3>
 
-timeShift 函数返回指定格式的日期，并添加指定的秒数，分钟数，小时数，天数或月数。
+timeShift 函数返回指定格式的日期，并加上指定的秒数，分钟数，小时数，天数或月数。
 
-#### 参数（Parameters）
+**参数（Parameters）**
 
 属性（Attribute）| 描述| 是否必须
 ---------|----------|---------
-格式 | 要传递给 DateTimeFormatter 的格式。请参阅[https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html)如果省略，则函数使用自纪元以来的毫秒数 | 否
-日期转换 | 以第一个参数“格式”设置的格式转换指定日期，如果省略，则日期设置为现在 | 否
-值转换 | 根据文本表示的持续时间（如PnDTnHnMn.nS）转换成指定的秒数，分钟数，小时数或天数。请参阅[https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence)<br><ul><li>`PT20.345S` 解析为 20.345 秒</li><li>`PT15M` 解析为 15 分钟</li><li>`PT10H` 解析为 10 个小时</li><li>`P2D` 解析为 2 天</li><li>`P6H3M` 解析为 6小时3分钟</li></ul> | 否
+格式 | 要传递给 DateTimeFormatter 的格式。请参阅 [DateTimeFormatter](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html) 如果省略，则函数使用纪元时间格式 | 否
+日期转换 | 以第一个参数“格式”设置的格式转换指定日期，如果省略，则日期默认为现在 | 否
+值转换 | 根据文本表示的持续时间（如PnDTnHnMn.nS）转换成指定的秒数，分钟数，小时数或天数。请参阅[https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence)<br/><ul><li>`PT20.345S` 解析为 20.345 秒</li><li>`PT15M` 解析为 15 分钟</li><li>`PT10H` 解析为 10 个小时</li><li>`P2D` 解析为 2 天</li><li>`P6H3M` 解析为 6小时3分钟</li></ul> | 否
 用于格式的区域设置 | 语言环境的字符串格式。语言代码必须是小写。国家代码必须大写。分隔符必须是下划线，例如 `en_EN`。请参阅 [http://www.oracle.com/technetwork/java/javase/javase7locales-334809.html]( http://www.oracle.com/technetwork/java/javase/javase7locales-334809.html)。如果省略，则默认情况下该函数使用 Apache JMeter 当前语言环境。 | 否
 变量名称 | 要设置的变量名称 | 否
+
+例子：
+
+    ${__timeShift(dd/MM/yyyy,21/01/2018,P2D,,)}
+
+返回`23/01/2018`
+
+    ${__timeShift(dd MMMM yyyy,21 février 2018,P2D,fr_FR,)}
+
+返回`23 février 2018`
+
+[【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
+
+<h3 id="digest ">__digest </h3>
+
+digest 函数返回特定的哈希算法的加密后的值，哈希算法有多种，名称为大写，可带 salt。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | -------- |
+| 算法              | 用来加密的算法。可用的算法请参阅 [StandardNames](https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html) 的 MessageDigest  <br/><ul><li>MD2</li><li>MD5</li><li>SHA-1</li><li>SHA-224</li><li>SHA-256</li><li>SHA-384</li><li>SHA-512</li></ul><br/><blockquote>`要添加的 salt`和`要编码的字符串`中是要考虑空格的</blockquote> | 是       |
+| 要编码的字符串    | 将被加密的字符串                                             | 是       |
+| 要添加的 salt     | 添加到字符串的 salt（加在字符串之后）                        | 否       |
+| 大写值            | 默认返回值为小写。当为true时返回值大写。                     | 否       |
+| 变量名称          | 要设置的变量名称                                             | 否       |
+
+例子：
+
+```
+${__digest(MD5,Errare humanum est,,,)}
+```
+
+返回`c49f00b92667a35c63708933384dad52`
+
+```
+${__digest(SHA-256,Felix qui potuit rerum cognoscere causas,mysalt,,)}
+```
+
+返回`a3bc6900fe2b2fc5fa8a601a4a84e27a079bf2c581d485009bc5c00516729ac7`
+
+[【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
+
+<h3 id="dateTimeConvert">__dateTimeConvert</h3>
+
+dateTimeConvert 函数将日期从源格式转换成目标格式并将结果储存到变量名中。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | -------- |
+| 日期字符串        | 要从源格式转换到目标格式的日期字符串。如果源日期格式为空，将使用纪元时间格式的日期。 | 是       |
+| 源日期格式        | 原始日期格式。如果为空，则日期字符串字段必须是纪元时间格式。 | 否       |
+| 目标日期格式      | 新的日期格式                                                 | 是       |
+| 变量名称          | 要设置的变量名称                                             | 否       |
+
+例子：
+
+```
+${__dateTimeConvert(01212018,MMddyyyy,dd/MM/yyyy,)}
+```
+
+返回`21/01/2018`
+
+使用纪元时间：1526574881000，
+
+```
+${__digest(SHA-256,Felix qui potuit rerum cognoscere causas,mysalt,,)}
+```
+
+以UTC时间（Duser.timezone=GMT）返回`17/05/2018 16:34`
+
+[【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
+
+<h3 id="isPropDefined">__isPropDefined</h3>
+
+isPropDefined 函数当属性存在时返回 true，不存在时返回 false。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                     | 是否必须 |
+| ----------------- | ------------------------ | -------- |
+| 属性名称          | 要检查是否定义的属性名称 | 是       |
+
+例子：
+
+```
+${__isPropDefined(START.HMS)}
+```
+
+将返回`true`
+
+[【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
+
+<h3 id="isVarDefined">__isVarDefined</h3>
+
+isVarDefined 函数当变量存在时返回 true，不存在时返回 false。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                     | 是否必须 |
+| ----------------- | ------------------------ | -------- |
+| 变量名称          | 要检查是否定义的变量名称 | 是       |
+
+例子：
+
+```
+${__isVarDefined(JMeterThread.last_sample_ok)}
+```
+
+将返回`true`
+
+[【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
+
+<h3 id="changeCase">__changeCase</h3>
+
+changeCase 函数返回大小写经过特定模式变更后的字符串值。结果储存在 JMeter 变量中。
+
+**参数（Parameters）**
+
+| 属性（Attribute）    | 描述                                                         | 是否必须 |
+| -------------------- | ------------------------------------------------------------ | -------- |
+| 待变更大小写的字符串 | 将变更大小写模式的字符串                                     | 是       |
+| 大小写变更模式       | 改变大小写的模式，例如对` ab-CD eF `：<br/><ul><li>`UPPER`模式返回 AB-CD EF </li><li>`LOWER`模式返回 ab-cd ed </li><li>`CAPITALIZE`模式返回 Ab-CD eF </li></ul><br/><blockquote>变更模式名称不区分大小写</blockquote> | 是       |
+| 变量名称             | 要检查是否定义的变量名称                                     | 否       |
+
+例子：  
+
+```
+${__changeCase(Avaro omnia desunt\, inopi pauca\, sapienti nihil,UPPER,)}
+```
+
+将返回`AVARO OMNIA DESUNT, INOPI PAUCA, SAPIENTI NIHIL`
+
+```
+${__changeCase(LABOR OMNIA VINCIT IMPROBUS,LOWER,)}
+```
+
+将返回`labor omnia vincit improbus`
+
+```
+${__changeCase(omnibus viis romam pervenitur,CAPITALIZE,)}
+```
+
+将返回`Omnibus viis romam pervenitur`
 
 [【返回标题】](#20-函数和变量) [【返回函数列表】](#functions_list)
 
@@ -1156,4 +1415,4 @@ JMeter 属性集是在 JMeter 启动时通过系统属性定义来初始化的�
   * `START.HMS` - 格式为 `HHmmss` 的 JMeter 启动时间
   * `TESTSTART.MS` - 以毫秒为单位的测试启动时间
 
-请注意，`START` 变量/属性表示的是 JMeter 启动时间，而不是测试启动时间。它们主要用于文件名等地方。
+请注意，`START` 变量/属性表示的是 JMeter 启动时间，而不是测试启动时间。它们主要用于文件名等地方。 
