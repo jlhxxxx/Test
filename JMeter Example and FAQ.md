@@ -197,56 +197,6 @@
       运行脚本，测试通过。
     * 修改图片同理，增加 n 张图片参数名称也会增加：attachments[n][file]；删除图片同删除问题类似，在 `/redmine/attachments/${img_issue}`页面传参: `_method=delete`。
 
-## 提取 json 数据
-
-* 有些 method 不写在路径里会报错（_原因暂时未分析_）
-
-    ![](pic/2017-11-02-11-29-44.png)
-    ![](pic/2017-11-02-11-30-20.png)
-
-    * 修改后测试通过
-
-      ![](pic/2017-11-02-11-27-41.png)
-      ![](pic/2017-11-02-11-28-08.png)
-
-* JMeter 读取 json 数据
-    * 这里有篇文章可以看下 [Jmeter BeanShell PostProcessor 提取 json 数据](http://blog.csdn.net/qq_33903854/article/details/53589515)，学习下怎么写提取 json 的 Script 
-
-        ```java
-        举例：提取 json 数据中所有 name 字段值
-        返回的 json 格式如下： 
-        {“body”:{“apps”:[{“name”:”111”},{“name”:”222”}]}}
-
-        代码如下：
-        import org.json.*;
-
-        String response_data = prev.getResponseDataAsString();
-        JSONObject data_obj = new JSONObject(response_data);
-        String apps_str = data_obj.get("body").get("apps").toString();
-        JSONArray apps_array = new JSONArray(apps_str);
-        String[] result = new String[apps_array.length()];
-        for(int i=0;i<apps_array.length();i++){
-            JSONObject app_obj = new JSONObject(apps_array.get(i).toString());
-            String name = app_obj.get("name").toString();
-            result[i] = name;
-        }
-        vars.put("result", Arrays.toString(result));
-        ```
-    * 如果测试失败怀疑自己写的 Script 有问题，可以通过日志检查一下错误信息；也可以想办法验证一下提取的结果是否正确，新增一个随便 http 请求，加上要验证的数据作为参数，然后运行测试，查看结果树中的请求值：
-
-      ![](pic/2017-11-03-10-24-14.png)
-      ![](pic/2017-11-03-10-18-45.png)
-    * 我在测试的时候碰到两个问题，一个是缺少 json-20170516.jar 包，测试时日志可以查看报错，导入之后问题解决；
-
-      ![](pic/2017-11-03-10-30-54.png)
-    * 还有一个问题是取不到 array.length 的值，改成 array.length() 最后通过（带不带括号测试好几遍都不行，最后诡异的通过了，怀疑是之前哪里用了中文标点，现在也无从验证）。
-
-      ![](pic/2017-11-03-10-35-15.png)
-
-* sybx 压力测试分析
-
-    * 可以以 plxcb--plcbnyxg（plcbsfxg）--pltb 流程建立线程组（数据经过一个循环可以重复测试，这样稳定性测试就可简单通过增加循环次数来搞定）
-
 ## 参数化路径思路
 
 * CSV Date Set Config 支持相对路径，但是 file upload 不支持，这样每次拷贝测试脚本到不同计算机都要修改路径，对于我这样的懒人来说是很麻烦的。  
@@ -391,7 +341,7 @@
 
   注意这里如果同时设置**Result variable name**其返回值会不一样：![018033114221](pic/20180331142214.png)
 
-  ​
+  
 
 ### 执行存储过程
 
@@ -485,3 +435,42 @@
   ```
 
   > **在进行正式压力测试时，要记得把 BeanShell PostProcessor 禁用掉，否则影响测试结果**
+
+## JMeter调用第三方jar包
+
+### 1. Eclipse导出jar包
+
+参考文章：[Eclipse如何导出jar包并包含三方jar包,制作SDK](<https://jingyan.baidu.com/article/a378c960ef251db329283010.html>)
+
+- 导出不包含依赖：Export-->JAR file-->一路默认（若需要包含源文件注意勾选）
+- 导出包含依赖（需要有main方法）：Export-->Runnable JAR file-->看情况选择依赖包导出方式
+
+**Eclipse添加第三方jar包**：构建路径-->配置构建路径-->库-->添加外部JAR
+
+### 2. IDEA导出jar包
+
+File-->Project Structure-->Artifacts-->Add-->JAR-->From Modules with Dependencies
+
+如果不要带依赖包，记得在Output Layout里删掉；要添加源码增加Directory Content选择源码目录即可。
+
+保存之后Build-->Build Artifacts，即可在output文件夹下生成jar包。
+
+**IDEA添加第三方jar包**：File-->Project Structure-->Mudules-->Dependencies
+
+### 3. 制作Java Request可用的jar包
+
+参考文章：[Jmeter测试java请求](<https://blog.csdn.net/qq_34021712/article/details/78870407>)
+
+主要包含：
+
+```java
+public Arguments getDefaultParameters()；//可选，定义可用参数及默认值；  
+public void setupTest(JavaSamplerContext arg0)；//可选，测试前执行，做一些初始化工作；  
+public SampleResult runTest(JavaSamplerContext arg0)；//必选，实现自定义请求；  
+public void teardownTest(JavaSamplerContext arg0)；//可选，测试结束时调用；
+```
+
+注意：
+
+- 需要配置resources-->log4j2.xml文件；
+- 最好将JMeter--lib整个目录添加到依赖。

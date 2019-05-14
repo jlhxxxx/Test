@@ -19,14 +19,13 @@
 
 取样器执行JMeter实际的工作。每个取样器（[测试活动](http://jmeter.apache.org/usermanual/component_reference.html#Flow_Control_Action)除外）生成一个或多个样本结果。样本结果具有各种属性（成功/失败，经过时间，数据大小等），并且可以在各种监听器中查看。
 
-### FTP 请求（FTP Request）
+### FTP 请求
 
 此控制器允许您将FTP“检索文件”或“上传文件”的请求发送到FTP服务器。如果要将多个请求发送到同一FTP服务器，请考虑使用[FTP默认请求](http://jmeter.apache.org/usermanual/component_reference.html#FTP_Request_Defaults)配置元件，这样您就不必为每个FTP请求生成控制器输入同样的信息。下载文件时，它可以存储在磁盘（本地文件）或响应数据中，或两者都存储。
 
 延迟设置为登录所需的时间。
 
-![Screenshot for Control-Panel of FTP Request](http://jmeter.apache.org/images/screenshots/ftptest/ftp-request.png)
-
+![Screenshot for Control-Panel of FTP Request](http://jmeter.apache.org/images/screenshots/ftptest/ftp-request.png)    
 *FTP请求控制面板的截图*
 
 **参数（Parameters）**
@@ -45,7 +44,7 @@
 | 用户名                | FTP帐户用户名。                                              | 通常是       |
 | 密码                  | FTP帐户密码。注意这在测试计划中是可见的。                    | 通常是       |
 
-请参阅：
+**另请参阅：**
 
 * [断言](http://jmeter.apache.org/usermanual/test_plan.html#assertions)
 * [FTP默认请求](http://jmeter.apache.org/usermanual/component_reference.html#FTP_Request_Defaults)
@@ -53,7 +52,7 @@
 
 [【返回目录】]()
 
-### HTTP 请求（HTTP Request）
+### HTTP 请求
 
 此取样器允许您将HTTP/HTTPS请求发送到Web服务器。它还允许您控制JMeter是否分析内含图像和其他资源的HTML文件，并发送HTTP请求以检索它们。以下类型嵌入的资源将被检索：
 
@@ -128,11 +127,11 @@ JMeter还允许通过变更`https.socket.protocols`属性来启用其他协议�
 
 如果请求使用“URL重写”技术来保持会话，请参阅 [6.1使用URL重写处理用户会话](http://jmeter.apache.org/usermanual/build-adv-web-test-plan.html#session_url_rewriting) 获取其他配置步骤。
 
-![Screenshot for Control-Panel of HTTP Request](http://jmeter.apache.org/images/screenshots/http-request.png)
-
+![Screenshot for Control-Panel of HTTP Request](http://jmeter.apache.org/images/screenshots/http-request.png)  
 *HTTP请求控制面板的截图*
 
-![HTTP Request Advanced config fields](http://jmeter.apache.org/images/screenshots/http-request-advanced-tab.png)*HTTP请求高级配置字段*
+![HTTP Request Advanced config fields](http://jmeter.apache.org/images/screenshots/http-request-advanced-tab.png)  
+*HTTP请求高级配置字段*
 
 **参数（Parameters）**
 
@@ -186,16 +185,13 @@ JMeter还允许通过变更`https.socket.protocols`属性来启用其他协议�
 
 在`消息体数据`模式下，除了最后一行之外，每行发送时都将附加`CRLF`。要在最后一行数据之后发送`CRLF`，只需确保其后面有空行。（空行虽然看不到，但是可以通过观察光标是否可以放在后续行上看出。）
 
-![Figure 1 - HTTP Request with one unnamed parameter](http://jmeter.apache.org/images/screenshots/http-request-raw-single-parameter.png)
-
+![Figure 1 - HTTP Request with one unnamed parameter](http://jmeter.apache.org/images/screenshots/http-request-raw-single-parameter.png)  
 *图1 - 带有一个未命名参数的HTTP请求*
 
-![Figure 2 - Confirm dialog to switch](http://jmeter.apache.org/images/screenshots/http-request-confirm-raw-body.png)
-
+![Figure 2 - Confirm dialog to switch](http://jmeter.apache.org/images/screenshots/http-request-confirm-raw-body.png)  
 *图2 - 确认要切换的对话框*
 
-![Figure 3 - HTTP Request using Body Data](http://jmeter.apache.org/images/screenshots/http-request-raw-body.png)
-
+![Figure 3 - HTTP Request using Body Data](http://jmeter.apache.org/images/screenshots/http-request-raw-body.png)  
 *图3 - 使用消息体数据的HTTP请求*
 
 **方法的处理：** 
@@ -262,7 +258,7 @@ JAVA_HOME/jre/lib/security/java.security
 
 有关详细信息，请参阅 [Bug56357](https://bz.apache.org/bugzilla/show_bug.cgi?id=56357)。
 
-请参阅：
+**另请参阅：**
 
 * [断言](http://jmeter.apache.org/usermanual/test_plan.html#assertions)
 * [构建Web测试计划](http://jmeter.apache.org/usermanual/build-web-test-plan.html)
@@ -277,9 +273,9 @@ JAVA_HOME/jre/lib/security/java.security
 
 [【返回目录】]()
 
-### JDBC请求（JDBC Request）
+### JDBC 请求
 
-此采样器允许您将JDBC请求（SQL查询）发送到数据库。
+此取样器允许您将JDBC请求（SQL查询）发送到数据库。
 
 在使用之前，您需要设置 [JDBC连接配置](http://jmeter.apache.org/usermanual/component_reference.html#JDBC_Connection_Configuration)配置元件。
 
@@ -300,8 +296,7 @@ C_2 =第3列，第2行
 
 > 延迟时间设置为获取连接所花费的时间。
 
-![Screenshot for Control-Panel of JDBC Request](http://jmeter.apache.org/images/screenshots/jdbctest/jdbc-request.png)
-
+![Screenshot for Control-Panel of JDBC Request](http://jmeter.apache.org/images/screenshots/jdbctest/jdbc-request.png)  
 *JDBC Request的控制面板的截图*
 
 **参数（Parameters）**
@@ -319,7 +314,7 @@ C_2 =第3列，第2行
 | Query timeout(s)                                             | 设置查询的超时秒数，空值表示0，为无限。`-1`表示不设置用例可能需要的任何查询超时，或者某些驱动程序不支持超时。默认值为0。 | 否                                     |
 | Handle ResultSet                                             | 定义如何处理从可调用语句返回的ResultSet：<ul><li>`存储为字符串`（默认） - “变量名称”列表中的所有变量都存储为字符串，当列表中存在时，不会遍历`ResultSet`。`CLOB`将转换为字符串。`BLOB`将被当做UTF-8编码的字节数组转换为字符串。`CLOB`和`BLOB`都将在在`jdbcsampler.max_retain_result_size`字节后被切断。</li><li>`存储为对象` - 变量名称列表上的`ResultSet`类型的变量将存储为对象，可以在后续测试/脚本中访问并迭代，不会遍历`ResultSet`。`CLOB`将像选择了`存储为字符串`一样被处理。`BLOB`将存储为字节数组。`CLOB`和`BLOB`都将在在`jdbcsampler.max_retain_result_size`字节后被切断。</li><li>`记录计数` - `ResultSet`类型的变量将通过显示结果的记录计数来迭代。变量将存储为字符串。对于`BLOB`，将存储对象的大小。</li></ul> | 否                                     |
 
-请参阅：
+**另请参阅：**
 
 * [构建数据库测试计划](http://jmeter.apache.org/usermanual/build-db-test-plan.html)
 * [JDBC Connection Configuration](http://jmeter.apache.org/usermanual/component_reference.html#JDBC_Connection_Configuration)
@@ -330,7 +325,525 @@ C_2 =第3列，第2行
 
 [【返回目录】]()
 
-### Java请求（Java Request）
+### Java 请求
+
+此取样器允许您控制实现`org.apache.jmeter.protocol.java.sampler.JavaSamplerClient`接口的java类  。通过编写您自己的此接口实现，您可以用JMeter来使用多个线程，输入参数控制和数据收集。
+
+下拉菜单提供了JMeter在其classpath中找到的所有此类实现的列表。可以在下面的表中指定参数 - 由您的实现定义。JMeter提供了两个简单示例（`JavaTest`和`SleepTest`）。 
+
+ `JavaTest`示例取样器对检查测试计划非常有用，因为它允许在几乎所有的字段设置值。这些可以被断言等使用。这些字段允许使用变量，因此可以很容易地看到这些变量的值。 
+
+![Screenshot for Control-Panel of Java Request](http://jmeter.apache.org/images/screenshots/java_request.png)  
+*Java 请求的控制面板的截图* 
+
+> 如果`teardownTest`方法未被[AbstractJavaSamplerClient](http://jmeter.apache.org/api/org/apache/jmeter/protocol/java/sampler/AbstractJavaSamplerClient.html)的子类覆盖，则不会调用其`teardownTest`方法。这降低了JMeter内存要求。不会对现有的测试计划产生任何影响。 
+
+> 添加/删除按钮目前不起任何作用。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 类名称            | 要取样的JavaSamplerClient接口的具体实现。                    | 是       |
+| 发送带参数的请求  | 将传递给取样类的参数列表。所有参数都以字符串形式发送。请参阅下面的具体设置。 | 否       |
+
+以下参数适用于`SleepTest`和`JavaTest`实现：
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| Sleep_time        | 睡眠时间（ms）                                               | 是       |
+| Sleep_mask        | 添加多少“随机性”：<br/>睡眠时间计算如下：<code>totalSleepTime = SleepTime + (System.currentTimeMillis() % SleepMask)</code> | 是       |
+
+以下参数适用于`JavaTest`实现：
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| Label             | 要使用的标签。如果提供，则覆盖`名称`                         | 否       |
+| ResponseCode      | 要取样的JavaSamplerClient接口的具体实现。                    | 否       |
+| ResponseCode      | 如果提供，则设置SampleResult ResponseCode。                  | 否       |
+| Status            | 如果提供，则设置SampleResult Status。如果它等于“`OK` ”（忽略大小写），则状态设置为成功，否则样本被标记为失败。 | 否       |
+| SamplerData       | 如果提供，则设置SampleResult SamplerData。                   | 否       |
+| ResultData        | 如果提供，则设置SampleResult ResultData。                    | 否       |
+
+[【返回目录】]()
+
+### LDAP 请求
+
+此取样器允许您向LDAP服务器发送不同的LDAP请求（`添加`，`修改`，`删除`和`搜索`）。     
+
+如果要将多个请求发送到同一LDAP服务器，请考虑使用[LDAP默认请求](http://jmeter.apache.org/usermanual/component_reference.html#LDAP_Request_Defaults)配置元件，这样您就不必为每个LDAP请求输入相同的信息。
+
+[登录配置元件](http://jmeter.apache.org/usermanual/component_reference.html#Login_Config_Element)也使用同样的方法发送用户名和密码。
+
+![Screenshot for Control-Panel of LDAP Request](http://jmeter.apache.org/images/screenshots/ldap_request.png)  
+*LDAP请求控制面板的屏截图*
+
+创建测试LDAP服务器的测试用例有两种方法。
+
+1. 内置测试用例。
+2. 用户定义的测试用例。
+
+测试LDAP有四种测试方案。测试方案如下：
+
+1. 添加测试       
+
+    1. 内置测试：           
+
+        这将在LDAP服务器中添加预定义的条目并计算执行时间。执行测试后，将从LDAP服务器中删除创建的条目。
+
+    2. 用户定义的测试：           
+
+        这将在LDAP服务器中添加条目。用户必须输入表中的所有属性。从表中收集条目以进行添加。计算执行时间。测试后不会删除创建的条目。
+
+2. 修改测试       
+
+    1. 内置测试：           
+
+        这将首先创建预定义的条目，然后修改LDAP服务器中创建的条目。并计算执行时间。执行测试后，将从LDAP服务器中删除创建的条目。
+
+    2. 用户定义的测试：           
+
+        这将修改LDAP服务器中的条目。用户必须输入表中的所有属性。从表中收集条目以进行修改。计算执行时间。该条目不会从LDAP服务器中删除。
+
+3. 搜索测试       
+
+    1. 内置测试：           
+
+        这将首先创建条目，然后搜索属性是否可用。它计算搜索查询的执行时间。在执行结束时，将从LDAP服务器中删除创建的条目。
+
+    2. 用户定义的测试：           
+
+        这将搜索搜索库（同样，由用户定义）中的用户定义条目（搜索过滤）。这些条目应该在LDAP服务器中可用。计算执行时间。
+
+4. 删除测试       
+
+    1. 内置测试：           
+
+        这将首先创建预定义的条目，然后将从LDAP服务器中删除。计算执行时间。
+
+    2. 用户定义的测试：           
+
+        这将删除LDAP服务器中的用户定义条目。这些条目应该在LDAP服务器中可用。计算执行时间。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须                                         |
+| ----------------- | ------------------------------------------------------------ | :----------------------------------------------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否                                               |
+| 服务器名称或IP    | LDAP服务器的域名或IP地址。JMeter假定LDAP服务器正在侦听默认端口（`389`）。 | 是                                               |
+| 端口              | 要连接的端口（默认为`389`）。                                | 是                                               |
+| 根DN              | 用于LDAP操作的基本DN                                         | 是                                               |
+| 用户名            | LDAP服务器用户名。                                           | 通常是                                           |
+| 密码              | LDAP服务器密码。（注意，这在测试计划中未加密存储）           | 通常是                                           |
+| DN入口            | 要创建或修改的上下文的名称；可能不是空的。<blockquote>您必须自己设置对象的正确属性。因此，如果要添加`cn=apache`，`ou=test` ，则必须将`cn`和`apache`添加到表的`name`和`value`中。</blockquote> | 是，如果选择了用户定义的测试和添加测试或修改测试 |
+| 删除              | 要删除的上下文的名称；可能不是空的                           | 是，如果选择了用户定义的测试和删除测试           |
+| Search base       | 要搜索的上下文或对象的名称                                   | 是，如果选择了用户定义的测试和搜索测试           |
+| 搜索过滤器        | 用于搜索的过滤器表达式；可能不会为空                         | 是，如果选择了用户定义的测试和搜索测试           |
+| 添加测试          | 使用`name`，`value`这样的键值对在给定上下文中创建新对象      | 是，如果选择了用户定义的测试和添加测试           |
+| 修改测试          | 使用`name`，`value`这样的键值对来修改给定的上下文对象        | 是，如果选择了用户定义的测试和修改测试           |
+
+**另请参阅：**
+
+-  [构建LDAP测试计划](http://jmeter.apache.org/usermanual/build-ldap-test-plan.html) 
+-  [LDAP默认请求](http://jmeter.apache.org/usermanual/component_reference.html#LDAP_Request_Defaults) 
+
+[【返回目录】]()
+
+### LDAP扩展请求
+
+此取样器可以将所有8个不同的LDAP请求发送到LDAP服务器。它是LDAP取样器的扩展版本，因此配置起来比较困难，但可以更接近真实的LDAP会话。     
+
+如果要将多个请求发送到同一LDAP服务器，请考虑使用[LDAP扩展请求默认值](http://jmeter.apache.org/usermanual/component_reference.html#LDAP_Extended_Request_Defaults)配置元件，这样您就不必为每个LDAP请求输入相同的信息。
+
+![Screenshot for Control-Panel of LDAP Extended Request](http://jmeter.apache.org/images/screenshots/ldapext_request.png)  
+*LDAP扩展请求控制面板的截图*
+
+定义了九个测试操作。这些操作如下：
+
+ **线程绑定** 
+
+任何LDAP请求都是LDAP会话的一部分，因此首先要做的是启动与LDAP服务器的会话。使用线程绑定启动此会话，这相当于LDAP的“`bind`”操作。要求用户提供`username `（专有名称）和`password`，用于启动会话。如果未指定密码或密码错误，则会启动匿名会话。注意，省略密码不会使此测试失败，密码错误才会。（注意，这在测试计划中是未加密存储的）
+
+**参数（Parameters）**
+
+| 属性（Attribute）                    | 描述                                                         | 是否必须 |
+| ------------------------------------ | ------------------------------------------------------------ | :------- |
+| 名称                                 | 树中显示的此采样器的描述性名称。                             | 否       |
+| 服务器名称                           | LDAP服务器的名称（或IP地址）。                               | 是       |
+| 端口                                 | LDAP服务器监听的端口号。如果省略，则JMeter假定LDAP服务器正在侦听默认端口（`389`）。 | 否       |
+| DN                                   | 将用于任何后续操作的基础对象的可分辨名称。它可以用作所有操作的起点。您无法在比此DN更高的级别上启动任何操作！ | 否       |
+| Username                             | 要绑定的用户的完整可分辨名称。                               | 否       |
+| Password                             | 上述用户的密码。如果省略，将导致匿名绑定。如果不正确，则取样器将返回错误并恢复为匿名绑定。（注意，这在测试计划中是未加密存储的） | 否       |
+| Connection timeout (in milliseconds) | 连接超时时间，如果超时连接将中止                             | 否       |
+| Use Secure LDAP Protocol             | 使用`ldaps://`方案而不是`ldap://`                            | 否       |
+| Trust All Certificates               | 信任所有证书，仅在选中`Use Secure LDAP Protocol`时使用       | 否       |
+
+ **线程解绑** 
+
+这只是结束会话的操作。它等于LDAP“`unbind`”操作。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                             | 是否必须 |
+| ----------------- | -------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。 | 否       |
+
+ **单绑定/解绑** 
+
+这是LDAP“`bind`”和“`unbind`”操作的组合。它可用于任何用户的身份验证请求/密码检查。它将打开一个新会话，只是为了检查用户/密码组合的有效性，并再次结束会话。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| Username          | 要绑定的用户的完整可分辨名称。                               | 是       |
+| Password          | 上述用户的密码。如果省略，将导致匿名绑定。如果不正确，则取样器将返回错误。（注意，这在测试计划中是未加密存储的） | 否       |
+
+ **重命名条目** 
+
+这是LDAP“`moddn`”操作。它可用于重命名条目，也可用于将条目或完整子树移动到LDAP树中的其他位置。
+
+**参数（Parameters）**
+
+| 属性（Attribute）      | 描述                                                         | 是否必须 |
+| ---------------------- | ------------------------------------------------------------ | :------- |
+| 名称                   | 树中显示的此采样器的描述性名称。                             | 否       |
+| Old entry name         | 相对于线程绑定操作中的给定DN，要重命名或移动的对象的当前可分辨名称。 | 是       |
+| New distinguished name | 相对于线程绑定操作中的给定DN，要重命名或移动的对象的新可分辨名称。 | 是       |
+
+ **添加测试** 
+
+这是LDAP“`add`”操作。它可用于将任何类型的对象添加到LDAP服务器。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| DN入口            | 相对于线程绑定操作中的给定DN，要添加的对象的可分辨名称。     | 是       |
+| 添加测试          | 要用于对象的属性及其值的列表。如果需要添加多值属性，则需要将相同的属性及其各自的值多次添加到列表中。 | 是       |
+
+ **删除测试** 
+
+这是LDAP“`delete`”操作，它可用于从LDAP树中删除对象。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                     | 是否必须 |
+| ----------------- | -------------------------------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                         | 否       |
+| 删除              | 相对于线程绑定操作中的给定DN，要删除的对象的可分辨名称。 | 是       |
+
+ **搜索测试** 
+
+这是LDAP“`search`”操作，用于定义搜索。
+
+**参数（Parameters）**
+
+| 属性（Attribute）         | 描述                                                         | 是否必须 |
+| ------------------------- | ------------------------------------------------------------ | :------- |
+| 名称                      | 树中显示的此采样器的描述性名称。                             | 否       |
+| Search base               | 相对于线程绑定操作中的给定DN，您希望搜索查找的子树的可分辨名称。 | 否       |
+| Search Filter             | 搜索过滤必须在LDAP语法中指定。                               | 是       |
+| Scope                     | 使用`0`代表baseobject，`1`为onelevel和`2`为subtree的搜索。（默认=`0`） | 否       |
+| 大小限制                  | 指定要从服务器返回的最大结果数。（默认值=`0`，表示没有限制）当取样器达到最大结果数时，它将失败并返回错误代码`4` | 否       |
+| Time Limit                | 指定服务器可以在搜索上花费的最大（cpu）时间（以毫秒为单位）。注意这并没有说响应时间。（默认为`0`，表示没有限制） | 否       |
+| 属性                      | 指定要返回的属性，以分号分隔。空值将返回所有属性             | 否       |
+| Return object             | 返回（`true`）或不返回（`false`）对象。默认=`false`          | 否       |
+| 废弃的别名                | 如果为`true`，它将废弃别名，如果为`false`，则不会废弃（默认值=`false`） | 否       |
+| Parse the search results? | 如果为`true`，则搜索结果将添加到响应数据中。如果为`false`，则将标记 - 无论是否找到结果 - 添加到响应数据中。 | 否       |
+
+ **修改测试** 
+
+这是LDAP“`modify`”操作。它可以用于修改对象。也可用于添加，删除或替换属性的值。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| DN入口            | 相对于线程绑定操作中的给定DN，要修改的对象的可分辨名称       | 是       |
+| 修改测试          | attribute-value-opCode三角。opCode可以是任何有效的LDAP operationCode（`add`，`delete/remove`或`replace`）。如果未指定`delete`操作的值，则将删除给定属性的所有值。如果指定了`delete`操作的值，则仅删除给定值。如果该值不存在，采样器将无法通过测试。 | 是       |
+
+ **比较** 
+
+这是LDAP“`compare`”操作。它可用于将给定属性的值与某个已知值进行比较。实际上，这主要用于检查某个人是否是某个组的成员。在这种情况下，您可以将用户的DN作为给定值与`groupOfNames`对象的“`member`”属性中的值进行比较。如果比较操作失败，则测试失败并返回错误代码`49`。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                             | 是否必须 |
+| ----------------- | -------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。 | 否       |
+| DN入口            | 要绑定的用户的完整可分辨名称。   | 是       |
+| 比较过滤器        | 格式为"`attribute=value`"        | 是       |
+
+**另请参阅：**
+
+-  [构建LDAP测试计划](http://jmeter.apache.org/usermanual/build-ldapext-test-plan.html) 
+-  [LDAP扩展请求默认值](http://jmeter.apache.org/usermanual/component_reference.html#LDAP_Extended_Request_Defaults) 
+
+[【返回目录】]()
+
+### Access Log Sampler
+
+AccessLogSampler 旨在读取访问日志并生成http请求。对于那些不熟悉访问日志的人来说，它是Web服务器记录它接受的每个请求的日志。这意味着每个图像，CSS文件，JavaScript文件，html文件，......
+
+Tomcat使用通用格式的访问日志。这意味着使用通用日志格式的任何Web服务器都可以使用AccessLogSampler。使用通用日志格式的服务器包括：Tomcat，Resin，Weblogic和SunOne。常见的日志格式如下所示：
+
+    127.0.0.1 - - [21/Oct/2003:05:37:21 -0500] "GET /index.jsp?%2Findex.jsp= HTTP/1.1" 200 8343
+
+> 解析器的当前实现仅查看包含HTTP协议方法的引号内的文本（`GET`，`PUT`，`POST`，`DELETE`，...）。其他所有都被剥离并忽略。例如，解析器完全忽略响应代码。
+
+对于将来，过滤出响应代码不是`200`的条目可能会更好。扩展取样器应该相当简单。您必须实现两个接口：
+
+-  `org.apache.jmeter.protocol.http.util.accesslog.LogParser `
+-  `org.apache.jmeter.protocol.http.util.accesslog.Generator`
+
+AccessLogSampler的当前实现使用生成器来创建新的HTTPSampler。服务器名称，端口和获取图像由AccessLogSampler设置。接下来，使用整数`1`调用解析器，告诉它解析一个条目。之后，调用`HTTPSampler.sample()`来发出请求。
+
+    samp = (HTTPSampler) GENERATOR.generateRequest();
+    samp.setDomain(this.getDomain());
+    samp.setPort(this.getPort());
+    samp.setImageParser(this.isImageParser());
+    PARSER.parse(1);
+    res = samp.sample();
+    res.setSampleLabel(samp.toString());
+
+`LogParser`中所需的方法是： 
+
+-  `setGenerator(Generator)`
+-  `parse(int) `
+
+ 实现`Generator`接口的类应该为所有方法提供具体的实现。有关如何实现任一接口的示例，请参阅  `StandardGenerator`和`TCLogParser`。 
+
+![Screenshot for Control-Panel of Access Log Sampler](http://jmeter.apache.org/images/screenshots/accesslogsampler.png)  
+*Access Log Sampler控制面板的截图*
+
+#### （Beta代码）
+
+**参数（Parameters）**
+
+| 属性（Attribute）    | 描述                             | 是否必须         |
+| -------------------- | -------------------------------- | :--------------- |
+| 名称                 | 树中显示的此采样器的描述性名称。 | 否               |
+| Server               | Web服务器的域名或IP地址。        | 是               |
+| Protocol             | 方案                             | 否（默认为http） |
+| Port                 | Web服务器监听的端口。            | 否（默认为80）   |
+| Log parser class     | 日志解析器类负责解析日志。       | 是（默认提供）   |
+| Filter               | 过滤器类用于过滤掉某些行。       | 否               |
+| Location of log file | 访问日志文件的位置。             | 是               |
+
+ `TCLogParser`为每个线程独立处理访问日志。`SharedTCLogParser`和`OrderPreservingLogParser`共享访问文件，即每个线程获取日志中的下一个条目。 
+
+ `SessionFilter`旨在跨线程处理cookies。它不会过滤掉任何条目，但会修改cookie管理器，以便一次一个线程处理给定IP的cookies。如果两个线程尝试处理来自相同客户端IP地址的样本，则将强制一个线程等待直到另一个线程完成。 
+
+ `LogFilter`旨在允许通过文件名和正则表达式来过滤访问日志条目，以及允许替换文件扩展名。但是，目前无法通过GUI进行配置，因此无法真正使用它。 
+
+[【返回目录】]()
+
+### BeanShell 取样器
+
+此取样器允许您使用BeanShell脚本语言编写取样器。 
+
+  **有关使用BeanShell的完整详细信息，请参阅[BeanShell网站](http://www.beanshell.org/)。**  
+
+> 强烈建议迁移到[JSR223 Sampler](http://jmeter.apache.org/usermanual/component_reference.html#JSR223_Sampler)+Groovy以提高性能，支持新的Java功能并限制BeanShell库的维护。
+
+ 测试元件支持`ThreadListener`和`TestListener`接口方法。这些必须在初始化文件中定义。有关定义的示例，请参阅文件`BeanShellListeners.bshrc`。 
+
+ BeanShell取样器还支持`Interruptible`接口。`interrupt()`方法可以在脚本或初始化文件中定义。 
+
+![Screenshot for Control-Panel of BeanShell Sampler](http://jmeter.apache.org/images/screenshots/beanshellsampler.png)  
+*BeanShell 取样器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）             | 描述                                                         | 是否必须               |
+| ----------------------------- | ------------------------------------------------------------ | :--------------------- |
+| 名称                          | 树中显示的此取样器的描述性名称。该名称存储在脚本变量Label中  | 否                     |
+| 每次调用前重置bsh.Interpreter | 如果选择此选项，则将为每个样本重新创建解释器。对于某些长时间运行的脚本，这可能是必需的。有关详细信息请参阅[最佳实践 -  BeanShell脚本](http://jmeter.apache.org/usermanual/best-practices#bsh_scripting)。 | 是                     |
+| 参数                          | 要传递给BeanShell脚本的参数。这适用于脚本文件；对于GUI中定义的脚本，您可以在脚本本身中使用所需的任何变量和函数引用。参数存储在以下变量中：<br />`Parameters`：包含参数的字符串，作为单个变量<br />`bsh.args`：包含参数的字符串数组，在空格处分割 | 否                     |
+| 脚本文件                      | 包含要运行的BeanShell脚本的文件。文件名存储在脚本变量`FileName`中 | 否                     |
+| 脚本                          | 要运行的BeanShell脚本。返回值（如果不为`null`）存储为取样器结果。 | 是（除非提供脚本文件） |
+
+> 注意每个取样器实例都有自己的BeanShell解释器，而取样器只能从一个线程调用
+
+ 如果定义了“`beanshell.sampler.init`”属性，则将其作为源文件的名称传递给解析器。这可以用于定义常用方法和变量。bin目录中有一个示例init文件：`BeanShellSampler.bshrc`。 
+
+ 如果提供了脚本文件，将使用该脚本文件，否则将使用脚本。
+
+> 在将脚本字段传递给解释器之前，JMeter处理函数和变量的引用，因此引用只会被解析一次。脚本文件中的变量和函数引用将逐字传递给解释器，这可能会导致语法错误。为了使用运行时变量，请使用适当的props方法，例如`props.get("START.HMS");` `props.put("PROP1","1234");`  
+>  BeanShell目前不支持Java 5语法，例如泛型和增强的for循环。 
+
+在调用脚本之前，BeanShell解释器会设置一些变量：
+
+参数字段的内容放入变量“`Parameters`”中。该字符串也使用单个空格作为分隔符拆分为单独的标记，并将结果列表存储在字符串数组`bsh.args`中。
+
+可设置的BeanShell变量的完整列表如下：
+
+- `log` - [记录器](https://www.slf4j.org/api/org/slf4j/Logger.html) 
+
+-  `Label` - 取样器标签
+
+-  `FileName` - 文件名（如果有）
+
+-  `Parameters` - 参数字段中的文本
+
+-  `bsh.args` - 参数，按上面描述的拆分
+
+-  `SampleResult` - 指向当前[SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)的指针 
+
+-  `ResponseCode`默认为`200 `
+
+-  `ResponseMessage`默认为“`OK`”
+
+-  `IsSuccess`默认为`true` 
+
+-  `ctx` - [JMeterContext](http://jmeter.apache.org/api/org/apache/jmeter/threads/JMeterContext.html)
+
+- `vars` - [JMeterVariables](http://jmeter.apache.org/api/org/apache/jmeter/threads/JMeterVariables.html) - 例如：
+
+        vars.get("VAR1");
+        vars.put("VAR2","value");
+        vars.remove("VAR3");
+        vars.putObject("OBJ1",new Object());
+    
+- `props` - JMeter属性（`java.util.Properties`类） - 例如：
+
+        props.get("START.HMS");
+        props.put("PROP1","1234");
+
+脚本完成后，控制权返回给取样器，并将以下脚本变量的内容复制到[SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)中的相应变量中：
+
+-  `ResponseCode` - 例如`200` 
+-  `ResponseMessage` - 例如“`OK`”
+-  `IsSuccess` - `true`或`false`
+
+SampleResult和ResponseData根据脚本的返回值来设置。如果脚本返回null，则可以使用方法`SampleResult.setResponseData(data)`直接设置响应，其中data是String或byte数组。data类型默认为“`text`”，但可以通过`SampleResult.setDataType(SampleResult.BINARY)`方法设置为二进制值 。
+
+`SampleResult`变量给予脚本对`SampleResult`内所有字段和方法完全的访问权限。例如，脚本可以访问`setStopThread(boolean)`和`setStopTest(boolean)`方法。这是一个简单的（不是很有用）示例脚本：
+
+    if (bsh.args[0].equalsIgnoreCase("StopThread")) {
+        log.info("Stop Thread detected!");
+        SampleResult.setStopThread(true);
+    }
+    return "Data from sample with Label "+Label;
+    //or
+    SampleResult.setResponseData("My data");
+    return null;
+
+另一个例子：
+确保在`jmeter.properties`中定义属性`beanshell.sampler.init=BeanShellSampler.bshrc`。以下脚本将显示`ResponseData`字段中所有变量的值： 
+
+	return getVariables();
+
+ 有关各种类可用方法的详细信息（[JMeterVariables](http://jmeter.apache.org/api/org/apache/jmeter/threads/JMeterVariables.html)，[SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)等），请查阅Javadoc或源代码。但要注意，滥用任何方法都可能导致难以发现的细微错误。 
+
+[【返回目录】]()
+
+### JRS223 取样器
+
+JSR223取样器允许使用JSR223脚本代码来执行创建/更新变量所需的一个样本或一些计算。
+
+> 如果您不想在运行此取样器时生成[SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)，请调用以下方法：
+>
+>        SampleResult.setIgnore();
+
+JSR223测试元件具有可以显著提高性能的功能（编译）。要利用这个特性，请使用下面的方法：
+
+- 使用脚本文件而不是内联它们。如果ScriptEngine上有此功能，JMeter将编译并缓存它们。
+
+- 或者使用脚本文本并检查`Cache compiled script if available`属性。
+
+    > 使用此功能时，请确保您的脚本代码不直接在代码中使用JMeter变量而是使用脚本参数，因为缓存只会缓存第一次替换。
+
+    > 要从缓存和编译中受益，用于脚本编写的语言引擎必须实现JSR223 [Compilable](https://docs.oracle.com/javase/8/docs/api/javax/script/Compilable.html)接口（Groovy就是其中之一，java，beanshell和javascript都不是）
+
+    > 当使用Groovy作为脚本语言并且不检查`Cache compiled script if available`
+>
+    > 时（建议使用缓存），由于版本2.4.6中的Groovy内存泄漏问题，您应该设置JVM属性`-Dgroovy.use.classvalue=true`，请参阅：
+>
+    > - [GROOVY-7683](https://issues.apache.org/jira/browse/GROOVY-7683)
+> - [GROOVY-7591](https://issues.apache.org/jira/browse/GROOVY-7591)
+    > - [JDK-8136353](https://bugs.openjdk.java.net/browse/JDK-8136353)
+
+缓存大小由以下JMeter属性（`jmeter.properties`）控制：
+
+	jsr223.compiled_scripts_cache_size=100
+
+> 与[BeanShell 取样器](http://jmeter.apache.org/usermanual/component_reference.html#BeanShell_Sampler)不同，解释器不会在调用之间保存。
+
+> 如果ScriptEngine支持此功能，使用脚本文件或脚本文本+检查`Cache compiled script if available`的JSR223测试元件将执行编译，这可以实现性能的显著提升。
+
+![Screenshot for Control-Panel of JSR223 Sampler](http://jmeter.apache.org/images/screenshots/jsr223-sampler.png)  
+*JSR223取样器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）        | 描述                                                         | 是否必须               |
+| ------------------------ | ------------------------------------------------------------ | :--------------------- |
+| 名称                     | 树中显示的此采样器的描述性名称。                             | 否                     |
+| 脚本语言                 | 要使用的JSR223脚本语言的名称。<blockquote>支持的语言比下拉列表中显示的要多。如果在JMeter lib目录中安装了相应的jar，则可使用相应的语言。</blockquote> | 是                     |
+| 脚本文件                 | 要用作JSR223脚本的文件的名称，如果使用文件的相对路径，则它将使用相对于系统属性“`user.dir`” 所引用的目录 | 否                     |
+| 参数                     | 要传递给脚本文件或脚本的参数列表。                           | 否                     |
+| 缓存编译脚本（如果可用） | 如果选中（建议）并且使用的语言支持[Compilable](https://docs.oracle.com/javase/8/docs/api/javax/script/Compilable.html)接口（Groovy就是其中之一，java，beanshell和javascript都不是），JMeter将编译并缓存脚本，且使用它的MD5哈希值作为唯一缓存密钥 | 否                     |
+| 脚本                     | 要传递给JSR223语言的脚本                                     | 是（除非提供脚本文件） |
+
+如果提供了脚本文件，则使用该脚本文件，否则使用脚本。
+
+在调用脚本之前，会设置一些变量。请注意，这些是JSR223变量 - 即它们可以直接在脚本中使用。
+
+- `log` - [记录器](https://www.slf4j.org/api/org/slf4j/Logger.html)
+
+- `Label` - 取样器标签
+
+- `FileName` - 文件名（如果有）
+
+- `Parameters` - 参数字段中的文本
+
+- `args` - 参数，按照上面描述的拆分
+
+- `SampleResult` - 指向当前[SampleResult的](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)指针
+
+- `sampler` - （[Sampler](http://jmeter.apache.org/api/org/apache/jmeter/samplers/Sampler.html)） - 指向当前Sampler的指针
+
+- `ctx` - [JMeterContext](http://jmeter.apache.org/api/org/apache/jmeter/threads/JMeterContext.html)
+
+- `vars` - [JMeterVariables](http://jmeter.apache.org/api/org/apache/jmeter/threads/JMeterVariables.html) - 例如：
+
+        vars.get("VAR1");
+        vars.put("VAR2","value");
+        vars.remove("VAR3");
+        vars.putObject("OBJ1",new Object());
+
+- `props` - JMeterProperties（`java.util.Properties`类） - 例如：
+
+        props.get("START.HMS");
+        props.put("PROP1","1234");
+    
+- `OUT` - System.out - 例如`OUT.println("message")`
+
+[SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)和ResponseData根据脚本的返回值来设置。如果脚本返回`null`，则可以使用`SampleResult.setResponseData(data)`方法直接设置响应 ，其中data是String或byte数组。data类型默认为“`text`”，但可以通过`SampleResult.setDataType(SampleResult.BINARY)`方法设置为二进制值 。
+
+`SampleResult`变量给予脚本对`SampleResult`内所有字段和方法完全的访问权限。例如，脚本可以访问`setStopThread(boolean)`和`setStopTest(boolean)`方法。
+
+与BeanShell 取样器不同，JSR223 取样器不通过脚本变量设置`ResponseCode`，`ResponseMessage`和样本status。目前改变这些的唯一方法是通过[SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)方法：
+
+- `SampleResult.setSuccessful(true/false)`
+- `SampleResult.setResponseCode("code")`
+- `SampleResult.setResponseMessage("message")`
+
+[【返回目录】]()
+
+### TCP 取样器
+
+
 
 
 

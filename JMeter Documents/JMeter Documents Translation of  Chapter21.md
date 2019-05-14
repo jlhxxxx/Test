@@ -1,5 +1,7 @@
 # 21. 正则表达式
 
+英文文档地址：<http://jmeter.apache.org/usermanual/regular_expressions.html>
+
 ## 21.1 概述
 
 JMeter 包含模式匹配软件 [Apache Jakarta ORO](http://attic.apache.org/projects/jakarta-oro.html) 。 
@@ -169,6 +171,7 @@ ORO 支持以下 Perl5 扩展正则表达式。
 忽略大小写修饰符 `(?i)` 可以适用于正则表达式的一部分，例如：
 
     Match ExAct case or (?i)ArBiTrARY(?-i) case 
+
 将匹配 `Match ExAct case or arbitrary case` 以及 `Match ExAct case or ARBitrary case`，但不匹配 `Match exact case or ArBiTrARY case`。
 
 ## 21.6 测试正则表达式
