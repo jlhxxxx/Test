@@ -1,5 +1,3 @@
-
-
 --# 18. 组件参考
 <!-- TOC -->
 
@@ -843,9 +841,179 @@ JSR223测试元件具有可以显著提高性能的功能（编译）。要利�
 
 ### TCP 取样器
 
+TCP取样器打开与指定服务器的TCP/IP连接。然后发送文本，并等待响应。
 
+如果选择“`Re-use connection`”，则在同一线程中的取样器之间共享连接，前提是使用完全相同的主机名称和端口。不同的主机/端口组合将使用不同的连接，不同的线程也是如此。如果同时选择“ `Re-use connection` ”和“`Close connection`”，则运行采样器后将关闭套接字。在下一个采样器上，将创建另一个套接字。您可能希望在每个线程循环结束时关闭套接字。
 
+如果检测到错误 - 或未选择“`Re-use connection`” - 则关闭套接字。下一个样本将打开另一个套接字。
 
+以下属性可用于控制其操作：
+
+- `tcp.status.prefix`
+
+    状态码之前的文本
+
+- `tcp.status.suffix`
+
+    状态码之后的文本
+
+- `tcp.status.properties`
+
+    用于将状态代码转换为消息的属性文件的名称
+
+- `tcp.handler`
+
+    TCP Handler类的名称（默认`TCPClientImpl`） - 仅在GUI上未指定时使用
+
+处理连接的类由GUI定义，如果未定义，从`tcp.handler`属性里寻找。如果还是找不到，则在
+
+`org.apache.jmeter.protocol.tcp.sampler`包中搜索该类。
+
+用户可以提供自己的实现。该类必须扩展`org.apache.jmeter.protocol.tcp.sampler.TCPClient`。
+
+目前提供以下实现。
+
+- `TCPClientImpl`
+- `BinaryTCPClientImpl`
+- `LengthPrefixedBinaryTCPClientImpl`
+
+实现的行为如下：
+
+- `TCPClientImpl`
+
+    这种实现是相当基础的。读取响应时，如果配置了`tcp.eolByte`属性，则读取直到行字节结束，否则直到输入流结束。您可以通过设置`tcp.charset`来控制字符集编码，默认为平台默认编码。
+
+- `BinaryTCPClientImpl`
+
+    此实现将GUI输入（必须是十六进制编码的字符串）转换为二进制，并在读取响应时执行相反的操作。读取响应时，如果配置了`tcp.BinaryTCPClient.eomByte`属性，则读取直到消息字节结束，否则直到输入流结束。
+
+- `LengthPrefixedBinaryTCPClientImpl`
+
+    此实现通过在二进制消息数据前加二进制长度字节来扩展BinaryTCPClientImpl。长度前缀默认为2个字节。可以通过设置属性`tcp.binarylength.prefix.length`来变更。
+
+- 超时处理
+
+    如果设置了超时，则读取将在此过期时终止。因此，如果您使用的是`eolByte/eomByte`，请确保超时设置的足够长，否则将过早终止读取。
+
+- 响应处理
+
+    如果定义了`tcp.status.prefix`，则会在响应消息中从此开始搜索文本，直到后缀结束。如果找到任何此类文本，则用于设置响应代码。然后从属性文件（如果提供）中获取响应消息。
+    
+    > **使用前缀（prefix）和后缀（suffix）**
+    >
+    > 例如，如果prefix = “ `[`“和suffix =“`]`”，则下面的响应：
+    >
+    > ```
+    > [J28] XI123,23,GBP,CR
+    > ```
+    >
+    > 响应代码为`J28`。
+    
+    “`400`”-“`499`”和“`500`”-“`599`” 范围内的响应代码目前被视为失败; 其他的视为成功。[这需要进行配置！]
+
+> 提供的TCP实现不使用登录名/密码。
+
+在测试运行结束时断开套接字。
+
+![Screenshot for Control-Panel of TCP Sampler](http://jmeter.apache.org/images/screenshots/tcpsampler.png)  
+*TCP采样器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）   | 描述                                                         | 是否必须 |
+| ------------------- | ------------------------------------------------------------ | :------- |
+| 名称                | 树中显示的此采样器的描述性名称。                             | 否       |
+| TCPClient classname | TCPClient类的名称。默认为属性`tcp.handler`，使取不到则取`TCPClientImpl`。 | 是       |
+| 服务器名称或IP      | TCP服务器的名称或IP                                          | 是       |
+| 端口号              | 使用的端口                                                   | 是       |
+| Re-use connection   | 如果选中，则连接保持打开状态。否则，数据读取完将关闭。       | 是       |
+| 关闭连接            | 如果选择此选项，采样器运行结束将关闭连接。                   | 否       |
+| SO_LINGER           | 创建套接字时通过启用/禁用`SO_LINGER`指定延迟时间（以秒为单位）。如果将“`SO_LINGER`”值设置为`0`，可以防止大量套接字处于`TIME_WAIT`状态。 | 否       |
+| 行尾（EOL）字节值   | 行尾的字节值，将其设置为`-128`到`+127`范围之外的值以跳过`eol`检查。您可以在`jmeter.properties`文件中设置此项以及`eolByte`属性。如果在TCP取样器配置和`jmeter.properties`文件中同时设置此项，将使用TCP取样器配置中设置的值。 | 否       |
+| 连接超时            | 连接超时时间（毫秒，`0`为禁用）。                            | 否       |
+| 响应超时            | 响应超时时间（毫秒，`0`为禁用）。                            | 否       |
+| 设置无延迟          | 请参阅`java.net.Socket.setTcpNoDelay()`。如果选中，这将禁用Nagle算法，否则将使用Nagle算法。 | 是       |
+| 要发送的文本        | 要发送的文本                                                 | 是       |
+| 登录用户            | 用户名 - 默认实现不使用                                      | 否       |
+| 密码                | 密码 - 默认实现不使用（注意在测试计划中没有加密存储）        | 否       |
+
+[【返回目录】]()
+
+### JMS 发布
+
+JMS发布将消息发布到给定目标（主题/队列）。对于那些不熟悉JMS的人来说，它是用于消息传递的J2EE规范。市场上有许多JMS服务器，还有一些是开源的。
+
+> JMeter不包含任何JMS实现jar；必须从JMS提供方下载并放入lib目录
+
+![Screenshot for Control-Panel of JMS Publisher](http://jmeter.apache.org/images/screenshots/jmspublisher.png)  
+*JMS 发布控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）                 | 描述                                                         | 是否必须                    |
+| --------------------------------- | ------------------------------------------------------------ | :-------------------------- |
+| 名称                              | 树中显示的此采样器的描述性名称。                             | 否                          |
+| use JNDI properties file          | 使用`jndi.properties`。注意该文件必须在classpath中 - 例如，通过更新JMeter`user.classpath`属性。如果未选择此选项，JMeter将使用“`JNDI Initial Context Factory`”和“`Provider URL`”字段来创建连接。 | 是                          |
+| JNDI Initial Context Factory      | 上下文工厂的名称                                             | 否                          |
+| Provider URL                      | JMS提供方的URL                                               | 是，除非使用jndi.properties |
+| Destination                       | 消息目标（主题或队列名称）                                   | 是                          |
+| Setup                             | 目标设置类型。设置为`At startup`时，目标名称是静态的（即在测试期间名称始终是一致的），设置为`Each sample`时，目标名称是动态的，并在每个样本评估（即，目标名称是可变的） | 是                          |
+| Authentication                    | JMS提供方的身份验证要求                                      | 是                          |
+| User                              | 用户名                                                       | 否                          |
+| Password                          | 密码（注意在测试计划中没有加密存储）                         | 否                          |
+| Expiration                        | 消息过期时间（以毫秒为单位）。如果未指定到期时间，则默认值为`0`（永不过期）。 | 否                          |
+| Priority                          | 消息的优先级。从`0`（最低）到`9`（最高）共10个优先级。如果未指定优先级，则默认级别为`4`。 | 否                          |
+| Reconnect on error codes (regex)  | 强制重新连接的JMSException错误代码的正则表达式。如果为空则不会重新连接 | 否                          |
+| Number of samples to aggregate    | 要聚合的样本数                                               | 是                          |
+| Message source                    | 获取消息来源：  <ul><li>`From File`表示所有样本都将读取和重用所引用的文件。如果文件名更改，则从JMeter 3.0开始重新加载</li><li>`Random File from folder specified below`表示将从下面指定的文件夹中选择随机文件，此文件夹必须包含扩展名为`.dat`的文件用于字节消息，或扩展名为`.txt`或`.obj`的文件用于对象或文本消息</li><li>`Text area`用于文本或对象消息的消息</li></ul> | 是                          |
+| Message type                      | 文本，MAP，对象消息或字节消息                                | 是                          |
+| Content encoding                  | 指定用于读取消息源文件的编码：<ul><li>`RAW`：文件没有变量支持，并使用默认系统字符集加载它。  `DEFAULT`：使用默认系统编码加载文件，但依赖于XML prolog的XML除外。如果文件包含变量，则将对其进行处理。  `Standard charsets`：指定的编码（有效或无效）用于读取文件和处理变量指定用于读取消息源文件的编码： | 是                          |
+| Use non-persistent delivery mode? | 是否设置DeliveryMode.NON_PERSISTENT（默认为false）           | 否                          |
+| JMS Properties                    | JMS属性是特定于底层消息传递系统的属性。您可以设置值的名称，值和类（类型）。默认类型为String。例如：对于WebSphere 5.1 Web服务，您需要设置JMS Property targetService以通过JMS测试Web服务。 | 否                          |
+
+ 对于MapMessage类型，JMeter将源读取为文本行。每行必须有3个字段，用逗号分隔。这些领域是：
+
+- 入境名称
+- 对象类名，例如“ String ”（如果未指定，则假定为java.lang包）
+- 对象字符串值
+
+的valueOf（字符串）
+
+```
+名，字符串，实施例
+大小，整数，1234
+```
+
+> Object消息已实现，其工作方式如下： 
+>
+> - 将包含对象及其依赖项的JAR放在jmeter_home / lib /文件夹中
+> - 使用XStream将对象序列化为XML
+> - 将结果放在以.txt或.obj为后缀的文件中，或将XML内容直接放在文本区域中
+>
+>  请注意，如果消息位于文件中，则在使用“文本区域”时将不会替换属性。 
+
+下表显示了在配置JMS时可能有用的一些值：
+
+| Apache [ActiveMQ](http://activemq.apache.org/) | 值（S）                                                | 评论                                                         |
+| ---------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
+| 上下文工厂                                     | org.apache.activemq.jndi.ActiveMQInitialContextFactory | .                                                            |
+| 提供者URL                                      | VM：//本地主机                                         |                                                              |
+| 提供者URL                                      | VM：（经纪人：（VM：//本地主机）持续= FALSE）          | 禁用持久性                                                   |
+| 队列参考                                       | dynamicQueues / QUEUENAME                              | [动态定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations) QUEUENAME到JNDI |
+| 主题参考                                       | dynamicTopics / TOPICNAME                              | [动态地将](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations) TOPICNAME [定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations)为JNDI |
+
+[【返回目录】]()
+
+**参数（Parameters）**
+
+| 属性（Attribute）        | 描述                                                         | 是否必须               |
+| ------------------------ | ------------------------------------------------------------ | :--------------------- |
+| 名称                     | 树中显示的此采样器的描述性名称。                             | 否                     |
+| TCPClient classname      | 要使用的JSR223脚本语言的名称。<blockquote>支持的语言比下拉列表中显示的要多。如果在JMeter lib目录中安装了相应的jar，则可使用相应的语言。</blockquote> | 是                     |
+| 脚本文件                 | 要用作JSR223脚本的文件的名称，如果使用文件的相对路径，则它将使用相对于系统属性“`user.dir`” 所引用的目录 | 否                     |
+| 参数                     | 要传递给脚本文件或脚本的参数列表。                           | 否                     |
+| 缓存编译脚本（如果可用） | 如果选中（建议）并且使用的语言支持[Compilable](https://docs.oracle.com/javase/8/docs/api/javax/script/Compilable.html)接口（Groovy就是其中之一，java，beanshell和javascript都不是），JMeter将编译并缓存脚本，且使用它的MD5哈希值作为唯一缓存密钥 | 否                     |
+| 脚本                     | 要传递给JSR223语言的脚本                                     | 是（除非提供脚本文件） |
 
 
 
