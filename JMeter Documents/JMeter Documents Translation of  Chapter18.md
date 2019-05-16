@@ -967,42 +967,42 @@ JMS发布将消息发布到给定目标（主题/队列）。对于那些不熟�
 | Number of samples to aggregate    | 要聚合的样本数                                               | 是                          |
 | Message source                    | 获取消息来源：  <ul><li>`From File`表示所有样本都将读取和重用所引用的文件。如果文件名更改，则从JMeter 3.0开始重新加载</li><li>`Random File from folder specified below`表示将从下面指定的文件夹中选择随机文件，此文件夹必须包含扩展名为`.dat`的文件用于字节消息，或扩展名为`.txt`或`.obj`的文件用于对象或文本消息</li><li>`Text area`用于文本或对象消息的消息</li></ul> | 是                          |
 | Message type                      | 文本，MAP，对象消息或字节消息                                | 是                          |
-| Content encoding                  | 指定用于读取消息源文件的编码：<ul><li>`RAW`：文件没有变量支持，并使用默认系统字符集加载它。  `DEFAULT`：使用默认系统编码加载文件，但依赖于XML prolog的XML除外。如果文件包含变量，则将对其进行处理。  `Standard charsets`：指定的编码（有效或无效）用于读取文件和处理变量指定用于读取消息源文件的编码： | 是                          |
-| Use non-persistent delivery mode? | 是否设置DeliveryMode.NON_PERSISTENT（默认为false）           | 否                          |
-| JMS Properties                    | JMS属性是特定于底层消息传递系统的属性。您可以设置值的名称，值和类（类型）。默认类型为String。例如：对于WebSphere 5.1 Web服务，您需要设置JMS Property targetService以通过JMS测试Web服务。 | 否                          |
+| Content encoding                  | 指定用于读取消息源文件的编码：<ul><li>`RAW`：文件没有变量支持，并使用默认系统字符集加载它。 </li><li>`DEFAULT`：使用默认系统编码加载文件，但依赖于XML prolog的XML除外。如果文件包含变量，则将对其进行处理。</li><li> `Standard charsets`：指定的编码（有效或无效）用于读取文件和处理变量 | 是                          |
+| Use non-persistent delivery mode? | 是否设置`DeliveryMode.NON_PERSISTENT`（默认为`false`）       | 否                          |
+| JMS Properties                    | JMS属性是特定于底层消息传递系统的属性。您可以设置值的名称，值和类（类型）。默认类型为`String`。例如：对于WebSphere 5.1 Web服务，您需要设置JMS Property targetService来通过JMS测试Web服务。 | 否                          |
 
- 对于MapMessage类型，JMeter将源读取为文本行。每行必须有3个字段，用逗号分隔。这些领域是：
+ 对于MapMessage类型，JMeter将源文件读取为文本行。每行必须有3个字段，用逗号分隔。这些字段是：
 
-- 入境名称
-- 对象类名，例如“ String ”（如果未指定，则假定为java.lang包）
+- 条目名称
+- 对象类名，例如“`String`”（如果未指定，则假定为`java.lang`包）
 - 对象字符串值
 
-的valueOf（字符串）
+`valueOf(String)`
 
-```
-名，字符串，实施例
-大小，整数，1234
-```
+    name,String,Example
+    size,Integer,1234
 
-> Object消息已实现，其工作方式如下： 
+> 对象消息的实现和工作方式如下： 
 >
-> - 将包含对象及其依赖项的JAR放在jmeter_home / lib /文件夹中
+> - 将包含对象及其依赖项的JAR放在`jmeter_home/lib/`文件夹中
 > - 使用XStream将对象序列化为XML
-> - 将结果放在以.txt或.obj为后缀的文件中，或将XML内容直接放在文本区域中
+> - 将结果放在以`.txt`或`.obj`为后缀的文件j中，或将XML内容直接放在文本区域中
 >
->  请注意，如果消息位于文件中，则在使用“文本区域”时将不会替换属性。 
+>  请注意，如果消息位于文件中，则在使用文本区域时将不会替换属性。 
 
 下表显示了在配置JMS时可能有用的一些值：
 
-| Apache [ActiveMQ](http://activemq.apache.org/) | 值（S）                                                | 评论                                                         |
+| Apache [ActiveMQ](http://activemq.apache.org/) | 值                                                     | 备注                                                         |
 | ---------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
 | 上下文工厂                                     | org.apache.activemq.jndi.ActiveMQInitialContextFactory | .                                                            |
-| 提供者URL                                      | VM：//本地主机                                         |                                                              |
-| 提供者URL                                      | VM：（经纪人：（VM：//本地主机）持续= FALSE）          | 禁用持久性                                                   |
-| 队列参考                                       | dynamicQueues / QUEUENAME                              | [动态定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations) QUEUENAME到JNDI |
-| 主题参考                                       | dynamicTopics / TOPICNAME                              | [动态地将](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations) TOPICNAME [定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations)为JNDI |
+| 提供者URL                                      | vm://localhost                                         |                                                              |
+| 提供者URL                                      | vm:(broker:(vm://localhost)?persistent=false)          | 禁用持久性                                                   |
+| 队列参考                                       | dynamicQueues/QUEUENAME                                | [动态定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations)QUEUENAME到JNDI |
+| 主题参考                                       | dynamicTopics/TOPICNAME                                | [动态定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations)TOPICNAME到JNDI |
 
 [【返回目录】]()
+
+### JMS 订阅
 
 **参数（Parameters）**
 
