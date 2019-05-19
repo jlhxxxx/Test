@@ -13,7 +13,7 @@
 
 > 少数测试元件使用JMeter属性来控制它们的行为。这些属性通常在类被加载时解析。这通常发生在测试计划执行前，所以不能通过[__setProperty()](http://jmeter.apache.org/usermanual/functions.html#__setProperty)函数来改变设置。
 
-## 18.1 取样器（Samplers）
+## 18.1 取样器
 
 取样器执行JMeter实际的工作。每个取样器（[测试活动](http://jmeter.apache.org/usermanual/component_reference.html#Flow_Control_Action)除外）生成一个或多个样本结果。样本结果具有各种属性（成功/失败，经过时间，数据大小等），并且可以在各种监听器中查看。
 
@@ -899,7 +899,7 @@ TCP取样器打开与指定服务器的TCP/IP连接。然后发送文本，并�
 
     如果定义了`tcp.status.prefix`，则会在响应消息中从此开始搜索文本，直到后缀结束。如果找到任何此类文本，则用于设置响应代码。然后从属性文件（如果提供）中获取响应消息。
     
-    > **使用前缀（prefix）和后缀（suffix）**
+    > #### 使用前缀（prefix）和后缀（suffix）
     >
     > 例如，如果prefix = “ `[`“和suffix =“`]`”，则下面的响应：
     >
@@ -1004,17 +1004,476 @@ JMS发布将消息发布到给定目标（主题/队列）。对于那些不熟�
 
 ### JMS 订阅
 
+JMS订阅将订阅给定目标（主题或队列）中的消息。对于那些不熟悉JMS的人来说，它是用于消息传递的J2EE规范。市场上有许多JMS服务器，还有一些是开源的。
+
+> JMeter不包含任何JMS实现jar；必须从JMS提供方下载并放入lib目录
+
+![Screenshot for Control-Panel of JMS Subscriber](http://jmeter.apache.org/images/screenshots/jmssubscriber.png)   
+*JMS 订阅控制面板的截图*
+
 **参数（Parameters）**
 
-| 属性（Attribute）        | 描述                                                         | 是否必须               |
-| ------------------------ | ------------------------------------------------------------ | :--------------------- |
-| 名称                     | 树中显示的此采样器的描述性名称。                             | 否                     |
-| TCPClient classname      | 要使用的JSR223脚本语言的名称。<blockquote>支持的语言比下拉列表中显示的要多。如果在JMeter lib目录中安装了相应的jar，则可使用相应的语言。</blockquote> | 是                     |
-| 脚本文件                 | 要用作JSR223脚本的文件的名称，如果使用文件的相对路径，则它将使用相对于系统属性“`user.dir`” 所引用的目录 | 否                     |
-| 参数                     | 要传递给脚本文件或脚本的参数列表。                           | 否                     |
-| 缓存编译脚本（如果可用） | 如果选中（建议）并且使用的语言支持[Compilable](https://docs.oracle.com/javase/8/docs/api/javax/script/Compilable.html)接口（Groovy就是其中之一，java，beanshell和javascript都不是），JMeter将编译并缓存脚本，且使用它的MD5哈希值作为唯一缓存密钥 | 否                     |
-| 脚本                     | 要传递给JSR223语言的脚本                                     | 是（除非提供脚本文件） |
+| 属性（Attribute）                | 描述                                                         | 是否必须 |
+| -------------------------------- | ------------------------------------------------------------ | :------- |
+| 名称                             | 树中显示的此采样器的描述性名称。                             | 否       |
+| use JNDI properties file         | 使用`jndi.properties`。注意该文件必须在classpath中 - 例如，通过更新JMeter`user.classpath`属性。如果未选择此选项，JMeter将使用“`JNDI Initial Context Factory`”和“`Provider URL`”字段来创建连接。 | 是       |
+| JNDI Initial Context Factory     | 上下文工厂的名称                                             | 否       |
+| Provider URL                     | JMS提供方的URL                                               | 否       |
+| Destination                      | 消息目标（主题或队列名称）                                   | 是       |
+| Durable Subscription ID          | 用于持久订阅的ID。首次使用时，相应的队列若不存在，则会由JMS提供方自动生成。 | 否       |
+| Client ID                        | 持久订阅时使用的客户端ID。当你有多个线程时，一定要添加一个像`${__threadNum}`这样的变量。 | 否       |
+| JMS Selector                     | 由JMS规范定义的消息选择器，仅提取与选择器条件相关的消息。语法使用SQL 92的子部分。 | 否       |
+| Setup                            | 目标设置类型。设置为`At startup`时，目标名称是静态的（即在测试期间名称始终是一致的），设置为`Each sample`时，目标名称是动态的，并在每个样本评估（即，目标名称是可变的） | 是       |
+| Authentication                   | JMS提供方的身份验证要求                                      | 是       |
+| User                             | 用户名                                                       | 否       |
+| Password                         | 密码（注意在测试计划中没有加密存储）                         | 否       |
+| Number of samples to aggregate   | 要聚合的样本数                                               | 是       |
+| Save response                    | 采样器是否存储响应。如果不是，则仅返回响应长度。             | 是       |
+| Timeout                          | 指定要超时时间，以毫秒为单位。`0`=none。这是整体聚合超时，而不是每个样本的超时。 | 是       |
+| Client                           | 使用哪个客户端实现。它们都创建了可以读取消息的连接。但是，他们使用不同的策略，如下所述：<ul><li>`MessageConsumer.receive()`为每个请求的消息调用`receive()`。保留样本之间的连接，但仅在采样器处于活动状态时才获取消息。这最适合队列订阅。</li><li>`MessageListener.onMessage()`建立一个监听器，将所有传入的消息存储在队列中。侦听器在采样器完成后仍保持活动状态。这最适合主题订阅。</li></ul> | 是       |
+| Stop between samples?            | 如果选中，则JMeter 在每个样本的末尾调用`Connection.stop()`（并在每个样本之前调用`start()`）。在多个样本/线程与同一队列连接的某些情况下，这可能很有用。如果未选中，JMeter将在线程的开始调用`Connection.start()`，并且在线程结束之后调用`stop()`。 | 是       |
+| Separator                        | 分隔符用于在有多个消息时分隔消息（与设置要聚合的样本数相关）。注意`\n`，`\r`，`\t`都可以。 | 否       |
+| Reconnect on error codes (regex) | 强制重新连接的JMSException错误代码的正则表达式。如果为空则不会重新连接 | 否       |
+| Pause between errors (ms)        | 发生错误时，订阅服务器的暂停时间，以毫秒为单位               | 否       |
+
+[【返回目录】]()
+
+### JMS点到点
+
+此采样器通过点到点连接（队列）发送并可选地接收JMS消息。与发布/订阅消息不同，它通常用于处理事务。
+
+`request_only`通常用于对JMS系统产生负载。
+`request_reply`这个模式将等待此服务发送的回复队列的响应，所以可以用于测试处理发送到请求队列消息的JMS服务的响应时间时。  
+`browse`返回当前队列深度，即队列中的消息数。  
+`read`从队列中读取消息（如果有的话）。  
+`clear`清除队列，即从队列中删除所有消息。
+
+JMeter 在创建队列连接时使用`java.naming.security.[principal|credentials]`属性 - 如果存在。如果不需要此行为，请设置JMeter属性`JMSSampler.useSecurity.properties=false`
+
+> JMeter不包含任何JMS实现jar；必须从JMS提供方下载并放入lib目录
+
+![Screenshot for Control-Panel of JMS Point-to-Point](http://jmeter.apache.org/images/screenshots/jms/JMS_Point-to-Point.png)  
+*JMS点到点控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）                            | 描述                                                         | 是否必须 |
+| -------------------------------------------- | ------------------------------------------------------------ | :------- |
+| 名称                                         | 树中显示的此采样器的描述性名称。                             | 否       |
+| QueueConnection Factory                      | 用于连接到消息传递系统的队列连接工厂的JNDI名称。             | 是       |
+| JNDI Name Request queue                      | 这是发送消息的队列的JNDI名称。                               | 是       |
+| JNDI Name Reply queue                        | 接收队列的JNDI名称。如果此处提供了值并且通信模式为“`Request Response`”， 则将监视此队列以获得发送请求的响应。 | 否       |
+| Number of samples to aggregate               | 要聚合的样本数。仅适用于读取通讯模式。                       | 是       |
+| JMS Selector                                 | 由JMS规范定义的消息选择器，仅提取与选择器条件相关的消息。语法使用SQL 92的子部分。 | 否       |
+| Communication style                          | 通信模式可以是`Request Only`（也称为Fire and Forget），`Request Response`，`Read`，`Browse`，`Clear`：<ul><li>`Request Only`只会发送消息，不会监控回复。因此，它可用于对系统产生负载。</li><li>`Request Response`将发送消息并监控它收到的回复。行为取决于JNDI Name Reply queue的值。如果JNDI Name Reply Queue有值，则此队列用于监视结果。使用请求的消息id和回复的相关id完成请求和回复的匹配。如果JNDI Name Reply queue为空，则临时队列将用于请求者和服务器之间的通信。这与固定回复队列非常不同。使用临时队列，发送线程将阻塞，直到收到回复消息。使用“`Request Response`”模式，您需要一个服务器来侦听发送到请求队列的消息，并将回复发送到`message.getJMSReplyTo()`引用的队列。</li><li>`Read`将从没有附加侦听器的传出队列中读取消息。这可以方便用于测试目的。该方法仅适用于JMS点到点采样器，可以用来处理没有绑定文件的队列（假设使用了jmeter-jms-skip-jndi库）。在使用绑定文件的情况下，可以使用JMS订阅采样器从队列中读取。</li><li>`Browse`将确定当前队列深度而不从队列中删除消息，返回队列中的消息数。</li><li>`Clear`将清除队列，即从队列中删除所有消息。</li></ul> | 是       |
+| Use alternate fields for message correlation | 这些复选框选择将用于将响应消息与原始请求进行匹配的字段。<ul><li>`Use Request Message Id`如果选中，将使用request JMSMessageID，否则将使用request JMSCorrelationID。在后一种情况下，必须在请求中指定相关ID。</li><li>`Use Response Message Id`如果选中，将使用Response JMSMessageID，否则将使用Response JMSCorrelationID。</li></ul>有两种常用的JMS关联模式：<ul><li>**JMS关联ID模式**：即以相关性的Ids匹配请求和响应 =>取消选中两个复选框，并提供相关ID。</li><li>**JMS消息ID模式**：即匹配请求消息id与响应相关id =>仅选择“Use Request Message Id”。</li></ul>在这两种情况下，JMS应用程序都负责根据需要填充相关ID。<blockquote>如果使用相同的队列发送和接收消息，则响应消息将与请求消息相同。在这种情况下，要么提供相关ID，要么清除两个复选框; 或选中两个复选框以使用消息Id进行关联。这对于检查原始JMS吞吐量非常有用。</blockquote> | 是       |
+| Timeout                                      | 回复消息的超时时间（以毫秒为单位）。如果在指定时间内未收到回复，则特定测试用例将失败，并且将丢弃超时后收到的特定回复消息。默认值为`2000`毫秒。`0`表示不设超时。 | 是       |
+| Expiration                                   | 消息过期时间（以毫秒为单位）。如果未指定，则默认值为`0`（永不过期）。 | 否       |
+| Priority                                     | 消息的优先级。从`0`（最低）到`9`（最高）有10个优先级。如果未指定优先级，则默认级别为`4`。 | 否       |
+| Use non-persistent delivery mode?            | 是否设置`DeliveryMode.NON_PERSISTENT`。                      | 是       |
+| Content                                      | 消息的内容。                                                 | 否       |
+| JMS Properties                               | MS属性是特定于底层消息传递系统的属性。您可以设置值的名称，值和类（类型）。默认类型为`String`。例如：对于WebSphere 5.1 Web服务，您需要设置JMS Property targetService来通过JMS测试Web服务。 | 否       |
+| Initial Context Factory                      | Initial Context Factory是用于查找JMS资源的工厂。             | 否       |
+| JNDI properties                              | JNDI属性是底层JNDI实现的特定属性。                           | 否       |
+| Provider URL                                 | JMS提供方的URL。                                             | 否       |
+
+[【返回目录】]()
+
+### JUnit 请求
+
+当前实现支持标准JUnit约定和扩展。它还包括`oneTimeSetUp`和`oneTimeTearDown`等扩展。采样器的工作方式与[Java 请求](http://jmeter.apache.org/usermanual/component_reference.html#Java_Request)类似，但 存在一些差异。
+
+* 与使用JMeter的测试接口不同，它会扫描jar文件以寻找扩展JUnit`TestCase`类的类。这包括任何类或子类。
+* JUnit测试jar文件应该放在`jmeter/lib/junit`而不是`/lib`目录中。您还可以使用“`user.classpath`”属性指定查找`TestCase`类的位置。
+* JUnit采样器不像[Java请求](http://jmeter.apache.org/usermanual/component_reference.html#Java_Request)那样使用名称/值对进行配置。采样器假定`setUp`和`tearDown`将正确配置测试。
+* 采样器仅测量测试方法的经过时间，不包括`setUp`和`tearDown`。
+* 每次调用测试方法时，JMeter都会将结果传递给监听器。
+* 支持`oneTimeSetUp`和`oneTimeTearDown`作为方法完成。由于JMeter是多线程的，我们不能像Maven那样调用`oneTimeSetUp/oneTimeTearDown`。
+* 采样器将意外异常报告为错误。标准JUnit测试运行与JMeter实现之间存在一些重要差异。JMeter不是为每个测试创建一个新的类实例，而是为每个采样器创建一个实例并重用它。这可以通过复选框“`Create a new instance per sample`”进行更改。
+
+采样器的当前实现将尝试首先使用字符串构造函数创建实例。如果测试类没有声明字符串构造函数，则采样器将查找空构造函数。示例如下：
+
+> #### JUnit构造函数
+>
+> 空构造函数：
+>
+> ```
+> public class myTestCase {
+>   public myTestCase() {}
+> }
+> ```
+>
+> 字符串构造函数：
+>
+> ```
+> public class myTestCase {
+>     public myTestCase(String text) {
+>        super(text);
+>     }
+> }
+> ```
+
+默认情况下，JMeter将为成功/失败代码和消息提供一些默认值。用户应定义一组唯一的成功和失败代码，并在所有测试中统一使用它们。
+
+> **一般准则**
+>
+> 如果使用`setUp`和`tearDown`，请确保将方法声明为public。如果不这样做，测试可能无法正常运行。  
+> 以下是编写JUnit测试的一般指南，能使它们在JMeter下运行良好。由于JMeter运行多线程，因此记住某些事情非常重要。
+>
+> * 编写`setUp`和`tearDown`方法，使它们是线程安全的。这通常意味着避免使用静态成员。
+> * 使测试方法成为离散的工作单元，而不是长的动作序列。通过将测试方法保持为离散操作，可以更轻松地组合测试方法以创建新的测试计划。
+> * 避免使测试方法相互依赖。由于JMeter允许对测试方法进行任意排序，因此运行行为与默认的JUnit行为不同。
+> * 如果测试方法是可配置的，请注意存储属性的位置。建议从Jar文件中读取属性。
+> * 每个采样器都会创建一个测试类的实例，因此编写测试时，应在`oneTimeSetUp`和`oneTimeTearDown`中进行初始化等配置。
+
+![Screenshot for Control-Panel of JUnit Request](http://jmeter.apache.org/images/screenshots/junit_sampler.png)  
+*JUnit 请求控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）                | 描述                                                         | 是否必须 |
+| -------------------------------- | ------------------------------------------------------------ | :------- |
+| 名称                             | 树中显示的此采样器的描述性名称。                             | 否       |
+| Search for JUnit4 annotations    | 选择此项以搜索JUnit4测试（`@Test`注释）                      | 是       |
+| Package filter                   | 以逗号分隔的要显示的包列表。例如，`org.apache.jmeter,junit.framework`。 | 否       |
+| Class name                       | JUnit测试类的完全限定名称。                                  | 是       |
+| Constructor string               | 传递给字符串构造函数的字符串。如果设置了字符串，则采样器将使用字符串构造函数而不是空构造函数。 | 否       |
+| Test method                      | 测试方法。                                                   | 是       |
+| Success message                  | 测试成功的描述性信息。                                       | 否       |
+| Success code                     | 表示测试成功的唯一代码。                                     | 否       |
+| Failure message                  | 测试失败的描述性信息。                                       | 否       |
+| Failure code                     | 表示测试失败的唯一代码。                                     | 否       |
+| Error message                    | 错误描述。                                                   | 否       |
+| Error code                       | 一些错误代码。不需要唯一。                                   | 否       |
+| Do not call setUp and tearDown   | 设置采样器不要调用`setUp`和`tearDown`。默认情况下，应调用`setUp`和`tearDown`。不调用这些方法可能会影响测试并使其不准确。此选项仅与调用`oneTimeSetUp`和`oneTimeTearDown`一起使用。如果所选方法是`oneTimeSetUp`或`oneTimeTearDown`，则应检查此选项。 | 是       |
+| Append assertion errors          | 是否在响应消息中附加断言错误。                               | 是       |
+| Append runtime exceptions        | 是否将运行时异常附加到响应消息。仅在未选择“`Append assertion errors`”时适用。 | 是       |
+| Create a new Instance per sample | 是否为每个样本创建新的JUnit实例。默认为false，表示创建一个JUnit`TestCase`并重复使用。 | 是       |
+
+识别以下JUnit4注释：
+
+* `@Test`
+
+  用于查找测试方法和类。支持“`expected`”和“`timeout`”属性。
+
+* `@Before`
+
+  在JUnit3中当做`setUp()`对待
+
+* `@After`
+
+  在JUnit3中当做`tearDown()`对待
+
+* `@BeforeClass`，`@AfterClass`
+
+  作为测试方法处理，因此可以根据需要独立运行
+
+> 注意，当前版本JMeter直接运行测试方法，而不是将其留给JUnit。这是为了允许从采样时间中排除`setUp`/`tearDown`方法。因此，采样器时间排除了调用`setUp`/`tearDown`方法及基于其注释的替代方法所花费的时间。
+
+[【返回目录】]()
+
+### 邮件阅读者取样器
+
+邮件阅读者取样器可以使用POP3(S)或IMAP(S)协议读取（可选删除）邮件消息。
+
+![Screenshot for Control-Panel of Mail Reader Sampler](http://jmeter.apache.org/images/screenshots/mailreader_sampler.png)  
+*邮件阅读者取样器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）               | 描述                                                         | 是否必须            |
+| ------------------------------- | ------------------------------------------------------------ | :------------------ |
+| 名称                            | 树中显示的此采样器的描述性名称。                             | 否                  |
+| Server Type                     | 提供者使用的协议：例如`pop3`，`pop3s`，`imap`，`imaps`。或表示服务器协议的另一个字符串。例如`file`用于只读邮件文件提供者。POP3和IMAP的实际提供者名称是`pop3`和`imap` | 是                  |
+| Server                          | 服务器的主机名或IP地址。请参阅下面的`file`协议。             | 是                  |
+| Port                            | 用于连接服务器的端口号（可选）                               | 否                  |
+| Username                        | 用户登录名                                                   | 否                  |
+| Password                        | 用户登录密码（注意在测试计划中没有加密存储）                 | 否                  |
+| Folder                          | 要使用的IMAP(S)文件夹。请参阅下面的`file`协议。              | 是，如果使用IMAP(S) |
+| Number of messages to retrieve  | 设置此项以检索所有或部分消息                                 | 是                  |
+| Fetch headers only              | 如果选中，则仅检索邮件信息头。                               | 是                  |
+| Delete messages from the server | 如果设置，将在检索后删除邮件                                 | 是                  |
+| Store the message using MIME    | 是否将邮件存储为MIME。如果选中，则整个原始消息存储在响应数据中；信息头不会存储，因为它们在数据中可用。如果未选中，则将邮件信息头存储为响应信息头。部分信息头（`Date`，`To`，`From`，`Subject`）存储在消息体中。 | 是                  |
+| Use no security features        | 表示与服务器的连接不使用任何安全协议。                       | 否                  |
+| Use SSL                         | 表示与服务器的连接必须使用SSL协议。                          | 否                  |
+| Use StartTLS                    | 表示与服务器的连接应尝试启动TLS协议。                        | 否                  |
+| Enforce StartTLS                | 如果服务器未启动TLS协议，则终止连接。                        | 否                  |
+| Trust All Certificates          | 选择后，它将接受独立于CA的所有证书。                         | 否                  |
+| Use local truststore            | 选择后，它只接受本地信任的证书。                             | 否                  |
+| Local truststore                | 包含受信任证书的文件路径。是针对当前目录的相对路径。<br/>如果查找证书失败，则到包含测试脚本（JMX文件）的目录中寻找。 | 否                  |
+
+> 您可以通过向user.properties添加[此处](https://javaee.github.io/javamail/docs/api/com/sun/mail/pop3/package-summary.html)描述的任何属性来传递与邮件相关的环境属性。
+
+消息存储为主采样器的子样本。多部分消息按部分存储为消息的子样本。
+
+**关于`file`协议的特殊处理：** 
+JavaMail中`file`提供可用于从文件中读取原始邮件。`server`字段用于指定路径的父`folder`。应使用名称`n.msg`存储单个消息文件，其中`n`是消息编号。或者，`server`字段可以是包含单个消息的文件的名称。此实现非常基础，主要用于调试目的。
+
+[【返回目录】]()
+
+### 测试活动（Flow Control Action）
+
+测试活动采样器是一个用于条件控制器的采样器。测试元件不是生成样本，而是暂停或停止所选目标。
+
+此采样器也可以与事务控制器结合使用，因为它允许包含暂停而无需生成样本。对于可变延迟，将暂停时间设置为零，并将定时器添加为子级。
+
+完成正在进行的任何样本后 ，“`stop`”操作将停止线程或测试。“`Stop Now`”操作将停止测试，而无需等待样本完成; 它会中断任何活动样本。如果某些线程未能在5秒的时间限制内停止，则将在GUI模式下显示一条消息。您可以使用`Stop`命令尝试停止线程，如果不能停止，可以手动退出JMeter。在CLI模式下，如果某些线程未能在5秒的时间限制内停止，JMeter将退出。
+
+> 可以使用JMeter属性`jmeterengine.threadstop.wait`更改等待时间。以毫秒为单位。
+
+![Screenshot for Control-Panel of Flow Control Action](http://jmeter.apache.org/images/screenshots/test_action.png)  
+*测试活动控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须         |
+| ----------------- | ------------------------------------------------------------ | :--------------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否               |
+| Target            | `Current Thread`/`All Threads`( `Pause` 和 `Go to next loop iteration`时忽略) | 是               |
+| Action            | `Pause`/`Stop`/`Stop Now`/`Go to next loop iteration`        | 是               |
+| Duration          | 暂停多长时间（毫秒）                                         | 是，如果选择暂停 |
+
+[【返回目录】]()
+
+### SMTP 取样器
+
+SMTP取样器可以使用SMTP/SMTPS协议发送邮件。可以为连接（SSL和TLS）以及用户身份验证设置安全协议。如果使用安全协议，则将对服务器证书进行验证。  
+有两种方法可以处理此验证：
+
+* `Trust all certificates`
+
+  这将忽略证书链验证
+
+* `Use a local truststore`
+
+  使用此选项，将根据本地信任库文件验证证书链。
+
+![Screenshot for Control-Panel of SMTP Sampler](http://jmeter.apache.org/images/screenshots/smtp_sampler.png)  
+*SMTP采样器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）                          | 描述                                                         | 是否必须              |
+| ------------------------------------------ | ------------------------------------------------------------ | :-------------------- |
+| 名称                                       | 树中显示的此采样器的描述性名称。                             | 否                    |
+| Server                                     | 服务器的主机名或IP地址。请参阅下面的`file`协议。             | 是                    |
+| Port                                       | 用于连接服务器的端口号。默认值为：SMTP=25，SSL=465，StartTLS=587 | 否                    |
+| Connection timeout                         | 连接超时时间，以毫秒为单位（套接字级别）。默认不设超时。     | 否                    |
+| Read timeout                               | 读取超时时间（以毫秒为单位）（套接字级别）。默认不设超时。   | 否                    |
+| Address From                               | 将出现在电子邮件中的发件人地址                               | 是                    |
+| Address To                                 | 目标电子邮件地址（多个值以“`;`” 分隔）                       | 是，除非指定了CC或BCC |
+| Address To CC                              | 抄送目标电子邮件地址（多个值以“`;`” 分隔）                   | 否                    |
+| Address To BCC                             | 密送目标电子邮件地址（多个值以“`;`” 分隔）                   | 否                    |
+| Address Reply-To                           | 备用回复地址（多个值以“`;`” 分隔）                           | 否                    |
+| Use Auth                                   | 指示SMTP服务器是否需要用户身份验证                           | 否                    |
+| Username                                   | 用户登录名                                                   | 否                    |
+| Password                                   | 用户登录密码（注意在测试计划中没有加密存储）                 | 否                    |
+| Use no security features                   | 表示与SMTP服务器的连接不使用任何安全协议。                   | 否                    |
+| Use SSL                                    | 表示与SMTP服务器的连接必须使用SSL协议。                      | 否                    |
+| Use StartTLS                               | 表示与SMTP服务器的连接应尝试启动TLS协议。                    | 否                    |
+| Enforce StartTLS                           | 如果服务器未启动TLS协议，则终止连接。                        | 否                    |
+| Trust All Certificates                     | 选择后，它将接受独立于CA的所有证书。                         | 否                    |
+| Use local truststore                       | 选择后，它只接受本地信任的证书。                             | 否                    |
+| Local truststore                           | 包含受信任证书的文件路径。是针对当前目录的相对路径。<br/>如果查找证书失败，则到包含测试脚本（JMX文件）的目录中寻找。 | 否                    |
+| Override System SSL/TLS Protocols          | 在握手时使用的自定义SSL/TLS协议，它是以空格分隔的列表，例如`TLSv1 TLSv1.1 TLSv1.2`。默认为所有支持的协议。 | 否                    |
+| Subject                                    | 电子邮件主题。                                               | 否                    |
+| Suppress Subject Header                    | 如果选中，则从发送的邮件中省略“`Subject:`”邮件头。这与发送空的“ `Subject:`”邮件头不同，尽管某些电子邮件客户端可能会以相同的方式显示它。 | 否                    |
+| Include timestamp in subject               | 包含主题行中的`System.currentTimemillis()`。                 | 否                    |
+| Add Header                                 | 可以使用此按钮定义其他邮件头。                               | 否                    |
+| Message                                    | 消息体。                                                     | 否                    |
+| Send plain body (i.e. not multipart/mixed) | 如果选中，则将主体作为简单消息发送，即不是`multipart/mixed`，如果可能的话。如果消息正文为空并且只有一个文件，则将文件内容作为消息体发送。<blockquote>注意：如果邮件正文不为空，并且至少有一个附加文件，则消息体将使用`multipart/mixed`发送。</blockquote> | 否                    |
+| Attach files                               | 要附加到邮件的文件                                           | 否                    |
+| Send .eml                                  | 如果设置，将发送`.eml`文件而不是`Subject`，`Message`和`Attach file(s)`字段中的条目 | 否                    |
+| Calculate message size                     | 计算消息大小并将其存储在样本结果中。                         | 否                    |
+| Enable debug logging?                      | 如果设置，则“`mail.debug`”属性设置为“`true`”                 | 否                    |
+
+[【返回目录】]()
+
+### OS进程取样器
+
+OS进程取样器是一个可用于在本地计算机上执行命令的采样器。  
+它应该允许执行可以从命令行运行的任何命令。  
+可以启用返回代码的验证，并可以指定预期的返回代码。
+
+注意OS shell通常提供命令行解析。这在操作系统之间有所不同，但通常shell会按照空格拆分参数。一些shell扩展了通配符文件名; 另一些没有。操作系统之间的引用机制也各不相同。采样器故意不进行任何解析或引用处理。必须以可执行文件期望的形式提供命令及其参数。这意味着采样器设置将无法在操作系统之间移植。
+
+许多操作系统都有一些内置命令，这些命令不作为单独的可执行文件提供。例如，Windows`DIR`命令是命令解释器（`CMD.EXE`）的一部分。这些内置函数不能作为独立程序运行，但必须作为参数提供给相应的命令解释器。
+
+例如，Windows命令行：`DIR C:\TEMP`需要指定如下：
+
+* 命令：
+
+  `CMD`
+
+* 参数1：
+
+  `/C`
+
+* 参数2：
+
+  `DIR`
+
+* 参数3：
+
+  `C:\TEMP`
+
+![Screenshot for Control-Panel of OS Process Sampler](http://jmeter.apache.org/images/screenshots/os_process_sampler.png)  
+*OS进程取样器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）        | 描述                                                         | 是否必须 |
+| ------------------------ | ------------------------------------------------------------ | :------- |
+| 名称                     | 树中显示的此采样器的描述性名称。                             | 否       |
+| 命令                     | 要执行的程序名称。                                           | 是       |
+| 工作目录                 | 执行命令的目录，默认为系统属性“`user.dir`”引用的文件夹       | 否       |
+| 命令行参数               | 传递给程序名称的参数。                                       | 否       |
+| 环境变量                 | 执行命令时添加到环境的键/值对。                              | 否       |
+| Standard input (stdin)   | 要从中获取输入的文件的名称（`STDIN`）。                      | 否       |
+| Standard output (stdout) | 标准输出（`STDOUT`）的输出文件名。如果省略，则捕获输出并作为响应数据返回。 | 否       |
+| Standard error (stderr)  | 标准错误（`STDERR`）的输出文件的名称。如果省略，则捕获输出并作为响应数据返回。 | 否       |
+| 检查返回码               | 如果选中，则采样器会将返回码与`预期返回代码`进行比较。       | 否       |
+| 预期返回代码             | 如果选中“`检查返回码` ” ，需要填写系统调用的预期返回代码。注意500在JMeter中用作错误指示器，因此您不应使用它。 | 否       |
+| Timeout                  | 命令超时时间（以毫秒为单位），默认为`0`，表示不设超时。如果命令执行完之前超时了，JMeter将尝试终止操作系统进程。 | 否       |
+
+[【返回目录】]()
+
+### MongoDB脚本（已弃用）
+
+略
+
+[【返回目录】]()
+
+## 18.2 逻辑控制器
+
+逻辑控制器决定采样器的处理顺序。
+
+### 简单控制器
+
+简单逻辑控制器允许您组织采样器和其他逻辑控制器。与其他逻辑控制器不同，该控制器不提供超出存储设备的功能。
+
+![Screenshot for Control-Panel of Simple Controller](http://jmeter.apache.org/images/screenshots/logic-controller/simple-controller.png)  
+*简单控制器的控制面板截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                             | 是否必须 |
+| ----------------- | -------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。 | 否       |
 
 
+> #### 使用简单控制器
+>
+> [下载](http://jmeter.apache.org/demos/SimpleTestPlan.jmx)此示例（参见图6）。在此示例中，我们创建了一个测试计划，该计划发送两个Ant HTTP请求和两个Log4J HTTP请求。我们通过把Ant和Log4J请求放在简单逻辑控制器中将它们分组。请记住，简单逻辑控制器对JMeter如何处理您添加到其中的控制器没有影响。因此，在此示例中，JMeter按以下顺序发送请求：Ant Home Page，Ant News Page，Log4J Home Page， Log4J History Page。
+>
+> 注意，File Reporter配置为将结果存储在当前目录中名为“`simple-test.dat`”的文件中。
+>
+> ![Figure 6 Simple Controller Example](http://jmeter.apache.org/images/screenshots/logic-controller/simple-example.png)  
+> *图6简单控制器示例*
+
+[【返回目录】]()
+
+### 循环控制器
+
+如果将生成器或逻辑控制器添加到循环控制器，除了为线程组指定的循环次数外，JMeter还将循环它们一定次数。例如，如果将一个HTTP请求添加到循环计数为2的循环控制器，并将线程组循环计数配置为3，则JMeter将发送总共`2 * 3 = 6`个 HTTP请求。
+
+> JMeter将循环索引公开为名为`__jm__<Name of your element>__idx`的变量。因此，例如，假设您的循环控制器名称为LC，那么您可以通过`$ {__ jm__LC__idx}`访问循环索引。索引从0开始
+
+![Screenshot for Control-Panel of Loop Controller](http://jmeter.apache.org/images/screenshots/logic-controller/loop-controller.png)
+
+*循环控制器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须             |
+| ----------------- | ------------------------------------------------------------ | :------------------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否                   |
+| 循环次数          | 每次测试执行时，将重复此控制器的子元素的次数。<br />值`-1`等同于选中`永远`。<br />**特殊情况：**嵌入在[线程组](http://jmeter.apache.org/usermanual/test_plan.html#thread_group)元件中的循环控制器的行为略有不同。除非设置为永久，否则在完成给定的迭代次数后，它将停止测试。<blockquote>在此字段中使用函数时，请注意可能会多次评估它。例如在循环控制器中使用`__Random`，循环控制器的每个子采样器都会将其评估为不同的值，并导致非预期的行为。</blockquote> | 是的，除非选中“永远” |
+
+> #### 循环示例
+>
+> [下载](http://jmeter.apache.org/demos/LoopTestPlan.jmx)此示例（参见图4）。在此示例中，我们创建了一个测试计划，该计划发送一个HTTP请求一次，并发送另一个HTTP请求五次。
+>
+> ![Figure 4 - Loop Controller Example](http://jmeter.apache.org/images/screenshots/logic-controller/loop-example.png)  
+> *图4 - 循环控制器示例*
+>
+> 我们为单个线程配置了线程组，并将循环次数配置为1。我们使用循环控制器，而不是让线程组控制循环。您可以看到我们向线程组添加了一个HTTP请求，并向循环控制器添加了另一个HTTP请求。我们将循环控制器循环次数配置为5。
+>
+> JMeter将按以下顺序发送请求：Home Page，News Page，News Page，News Page，News Page，和News Page。
+>
+> > 请注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
+
+[【返回目录】]()
+
+### 仅一次控制器
+
+仅一次逻辑控制器告诉JMeter每个线程只处理一次内部的控制器，并在进一步迭代测试计划期间执行其后的任何请求。
+
+仅一次控制器现在将始终在任何循环父控制器的第一次迭代期间执行。因此，如果将仅一次控制器放置在指定循环5次的循环控制器下，那么仅一次控制器将仅在第一次迭代时通过循环控制器执行（即每5次）。
+
+注意这意味着如果将它置于一个线程组（每个线程每次测试只运行一次），那么仅一次控制器仍然会像预期的那样运行，但现在用户可以更灵活地使用仅一次控制器。
+
+对于需要登录的测试，请考虑将登录请求放在此控制器中，因为每个线程只需登录一次即可建立会话。
+
+![Screenshot for Control-Panel of Once Only Controller](http://jmeter.apache.org/images/screenshots/logic-controller/once-only-controller.png)  
+*仅一次控制器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                             | 是否必须 |
+| ----------------- | -------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。 | 否       |
+
+> #### 仅一次示例
+>
+> [下载](http://jmeter.apache.org/demos/OnceOnlyTestPlan.jmx)此示例（参见图5）。在此示例中，我们创建了一个测试计划，其中包含两个发送HTTP请求的线程。每个线程向Home Page发送一次请求，然后向Bug Page发送三次请求。虽然我们将线程组配置为迭代三次，但每个JMeter线程只向Home Page发送一次请求，因为此请求位于仅一次控制器内。
+>
+> ![Figure 5. Once Only Controller Example](http://jmeter.apache.org/images/screenshots/logic-controller/once-only-example.png)
+>
+> *图5.仅一次控制器示例*
+>
+> 每个JMeter线程将按以下顺序发送请求：Home Page，Bug Page，Bug Page，Bug Page。
+>
+> 请注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
+
+[【返回目录】]()
+
+### 交替控制器
+
+
+
+**参数（Parameters）**
+
+| 属性（Attribute）        | 描述                                                         | 是否必须 |
+| ------------------------ | ------------------------------------------------------------ | :------- |
+| 名称                     | 树中显示的此采样器的描述性名称。                             | 否       |
+| 命令                     | 要执行的程序名称。                                           | 是       |
+| 工作目录                 | 执行命令的目录，默认为系统属性“`user.dir`”引用的文件夹       | 否       |
+| 命令行参数               | 传递给程序名称的参数。                                       | 否       |
+| 环境变量                 | 执行命令时添加到环境的键/值对。                              | 否       |
+| Standard input (stdin)   | 要从中获取输入的文件的名称（`STDIN`）。                      | 否       |
+| Standard output (stdout) | 标准输出（`STDOUT`）的输出文件名。如果省略，则捕获输出并作为响应数据返回。 | 否       |
+| Standard error (stderr)  | 标准错误（`STDERR`）的输出文件的名称。如果省略，则捕获输出并作为响应数据返回。 | 否       |
+| 检查返回码               | 如果选中，则采样器会将返回码与`预期返回代码`进行比较。       | 否       |
+| 预期返回代码             | 如果选中“`检查返回码` ” ，需要填写系统调用的预期返回代码。注意500在JMeter中用作错误指示器，因此您不应使用它。 | 否       |
+| Timeout                  | 命令超时时间（以毫秒为单位），默认为`0`，表示不设超时。如果命令执行完之前超时了，JMeter将尝试终止操作系统进程。</blockquote> | 否       |
+
+[【返回目录】]()
+
+**参数（Parameters）**
+
+| 属性（Attribute）        | 描述                                                         | 是否必须 |
+| ------------------------ | ------------------------------------------------------------ | :------- |
+| 名称                     | 树中显示的此采样器的描述性名称。                             | 否       |
+| 命令                     | 要执行的程序名称。                                           | 是       |
+| 工作目录                 | 执行命令的目录，默认为系统属性“`user.dir`”引用的文件夹       | 否       |
+| 命令行参数               | 传递给程序名称的参数。                                       | 否       |
+| 环境变量                 | 执行命令时添加到环境的键/值对。                              | 否       |
+| Standard input (stdin)   | 要从中获取输入的文件的名称（`STDIN`）。                      | 否       |
+| Standard output (stdout) | 标准输出（`STDOUT`）的输出文件名。如果省略，则捕获输出并作为响应数据返回。 | 否       |
+| Standard error (stderr)  | 标准错误（`STDERR`）的输出文件的名称。如果省略，则捕获输出并作为响应数据返回。 | 否       |
+| 检查返回码               | 如果选中，则采样器会将返回码与`预期返回代码`进行比较。       | 否       |
+| 预期返回代码             | 如果选中“`检查返回码` ” ，需要填写系统调用的预期返回代码。注意500在JMeter中用作错误指示器，因此您不应使用它。 | 否       |
+| Timeout                  | 命令超时时间（以毫秒为单位），默认为`0`，表示不设超时。如果命令执行完之前超时了，JMeter将尝试终止操作系统进程。</blockquote> | 否       |
 
 [【返回目录】]()
