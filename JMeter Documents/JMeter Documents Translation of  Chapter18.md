@@ -9,6 +9,8 @@
 
 <!-- /TOC -->
 
+英文文档地址：<http://jmeter.apache.org/usermanual/component_reference.html>
+
 ## 18 导言
 
 > 少数测试元件使用JMeter属性来控制它们的行为。这些属性通常在类被加载时解析。这通常发生在测试计划执行前，所以不能通过[__setProperty()](http://jmeter.apache.org/usermanual/functions.html#__setProperty)函数来改变设置。
@@ -1401,7 +1403,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的采样器
 >
 > JMeter将按以下顺序发送请求：Home Page，News Page，News Page，News Page，News Page，和News Page。
 >
-> > 请注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
+> > 注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
 
 [【返回目录】]()
 
@@ -1415,7 +1417,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的采样器
 
 对于需要登录的测试，请考虑将登录请求放在此控制器中，因为每个线程只需登录一次即可建立会话。
 
-![Screenshot for Control-Panel of Once Only Controller](http://jmeter.apache.org/images/screenshots/logic-controller/once-only-controller.png)  
+![Screenshot for Control-Panel of Once Only Controller](http://jmeter.apache.org/images/screenshots/logic-controller/once-only-controller.png)   
 *仅一次控制器控制面板的截图*
 
 **参数（Parameters）**
@@ -1428,52 +1430,207 @@ OS进程取样器是一个可用于在本地计算机上执行命令的采样器
 >
 > [下载](http://jmeter.apache.org/demos/OnceOnlyTestPlan.jmx)此示例（参见图5）。在此示例中，我们创建了一个测试计划，其中包含两个发送HTTP请求的线程。每个线程向Home Page发送一次请求，然后向Bug Page发送三次请求。虽然我们将线程组配置为迭代三次，但每个JMeter线程只向Home Page发送一次请求，因为此请求位于仅一次控制器内。
 >
-> ![Figure 5. Once Only Controller Example](http://jmeter.apache.org/images/screenshots/logic-controller/once-only-example.png)
->
+> ![Figure 5. Once Only Controller Example](http://jmeter.apache.org/images/screenshots/logic-controller/once-only-example.png)  
 > *图5.仅一次控制器示例*
 >
 > 每个JMeter线程将按以下顺序发送请求：Home Page，Bug Page，Bug Page，Bug Page。
 >
-> 请注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
+> 注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
 
 [【返回目录】]()
 
 ### 交替控制器
 
+如果将生成器或逻辑控制器添加到交替控制器，则JMeter每次循环迭代时将在每个其他控制器之间交替进行。
 
+![Screenshot for Control-Panel of Interleave Controller](http://jmeter.apache.org/images/screenshots/logic-controller/interleave-controller.png)  
+*交替控制器控制面板的截图*
 
 **参数（Parameters）**
 
-| 属性（Attribute）        | 描述                                                         | 是否必须 |
-| ------------------------ | ------------------------------------------------------------ | :------- |
-| 名称                     | 树中显示的此采样器的描述性名称。                             | 否       |
-| 命令                     | 要执行的程序名称。                                           | 是       |
-| 工作目录                 | 执行命令的目录，默认为系统属性“`user.dir`”引用的文件夹       | 否       |
-| 命令行参数               | 传递给程序名称的参数。                                       | 否       |
-| 环境变量                 | 执行命令时添加到环境的键/值对。                              | 否       |
-| Standard input (stdin)   | 要从中获取输入的文件的名称（`STDIN`）。                      | 否       |
-| Standard output (stdout) | 标准输出（`STDOUT`）的输出文件名。如果省略，则捕获输出并作为响应数据返回。 | 否       |
-| Standard error (stderr)  | 标准错误（`STDERR`）的输出文件的名称。如果省略，则捕获输出并作为响应数据返回。 | 否       |
-| 检查返回码               | 如果选中，则采样器会将返回码与`预期返回代码`进行比较。       | 否       |
-| 预期返回代码             | 如果选中“`检查返回码` ” ，需要填写系统调用的预期返回代码。注意500在JMeter中用作错误指示器，因此您不应使用它。 | 否       |
-| Timeout                  | 命令超时时间（以毫秒为单位），默认为`0`，表示不设超时。如果命令执行完之前超时了，JMeter将尝试终止操作系统进程。</blockquote> | 否       |
+| 属性（Attribute）         | 描述                                                         | 是否必须 |
+| ------------------------- | ------------------------------------------------------------ | :------- |
+| 名称                      | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块            | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。 | 否       |
+| Interleave across threads | 如果选中，交替控制器每次循环迭代时将跨所有线程在每个子控制器之间交替进行。例如在具有4个线程和3个子控制器的配置中，在第一次迭代时线程1将运行第一个子节点，线程2第二个子节点，线程3第三个子线程，线程4第一个子节点，在下一次迭代中，每个线程将运行下一个子控制器 | 否       |
+
+> #### 简单交替示例
+>
+> [下载](http://jmeter.apache.org/demos/InterleaveTestPlan.jmx)此示例（参见图1）。在此示例中，我们将线程组配置为具有两个线程且循环次数为5，每个线程总共10个请求。请参阅下表，了解JMeter发送HTTP请求的顺序。
+>
+> ![Figure 1 - Interleave Controller Example 1](http://jmeter.apache.org/images/screenshots/logic-controller/interleave.png)  
+> *图1 - 交替控制器示例1*
+>
+> | 循环迭代 | 每个JMeter线程发送这些HTTP请求                               |
+> | :------- | :----------------------------------------------------------- |
+> | 1        | News Page                                                    |
+> | 1        | Log Page                                                     |
+> | 2        | FAQ Page                                                     |
+> | 2        | Log Page                                                     |
+> | 3        | Gump Page                                                    |
+> | 3        | Log Page                                                     |
+> | 4        | 因为控制器中没有更多请求，JMeter重新开始并发送第一个HTTP请求，即News Page |
+> | 4        | Log Page                                                     |
+> | 5        | FAQ Page                                                     |
+> | 5        | Log Page                                                     |
+
+> #### 有用的交替示例
+>
+> [下载](http://jmeter.apache.org/demos/InterleaveTestPlan2.jmx)另一个示例（参见图2）。在此示例中，我们将线程组配置为具有单个线程且循环次数为8。请注意，测试计划有一个外部交替控制器，里面有两个交替控制器。
+>
+> ![Figure 2 - Interleave Controller Example 2 ](http://jmeter.apache.org/images/screenshots/logic-controller/interleave2.png)
+>
+> *图2 - 交替控制器示例2*
+>
+> 外部交替控制器在两个内部控制器之间交替。然后，每个内部交替控制器在每个HTTP请求之间交替。每个JMeter线程将按以下顺序发送请求： Home Page，Interleaved，Bug Page，Interleaved，CVS Page，Interleaved，和FAQ Page，Interleaved。
+>
+> 注意，File Reporter配置为将结果存储在当前目录中名为“`interleave-test2.dat`”的文件中。
+>
+> ![         Figure 3 - Interleave Controller Example 3 ](http://jmeter.apache.org/images/screenshots/logic-controller/interleave3.png)
+>
+> *图3 - 交替控制器示例3*
+>
+> 如果主交替控制器下的两个交替控制器是简单控制器，那么顺序将是：Home Page，CVS Page，Interleaved，Bug Page，FAQ Page，Interleaved。
+>
+> 但是，如果在主交替控制器上选中了“`忽略子控制器块`”，那么顺序将是：Home Page，Interleaved，Bug Page，Interleaved，CVS Page，Interleaved，和FAQ Page，Interleaved。
 
 [【返回目录】]()
 
+### 随机控制器
+
+随机逻辑控制器的作用类似于交替控制器，不同之处在于它通过其子控制器和采样器时不是按顺序排列，而是在每次通过时随机选取一个。
+
+> 多个控制器之间的交互可以产生复杂的行为。随机控制器尤其如此。在假设任何给定的交互给出的结果之前进行实验
+
+![Screenshot for Control-Panel of Random Controller](http://jmeter.apache.org/images/screenshots/logic-controller/random-controller.png)
+
+*随机控制器控制面板的截图*
+
 **参数（Parameters）**
 
-| 属性（Attribute）        | 描述                                                         | 是否必须 |
-| ------------------------ | ------------------------------------------------------------ | :------- |
-| 名称                     | 树中显示的此采样器的描述性名称。                             | 否       |
-| 命令                     | 要执行的程序名称。                                           | 是       |
-| 工作目录                 | 执行命令的目录，默认为系统属性“`user.dir`”引用的文件夹       | 否       |
-| 命令行参数               | 传递给程序名称的参数。                                       | 否       |
-| 环境变量                 | 执行命令时添加到环境的键/值对。                              | 否       |
-| Standard input (stdin)   | 要从中获取输入的文件的名称（`STDIN`）。                      | 否       |
-| Standard output (stdout) | 标准输出（`STDOUT`）的输出文件名。如果省略，则捕获输出并作为响应数据返回。 | 否       |
-| Standard error (stderr)  | 标准错误（`STDERR`）的输出文件的名称。如果省略，则捕获输出并作为响应数据返回。 | 否       |
-| 检查返回码               | 如果选中，则采样器会将返回码与`预期返回代码`进行比较。       | 否       |
-| 预期返回代码             | 如果选中“`检查返回码` ” ，需要填写系统调用的预期返回代码。注意500在JMeter中用作错误指示器，因此您不应使用它。 | 否       |
-| Timeout                  | 命令超时时间（以毫秒为单位），默认为`0`，表示不设超时。如果命令执行完之前超时了，JMeter将尝试终止操作系统进程。</blockquote> | 否       |
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。 | 否       |
+
+[【返回目录】]()
+
+### 随机顺序控制器
+
+随机顺序控制器很像简单控制器，因为它的每个子元件最多只执行一次，但节点的执行顺序是随机的。
+
+![Screenshot for Control-Panel of Random Order Controller](http://jmeter.apache.org/images/screenshots/randomordercontroller.png)
+
+*随机顺序控制器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                             | 是否必须 |
+| ----------------- | -------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。 | 否       |
+
+[【返回目录】]()
+
+### 吞吐量控制器
+
+吞吐量控制器允许用户控制执行的频率。有两种模式：
+
+- Percent executions
+- Total executions
+
+`Percent executions`
+
+  使控制器对测试计划执行一定比例的迭代。
+
+`Total executions`
+
+  使控制器在执行了一定数量的执行后停止执行。
+
+与仅一次控制器一样，当父循环控制器重新启动时，此设置将被重置。
+
+> 该控制器的命名不太好，因为它不控制吞吐量。有关可用于调整吞吐量的元件，请参阅[常数吞吐量定时器](http://jmeter.apache.org/usermanual/component_reference.html#Constant_Throughput_Timer)。 
+
+![Screenshot for Control-Panel of Throughput Controller](http://jmeter.apache.org/images/screenshots/throughput_controller.png)
+
+*吞吐量控制器控制面板的截图*
+
+> 当与其他控制器结合使用时，吞吐量控制器会产生非常复杂的行为 - 特别是父项是交替或随机控制器的情况（也非常有用）。
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 执行方式          | 控制器是以Percent executions模式还是以Total executions模式运行。 | 是       |
+| 吞吐量            | 一个数字。对于Percent executions模式，`0`到`100`之间的数字表示控制器执行的次数百分比。“`50`”表示控制器将在测试计划的一半迭代期间执行。对于Total executions模式，该数字表示控制器将执行的总次数。 | 是       |
+| Per User          | 如果选中，则每个用户将使控制器计算是否应在每个用户（每个线程）的基础上执行。如果未选中，则所有用户的计算都将是全局的。例如，如果使用Total executions模式，并取消选中“`per user`”，则为吞吐量指定的数字将是执行的总执行次数。如果选中“`per user`”，那么执行的总数将是用户数量乘以吞吐量的数量。 | 否       |
+
+[【返回目录】]()
+
+### Runtime控制器
+
+
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+
+[【返回目录】]()
+
+### 随机顺序控制器
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+
+[【返回目录】]()
+
+### 随机顺序控制器
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+
+[【返回目录】]()
+
+### 随机顺序控制器
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+
+[【返回目录】]()
+
+### 随机顺序控制器
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+
+[【返回目录】]()
+
+### 随机顺序控制器
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                         | 是否必须 |
+| ----------------- | ------------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
+| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
 
 [【返回目录】]()
