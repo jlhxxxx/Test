@@ -1569,51 +1569,181 @@ OS进程取样器是一个可用于在本地计算机上执行命令的采样器
 
 ### Runtime控制器
 
+Runtime控制器控制其子节点运行多长时间。控制器将运行其子项，直到超出配置的`Runtime(s)`。
 
+![Screenshot for Control-Panel of Runtime Controller](http://jmeter.apache.org/images/screenshots/runtimecontroller.png)
 
-**参数（Parameters）**
-
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
-
-[【返回目录】]()
-
-### 随机顺序控制器
+*Runtime控制器控制面板的屏幕截图*
 
 **参数（Parameters）**
 
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+| 属性（Attribute） | 描述                                               | 是否必须 |
+| ----------------- | -------------------------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称，同时用于命名事务。 | 是       |
+| Runtime (seconds) | 期望的运行时间。0表示不运行。                      | 是       |
 
 [【返回目录】]()
 
-### 随机顺序控制器
+### 如果（If）控制器
+
+If控制器允许用户控制其下方的测试元件（其子元件）是否运行。
+
+默认情况下，条件仅在初始条目时计算一次，但您可以选择对控制器中包含的每个可运行元件进行计算。
+
+If控制器将在内部使用javascript来计算条件，但这会导致性能下降。
+
+![If Controller using javascript](http://jmeter.apache.org/images/screenshots/if_controller_javascript.png)
+
+*If控制器使用javascript*
+
+更好的选项（默认选项）是使用`Interpret Condition as Variable Expression?`，然后在条件字段中，您有2个选项：
+
+- 选项1：使用包含`true`或`false`的变量
+
+    > 如果要测试最后一个样本是否成功，可以使用`${JMeterThread.last_sample_ok}`
+    >
+    > ![If Controller using Variable](http://jmeter.apache.org/images/screenshots/if_controller_variable.png)
+    >
+    > *If控制器使用变量*
+
+- 选项2：使用函数（建议使用`${__jexl3()}`）来计算表达式，表达式必须返回`true`或`false`
+
+    ![If Controller using expression](http://jmeter.apache.org/images/screenshots/if_controller_expression.png)
+
+    *If控制器使用表达式*
+
+例如，以前可以使用条件：`${__jexl3(${VAR} == 23)}`并将其评估为`true`/`false`，然后将结果传递给JavaScript，然后返回`true`/`false`。如果选择了Variable Expression选项，则会计算表达式并与“`true`” 进行比较，而无需使用JavaScript。
+
+> 要测试变量是否未定义（或为null），请执行以下操作，假设变量名为`myVar`，表达式如下：
+>
+> ```
+> "${myVar}" == "\${myVar}"
+> ```
+>
+> 或使用：
+>
+> ```
+> "${myVar}" != "\${myVar}"
+> ```
+>
+> 测试变量是否已定义且不为null。
+
+![Screenshot for Control-Panel of If Controller](http://jmeter.apache.org/images/screenshots/if_controller_expression.png)
+
+*IF控制器控制面板的截图*
 
 **参数（Parameters）**
 
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+| 属性（Attribute）                           | 描述                                                         | 是否必须 |
+| ------------------------------------------- | ------------------------------------------------------------ | :------- |
+| 名称                                        | 树中显示的此采样器的描述性名称。                             | 否       |
+| Condition (default JavaScript)              | 默认情况下，条件按**JavaScript**代码解析并返回“`true`”或“`false`”，但这可以被覆盖（见下文） | 是       |
+| Interpret Condition as Variable Expression? | 如果选择此选项，则条件必须是计算结果为“`true`”的表达式（忽略大小写）。例如，`${FOUND}`或`${__jexl3(${VAR} > 100)}`。与JavaScript情况不同，仅检查条件是否匹配“`true`”（忽略大小写）。<blockquote>对于性能测试，建议在条件中使用[__jexl3](http://jmeter.apache.org/usermanual/functions.html#__jexl3)或[__groovy](http://jmeter.apache.org/usermanual/functions.html#__groovy)函数</blockquote> | 是       |
+| Evaluate for all children                   | 是否应对所有子元件进行评估？如果未选中，则仅在输入时评估条件。 | 是       |
+
+> #### 示例（JavaScript）
+>
+> - `${COUNT} < 10`
+> - `"${VAR}" == "abcd"`
+>
+> 如果解释代码时出错，则假定条件判断为`false`，并在`jmeter.log`中记录消息。
+>
+> >   注意，性能测试中建议避免使用JavaScript模式。
+> >
+> > 使用[__groovy](http://jmeter.apache.org/usermanual/functions.html#__groovy)时请注意不要在字符串中使用变量替换，因为使用更改脚本的变量会无法缓存。应该使用`vars.get("myVar")`获取变量**。** 请参阅下面的Groovy示例。  
+
+> #### 示例（变量表达式）
+>
+> - `${__groovy(vars.get("myVar") != "Invalid" )}` (Groovy检查myVar是否不等于Invalid)
+> - `${__groovy(vars.get("myInt").toInteger() <=4 )}` (Groovy 检查myInt是否小于或等于4)
+> - `${__groovy(vars.get("myMissing") != null )}` (Groovy 检查myMissing变量是否没有设置)
+> - `${__jexl3(${COUNT} < 10)}`
+> - `${RESULT}`
+> - `${JMeterThread.last_sample_ok}` (检查最后一个样本是否成功)
 
 [【返回目录】]()
 
-### 随机顺序控制器
+### While控制器
+
+While控制器运行其子项，直到条件为“`false`”停止。
+
+> JMeter将循环索引公开为名为`__jm__<Name of your element>__idx`的变量。因此，例如，如果您的While控制器名为WC，那么您可以通过`${__jm__WC__idx}`访问循环索引。索引从0开始
+
+可能的条件值：
+
+- 空白 - 当循环中的最后一个样本失败时退出循环
+- `LAST` - 当循环中的最后一个样本失败时退出循环。如果循环之前的最后一个样本失败，不进入循环。
+- 其他 - 当条件等于字符串“`false`” 时退出（或不进入）循环
+
+> 条件可以是最终计算为字符串“`false`”的任何变量或函数。这允许根据需要使用[__jexl3](http://jmeter.apache.org/usermanual/functions.html#__jexl3)，[__groovy](http://jmeter.apache.org/usermanual/functions.html#__groovy)函数，属性或变量。
+
+> 请注意，条件被评估两次，一次是在开始采样子项之前，一次是在子项采样结束时，因此将非幂等函数放入Condition（如[__counter](http://jmeter.apache.org/usermanual/functions.html#__counter)）可能会产生问题。
+
+例如：
+
+- `${VAR}` - 其他测试元件将`VAR` 设置为false
+- `${__jexl3(${C}==10)}`
+- `${__jexl3("${VAR2}"=="abcd")}`
+- `${_P(property)}` - 其他某个地方将属性设置为"`false`"
+
+![Screenshot for Control-Panel of While Controller](http://jmeter.apache.org/images/screenshots/whilecontroller.png)
+
+*While控制器控制面板的截图*
 
 **参数（Parameters）**
 
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 否       |
+| 属性（Attribute） | 描述                                               | 是否必须 |
+| ----------------- | -------------------------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。同时用于命名事务。 | 否       |
+| Condition         | 空白，`LAST`，或变量/函数                          | 否       |
 
 [【返回目录】]()
 
-### 随机顺序控制器
+### Switch控制器
+
+Switch控制器的作用类似于[交替控制器](http://jmeter.apache.org/usermanual/component_reference.html#Interleave_Controller) ，它在每次迭代时运行一个子元件，但控制器运行顺序不是按排列顺序，而是按switch value定义。
+
+> switch value也可以是名称。
+
+如果switch value超出范围，它将运行第0个元件，这是数字情况的默认值。如果值为空字符串，它也是运行第0个元件。
+
+如果该值为非数字（且非空），则Switch控制器将查找具有相同名称的元件（要考虑大小写）。如果没有匹配的名称，则选择名为“`default`”（要考虑大小写）的元件。如果没有默认值，则不选择任何元件，并且控制器不会进行任何操作。
+
+![Screenshot for Control-Panel of Switch Controller](http://jmeter.apache.org/images/screenshots/switchcontroller.png)
+
+*Switch控制器控制面板的截图*  
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                       | 是否必须 |
+| ----------------- | ---------------------------------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                           | 否       |
+| *Switch Value*    | 要调用的从属元件的值（或名称）。元件从0开始编号。默认值为0 | 否       |
+
+[【返回目录】]()
+
+### ForEach控制器
+
+ForEach控制器循环遍历一组相关变量的值。将采样器（或控制器）添加到ForEach控制器时，每个采样（或控制器）执行一次或多次，在每个循环期间变量会有新值。输入应包含多个变量，每个变量都用下划线和数字扩展。每个这样的变量都必须有一个值。因此，例如当输入变量的名称为`inputVar`时，应该定义以下变量：
+
+- `inputVar_1 = wendy`
+- `inputVar_2 = charles`
+- `inputVar_3 = peter`
+- `inputVar_4 = john`
+
+注意：“`_`”分隔符现在是可选的。
+
+当返回变量以“`returnVar`” 给出时，ForEach控制器下的采样器和控制器的集合将连续执行`4`次，返回变量具有相应的上述值，并且可以在采样器中使用。
+
+> JMeter将循环索引公开为名为`__jm__<Name of your element>__idx`的变量。因此，例如，如果您的循环控制器名为FEC，那么您可以通过`${__jm__FEC__idx}`访问循环索引。索引从0开始
+
+它特别适合与正则表达式后处理器一起运行。这可以从先前请求的结果数据中“创建”必要的输入变量。通过省略“`_`”分隔符，可以使用ForEach控制器通过输入变量`refName_g`循环遍历组，并且还可以使用形式为**refName _ $ {C**的输入变量循环遍历所有匹配中的所有组。**} _g**，其中**C**是计数器变量。
+
+> 如果**inputVar_1**为**null**，ForEach控制器不会运行任何样本。如果正则表达式没有返回匹配，则会出现这种情况。
+
+![Screenshot for Control-Panel of ForEach Controller](http://jmeter.apache.org/images/screenshots/logic-controller/foreach-controller.png)
+
+*ForEach Controller控制面板的屏幕截图*
 
 **参数（Parameters）**
 
