@@ -2048,7 +2048,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 
 | **渲染**             | **描述**                                                     |
 | :------------------- | :----------------------------------------------------------- |
-| `CSS/JQuery Tester`  | *CSS/JQuery测试*只适用于文本响应。它在上面板中显示纯文本。“`测试`”按钮允许用户将CSS/JQuery表达式应用于上面板，结果将显示在下面板中。<br />CSS / JQuery表达式引擎可以是JSoup或Jodd，二者实现的语法略有不同。 <br />例如，应用于当前JMeter函数页面的具有`href`属性的选择器`a[class=sectionlink]`将给出以下输出：<br /><pre class="source">Match count: 74<br />Match[1]=#functions</code></pre> |
+| `CSS/JQuery Tester`  | *CSS/JQuery测试*只适用于文本响应。它在上面板中显示纯文本。“`测试`”按钮允许用户将CSS/JQuery表达式应用于上面板，结果将显示在下面板中。<br />CSS / JQuery表达式引擎可以是JSoup或Jodd，二者实现的语法略有不同。 <br />例如，应用于当前JMeter函数页面的具有`href`属性的选择器`a[class=sectionlink]`将给出以下输出：<pre class="source">Match count: 74<br />Match[1]=#functions</pre> |
 | `Document`           | 该*文档视图*将显示来自不同类型，如Microsoft Office（Word，Excel和PowerPoint中97-2003，2007-2010（OPENXML），Apache的OpenOffice的（作家，钙，留下深刻的印象），HTML，gzip的，JAR / ZIP文件中提取文本文件（内容列表），以及关于“多媒体”文件的一些元数据，如mp3，mp4，flv等。支持格式的完整列表可在[Apache Tika格式页面上找到。](http://tika.apache.org/1.2/formats.html)对**Document视图的**要求是下载[ Apache Tika二进制包](http://tika.apache.org/download.html)（**tika-app-xxjar**）并将其放在**JMETER_HOME / lib**目录中。如果文档大于10 MB，则不会显示。要更改此限制，请设置JMeter属性**document.max_size**（unit is byte）或设置为**0**以删除限制。 |
 | **HTML**             | 的*HTML视图*试图呈现响应为HTML。渲染的HTML很可能与任何Web浏览器中的视图相比较差; 但是，它确实提供了快速近似，有助于初始结果评估。 不下载图像，样式表等。 |
 | **HTML（下载资源）** | 如果选择了*HTML（下载资源）视图*选项，则渲染器可以下载HTML代码引用的图像，样式表等。 |
