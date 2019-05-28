@@ -1825,70 +1825,241 @@ Test Plan / Protocol: JDBC / Control / Interleave Controller (Module1)
 
 Include控制器旨在使用外部JMX文件。要使用它，在测试计划下创建一个测试片段，并在其下面添加任何所需的采样器，控制器等。然后保存测试计划。该文件现在可以作为其他测试计划的一部分包含在内。
 
-为方便起见，还可以在外部JMX文件中添加[线程组](http://jmeter.apache.org/usermanual/component_reference.html#Thread_Group)以进行调试。甲[模块控制器](http://jmeter.apache.org/usermanual/component_reference.html#Module_Controller)可用于引用试验片段。该[线程组](http://jmeter.apache.org/usermanual/component_reference.html#Thread_Group)在包括过程将被忽略。
+为方便起见，还可以在外部JMX文件中添加[线程组](http://jmeter.apache.org/usermanual/component_reference.html#Thread_Group)以进行调试。[模块控制器](http://jmeter.apache.org/usermanual/component_reference.html#Module_Controller)可用于引用试验片段。该[线程组](http://jmeter.apache.org/usermanual/component_reference.html#Thread_Group)在内部进程中将被忽略。
 
 如果测试使用Cookie管理器或用户定义的变量，则应将这些变量放在顶级测试计划中，而不是包含的文件中，否则无法保证它们正常工作。
 
-此元素不支持文件名字段中的变量/函数。
-但是，如果定义了属性**includecontroller.prefix**，则内容将用于为路径名添加前缀。
+> 此元素不支持文件名字段中的变量/函数。  
+> 但是，如果定义了属性`includecontroller.prefix`，则内容将用于路径名称的前缀。
 
-使用Include Controller并包含相同的JMX文件时，请确保以不同方式命名Include Controller以避免遇到已知问题[ Bug 50898](https://bz.apache.org/bugzilla/show_bug.cgi?id=50898)。
+> 使用Include控制器并包含相同的JMX文件时，请确保Include控制器命名不同以避免遇到已知问题[Bug 50898](https://bz.apache.org/bugzilla/show_bug.cgi?id=50898)。
 
-如果在**前缀** + **文件名**给定的位置找不到该**文件**，则控制器会尝试打开相对于JMX启动目录的**文件名**。
+如果在`prefix`+`Filename`给定的位置找不到该文件，则控制器会尝试打开相对于JMX启动目录下的`Filename`。
+
+![Screenshot for Control-Panel of Include Controller](http://jmeter.apache.org/images/screenshots/includecontroller.png)
+
+*Include控制器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                             | 是否必须 |
+| ----------------- | -------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。 | 否       |
+| 文件名            | 要包含的文件。                   | 是       |
+
+[【返回目录】]()
+
+### 事务控制器
+
+事务控制器生成一个额外的样本，用于测量执行嵌套测试元件所花费的总时间。
+
+> 注意：如果选中“`Include duration of timer and pre-post processors in generated sample`”复选框，则时间包括控制器范围内的所有处理，而不仅仅是样本。
+
+有两种操作模式：
+
+- 嵌套样本后添加额外的样本
+- 添加额外的样本作为嵌套样本的父级
+
+生成的采样时间包括嵌套采样器的所有时间，默认情况下（从2.11开始）不包括定时器和前置/后置处理器执行时间，除非选中“`Include duration of timer and pre-post processors in generated sample`”复选框。根据时钟精度，它可能略长于各个采样器加定时器的总和。在控制器记录开始时间之后但在第一个样本开始之前，时钟开始滴答。在最后也一样。
+
+仅当所有子样本都成功时，生成的样本才被视为成功。
+
+在父模式下，仍可以在查看树监听器中看到各个样本，但不再在其他监听器中显示为单独的条目。此外，子样本不会出现在CSV日志文件中，但可以保存到XML文件中。
+
+> 在父模式下，可以将断言（等）添加到事务控制器中。但是，默认情况下，它们将同时应用于单个样本和整个事务样本。要限制断言的范围，请使用简单控制器来包含样本，并将断言添加到简单控制器。父模式控制器当前不正确支持任何类型的嵌套事务控制器。
+
+![Screenshot for Control-Panel of Transaction Controller](http://jmeter.apache.org/images/screenshots/transactioncontroller.png)
+
+*事务控制器控制面板的截图*
+
+**参数（Parameters）**
+
+| 属性（Attribute）                                            | 描述                                                         | 是否必须 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | :------- |
+| 名称                                                         | 树中显示的此采样器的描述性名称，用于命名事务。               | 是       |
+| Generate Parent Sample                                       | 如果选中，则生成样本作为其他样本的父项，否则样本将作为独立样本生成。 | 是       |
+| Include duration of timer and pre-post processors in generated sample | 是否在生成的样本中包括定时器，前置和后置处理延迟。默认值为`false` | 是       |
+
+[【返回目录】]()
+
+### 录制控制器
+
+记录控制器是指示代理服务器应录制样本位置的占位符。在测试运行期间，它没有任何效果，类似于简单控制器。但在使用[HTTP代理服务器](http://jmeter.apache.org/usermanual/component_reference.html#HTTP(S)_Test_Script_Recorder)录制时，所有录制的样本将默认保存在录制控制器下。
+
+![Screenshot for Control-Panel of Recording Controller](http://jmeter.apache.org/images/screenshots/logic-controller/recording-controller.png)
+
+*录制控制器控制面板的截图*  
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                             | 是否必须 |
+| ----------------- | -------------------------------- | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。 | 否       |
+
+[【返回目录】]()
+
+### 临界部分控制器
+
+临界部分控制器确保其子元件（采样器/控制器等）将仅由一个线程执行，在执行控制器的子节点之前将执行命名锁定。
+
+![Screenshot for Control-Panel of Critical Section Controller](http://jmeter.apache.org/images/screenshots/logic-controller/critical-section-controller.png)
+
+*临界部分控制器控制面板的截图*
+
+下图显示了使用临界部分控制器的示例，如下图所示2个临界部分控制器用来确保：
+
+- `DS2-${__threadNum}`一次只能由一个线程执行
+
+- `DS4-${__threadNum}`一次只能由一个线程执行
+
+    ![Test Plan using Critical Section Controller](http://jmeter.apache.org/images/screenshots/logic-controller/critical-section-controller-tp.png)
+
+    *使用临界部分控制器的测试计划*
+
+**参数（Parameters）**
+
+| 属性（Attribute） | 描述                                                   | 是否必须 |
+| ----------------- | ------------------------------------------------------ | :------- |
+| 名称              | 树中显示的此采样器的描述性名称。                       | 否       |
+| 锁名称            | 锁定将由控制器执行，确保为不相关的部分使用不同的锁名称 | 是       |
+
+> 临界部分控制器仅在一个JVM中获取锁，因此如果使用分布式测试，请确保您的用例不依赖于所有JVM阻塞的所有线程。
+
+[【返回目录】]()
+
+## 18.3 监听器
+
+除了“监听”测试结果之外，大多数监听器扮演多种角色。它们还提供查看，保存和读取已保存测试结果的方法。
+
+注意，监听器在找到它们的范围的末尾处理。
+
+测试结果的保存和读取是通用。各种监听器都有一个面板，用户可以指定要写入（或读取）结果的文件。默认情况下，结果存储为XML文件，通常带有“`.jtl`”扩展名。存储为CSV是最有效的选项，但不如XML（另一个可用选项）详细。
+
+**监听器不处理在CLI模式下的采样数据，但是，如果配置了输出文件，原始数据将被保存。** 为了分析CLI运行生成的数据，您需要将文件加载到相应的监听器中。
+
+> 要读取现有结果并显示它们，请使用文件面板的浏览按钮打开该文件。
+
+如果要在加载新文件之前清除所有当前数据，请在加载文件之前使用菜单项 *“运行”*  →*“清除”* （`Ctrl`+`Shift`+`E`） 或*“运行”* →“*清除全部”* （`Ctrl`+`E`） 。
+
+可以从XML或CSV格式文件中读取结果。从CSV结果文件中读取时，标题（如果存在）用于确定存在哪些字段。 **为了正确解释无标题的CSV文件，必须在`jmeter.properties`中设置相应的属性。**
+
+> JMeter编写的XML文件在头文件中声明版本1.0，而实际文件使用1.1规则序列化。（这样做是出于历史兼容性原因；请参阅[Bug 59973](https://bz.apache.org/bugzilla/show_bug.cgi?id=59973)和[Bug 58679](https://bz.apache.org/bugzilla/show_bug.cgi?id=58679)）这会导致严格的XML解析器失败。考虑使用非严格的XML解析器来读取JTL文件。
+
+> 文件名可以包含函数and/or变量引用。但是，变量引用在客户端 - 服务器模式下不起作用（函数可以正常工作）。这是因为文件是在客户端上创建的，并且客户端不在本地运行测试，因此不会设置变量。
+
+**如果有大量样本，监听器会使用大量内存。** 目前大多数监听器都在其范围内拷贝每个样本的副本，下列监听器除外：
+
+- 简单数据写入器
+- BeanShell/JSR223监听器
+- 邮件观察器
+- 汇总报告
+
+以下监听器不再需要保存每个样本的副本。相反，聚合具有相同经过时间的样本。现在需要更少的内存，特别是如果大多数样本只需要一两秒钟。
+
+- 聚合报告
+- 汇总图
+
+要最小化所需的内存量，请使用简单数据写入器，并使用CSV格式。
+
+> JMeter变量可以保存到输出文件中。这只能使用属性指定。有关详细信息， 请参阅[监听器样本变量](http://jmeter.apache.org/usermanual/listeners.html#sample_variables)
+
+有关设置要保存的默认项的完整详细信息，请参阅[监听器默认配置](http://jmeter.apache.org/usermanual/listeners.html#defaults)文档。有关输出文件内容的详细信息，请参阅[CSV日志](http://jmeter.apache.org/usermanual/listeners.html#csvlogformat)格式或[XML日志](http://jmeter.apache.org/usermanual/listeners.html#xmlformat2.1)格式。
+
+> `jmeter.properties`中的条目用于定义默认值；可以使用“配置”按钮为单个侦听器重写这些内容，如下所示。`jmeter.properties`中的设置也适用于使用命令行标志`-l`添加的监听器。
+
+下图显示了结果文件配置面板的示例
+
+![Result file configuration panel](http://jmeter.apache.org/images/screenshots/simpledatawriter.png)
+
+*结果文件配置面板*
 
 **参数（Parameters）**
 
 | 属性（Attribute） | 描述                                                         | 是否必须 |
 | ----------------- | ------------------------------------------------------------ | :------- |
 | 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| Module to Run     | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 是       |
+| 文件名            | 包含样本结果的文件的名称。可以使用相对路径名或绝对路径名指定文件名。相对路径相对于当前工作目录（默认为`bin/`目录）进行解析。JMeter还支持相对于包含当前测试计划（JMX文件）的目录的路径。如果路径名以“`〜/`”（或JMeter`jmeter.save.saveservice.base_prefix`属性中的任何内容）开头，则假定路径相对于JMX文件位置。 | 否       |
+| 浏览...           | 文件浏览按钮                                                 | 否       |
+| 仅错误日志        | 选择此选项可以写入/只读错误的结果                            | 否       |
+| 仅成功日志        | 选择此选项可以写入/读取没有错误的结果。如果未选择“`仅错误日志`”或“`仅成功日志`”，则处理所有结果。 | 否       |
+| 配置              | 配置按钮，见下文                                             | 否       |
+
+#### 样本结果保存配置
+
+侦听器可以通过配置弹窗将不同的选项保存到结果日志文件（JTL），如下所示。默认值的定义如[监听器默认配置](http://jmeter.apache.org/usermanual/listeners.html#defaults)文档中所述。后面带有（`CSV`）的选项仅适用于CSV格式；带有（`XML`）的选项仅适用于XML格式。目前CSV格式无法用于保存包含换行符的任何选项。
+
+注意，cookie、方法和查询字符串将保存为“`Sampler Data`”选项的一部分。
+
+![Screenshot for Control-Panel of Sample Result Save Configuration](http://jmeter.apache.org/images/screenshots/sample_result_config.png)
+
+*样本结果保存配置的控制面板的截图*
 
 [【返回目录】]()
 
-**参数（Parameters）**
+### 图形结果
 
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| Module to Run     | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 是       |
+> 在压力测试期间不得使用图形结果，因为它消耗了大量资源（内存和CPU）。仅用于功能测试或测试计划调试和验证期间。
 
-[【返回目录】]()
+图形结果监听器生成一个简单的图形，用于绘制所有采样时间。沿着图的底部，以毫秒为单位显示当前样本（黑色），所有样本的当前平均值（蓝色），当前标准偏差（红色）和当前吞吐率（绿色）。
 
-**参数（Parameters）**
+吞吐量数字表示服务器处理的实际请求数/分钟数。此计算包括您添加到测试中的任何延迟以及JMeter自身的内部处理时间。像这样进行计算的优点是这个数字代表了一些真实的东西 - 你的服务器实际上每分钟处理了很多请求，你可以增加线程数和/或减少延迟来发现服务器的最大吞吐量。然而，如果您的计算考虑了延迟和JMeter的处理时间，那么您可能不清楚从该数字可以得出什么结论。
 
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| Module to Run     | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 是       |
+![Screenshot for Control-Panel of Graph Results](http://jmeter.apache.org/images/screenshots/graph_results.png)
 
-[【返回目录】]()
+*图形结果控制面板的截图*
 
-**参数（Parameters）**
+下表简要介绍了图表中的项目。关于统计术语的确切含义的更多细节可以在网上找到 - 例如维基百科 - 或者查阅统计书。
 
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| Module to Run     | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 是       |
+- `数据` - 绘制实际数据值
+- `平均值` - 绘制平均值
+- `中值` - 绘制[中值](http://jmeter.apache.org/usermanual/glossary.html#Median)（中途值）
+- `偏离` - 绘制[标准差](http://jmeter.apache.org/usermanual/glossary.html#StandardDeviation)（衡量变化）
+- `吞吐量` - 绘制每单位时间的样本数
 
-[【返回目录】]()
+显示屏底部的各个数字是当前值。“`最新样本`”是当前经过的采样时间，在图表上显示为“`数据`”。
 
-**参数（Parameters）**
-
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| Module to Run     | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 是       |
+图表左上角显示的值是90%响应时间最大值。
 
 [【返回目录】]()
 
-**参数（Parameters）**
+### 断言结果
 
-| 属性（Attribute） | 描述                                                         | 是否必须 |
-| ----------------- | ------------------------------------------------------------ | :------- |
-| 名称              | 树中显示的此采样器的描述性名称。                             | 否       |
-| Module to Run     | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。</blockquote> | 是       |
+> 在压力测试期间不得使用断言结果，因为它消耗了大量资源（内存和CPU）。仅用于功能测试或测试计划调试和验证期间。
+
+断言结果可视化器显示每个样本的标签。它还报告了作为测试计划一部分的任何[断言](http://jmeter.apache.org/usermanual/test_plan.html#assertions)的失败。
+
+![Screenshot for Control-Panel of Assertion Results](http://jmeter.apache.org/images/screenshots/assertion_results.png)
+
+*断言结果控制面板的截图*
+
+**另请参阅：**
+
+- [响应断言](http://jmeter.apache.org/usermanual/component_reference.html#Response_Assertion)
 
 [【返回目录】]()
+
+### 查看结果树
+
+> 在压力测试期间不得使用查看结果树，因为它消耗了大量资源（内存和CPU）。仅用于功能测试或测试计划调试和验证期间。
+
+查看结果树是一个显示所有样本响应的树，允许您查看任何样本的响应。除了显示响应之外，您还可以看到获得此响应所花费的时间以及一些响应代码。注意请求面板仅显示JMeter添加的信息头。它不显示可由HTTP协议实现添加的任何信息头（例如`Host`）。
+
+有几种方法可以查看响应，可以通过左侧面板底部的下拉框进行选择。
+
+| **渲染**             | **描述**                                                     |
+| :------------------- | :----------------------------------------------------------- |
+| `CSS/JQuery Tester`  | *CSS/JQuery测试*只适用于文本响应。它在上面板中显示纯文本。“`测试`”按钮允许用户将CSS/JQuery表达式应用于上面板，结果将显示在下面板中。<br />CSS / JQuery表达式引擎可以是JSoup或Jodd，二者实现的语法略有不同。 <br />例如，应用于当前JMeter函数页面的具有`href`属性的选择器`a[class=sectionlink]`将给出以下输出：<code>Match count: 74 <br/>Match[1]=#functions</code> |
+| `Document`           | 该*文档视图*将显示来自不同类型，如Microsoft Office（Word，Excel和PowerPoint中97-2003，2007-2010（OPENXML），Apache的OpenOffice的（作家，钙，留下深刻的印象），HTML，gzip的，JAR / ZIP文件中提取文本文件（内容列表），以及关于“多媒体”文件的一些元数据，如mp3，mp4，flv等。支持格式的完整列表可在[Apache Tika格式页面上找到。](http://tika.apache.org/1.2/formats.html)对**Document视图的**要求是下载[ Apache Tika二进制包](http://tika.apache.org/download.html)（**tika-app-xxjar**）并将其放在**JMETER_HOME / lib**目录中。如果文档大于10 MB，则不会显示。要更改此限制，请设置JMeter属性**document.max_size**（unit is byte）或设置为**0**以删除限制。 |
+| **HTML**             | 的*HTML视图*试图呈现响应为HTML。渲染的HTML很可能与任何Web浏览器中的视图相比较差; 但是，它确实提供了快速近似，有助于初始结果评估。 不下载图像，样式表等。 |
+| **HTML（下载资源）** | 如果选择了*HTML（下载资源）视图*选项，则渲染器可以下载HTML代码引用的图像，样式表等。 |
+| **HTML源格式化**     | 如果选择了*HTML源格式化视图*选项，则渲染器将显示由[Jsoup](https://jsoup.org/)格式化和清理的HTML源代码。 |
+| **JSON**             | 该*JSON视图*将显示在树风格的响应（也处理JSON嵌入JavaScript的）。 |
+| **JSON路径测试程序** | 该*JSON路径测试视图*将让你测试你的JSON-路径表达式，并从一个特定的反应看到所提取的数据。 |
+| **Regexp Tester**    | 在*正则表达式测试仪观点*仅适用于文本响应。它在上面板中显示纯文本。“ **测试** ”按钮允许用户将正则表达式应用于上面板，结果将显示在下面板中。 正则表达式引擎与正则表达式提取器中使用的引擎相同。 例如，应用于当前JMeter主页的RE **（JMeter \ w \*）。\***提供以下输出：  `比赛数：26 匹配[1] [0] = JMeter  -  Apache JMeter </ title> 匹配[1] [1] = JMeter的 匹配[2] [0] = JMeter“title =”JMeter“border =”0“/> </a> 匹配[2] [1] = JMeter的 匹配[3] [0] = JMeterCommitters“>贡献者</a>的 匹配[3] [1] = JMeterCommitters … 等等 … ` **[]中** 的第一个数字是匹配号码; 第二个数字是该组。组**[0]**是与整个RE匹配的任何组合。组**[1]**是任何相匹配的1个第一组，即**（JMeter的\ W \*）**在这种情况下。见图9b（下图）。 |
+| **文本**             | 默认的“ *文本”视图*显示响应中包含的所有文本。请注意，这仅在响应**内容类型**被视为文本时才有效。如果**内容类型**以下列任何一个开头，则将其视为二进制，否则将其视为文本。`图片/ 音频/ 视频/ ` |
+| **XML**              | 该*XML视图*将显示在树风格响应。任何DTD节点或Prolog节点都不会显示在树中; 但是，响应可能包含那些节点。您可以右键单击任何节点，然后展开或折叠其下的所有节点。 |
+| **XPath测试程序**    | 该*XPath的测试*只适用于文本响应。它在上面板中显示纯文本。“ **测试** ”按钮允许用户将XPath查询应用于上面板，结果将显示在下面板中。 |
+| **边界提取器测试仪** | 该*边界提取仪*只适用于文本响应。它在上面板中显示纯文本。“ **测试** ”按钮允许用户将边界提取器查询应用于上面板，结果将显示在下面板中。 |
 
 **参数（Parameters）**
 
