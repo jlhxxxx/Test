@@ -746,7 +746,7 @@ AccessLogSampler的当前实现使用生成器来创建新的HTTP取样器。服
 ![Screenshot for Control-Panel of Access Log Sampler](http://jmeter.apache.org/images/screenshots/accesslogsampler.png)  
 *Access Log Sampler控制面板的截图*
 
-<b align="center">（Beta代码）</b>
+<p align="center" style="font-weight: bold;">（Beta代码）</p>
 
 **参数**
 
@@ -756,7 +756,7 @@ AccessLogSampler的当前实现使用生成器来创建新的HTTP取样器。服
 | Server               | Web服务器的域名或IP地址。        | 是               |
 | Protocol             | 方案                             | 否（默认为http） |
 | Port                 | Web服务器监听的端口。            | 否（默认为80）   |
-| Log parser class     | 日志解析器类负责解析日志。       | 是（默认提供）   |
+| Log parser class     | 负责解析日志的日志解析器类。 | 是（默认提供）   |
 | Filter               | 过滤器类用于过滤掉某些行。       | 否               |
 | Location of log file | 访问日志文件的位置。             | 是               |
 
