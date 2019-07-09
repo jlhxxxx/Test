@@ -2,7 +2,143 @@
 
 英文文档地址：<http://jmeter.apache.org/usermanual/component_reference.html>
 
-<!-- TOC -->autoauto- [18. 组件参考](#18-组件参考)auto    - [18 导言](#18-导言)auto    - [18.1 取样器](#181-取样器)auto        - [FTP请求](#ftp请求)auto        - [HTTP请求](#http请求)auto        - [JDBC 请求](#jdbc-请求)auto        - [Java 请求](#java-请求)auto        - [LDAP请求](#ldap请求)auto        - [LDAP扩展请求](#ldap扩展请求)auto        - [Access Log Sampler](#access-log-sampler)auto            - [（Beta代码）](#beta代码)auto        - [BeanShell取样器](#beanshell取样器)auto        - [JRS223 取样器](#jrs223-取样器)auto        - [TCP 取样器](#tcp-取样器)auto        - [JMS 发布](#jms-发布)auto        - [JMS 订阅](#jms-订阅)auto        - [JMS点到点](#jms点到点)auto        - [JUnit 请求](#junit-请求)auto        - [邮件阅读者取样器](#邮件阅读者取样器)auto        - [测试活动（Flow Control Action）](#测试活动flow-control-action)auto        - [SMTP 取样器](#smtp-取样器)auto        - [OS进程取样器](#os进程取样器)auto        - [MongoDB脚本（已弃用）](#mongodb脚本已弃用)auto    - [18.2 逻辑控制器](#182-逻辑控制器)auto        - [简单控制器](#简单控制器)auto        - [循环控制器](#循环控制器)auto        - [仅一次控制器](#仅一次控制器)auto        - [交替控制器](#交替控制器)auto        - [随机控制器](#随机控制器)auto        - [随机顺序控制器](#随机顺序控制器)auto        - [吞吐量控制器](#吞吐量控制器)auto        - [Runtime控制器](#runtime控制器)auto        - [如果（If）控制器](#如果if控制器)auto        - [While控制器](#while控制器)auto        - [Switch控制器](#switch控制器)auto        - [ForEach控制器](#foreach控制器)auto        - [模块控制器](#模块控制器)auto        - [Include控制器](#include控制器)auto        - [事务控制器](#事务控制器)auto        - [录制控制器](#录制控制器)auto        - [临界部分控制器](#临界部分控制器)auto    - [18.3 监听器](#183-监听器)auto            - [样本结果保存配置](#样本结果保存配置)auto        - [图形结果](#图形结果)auto        - [断言结果](#断言结果)auto        - [查看结果树](#查看结果树)auto        - [聚合报告](#聚合报告)auto        - [用表格查看结果](#用表格查看结果)auto        - [简单数据写入器](#简单数据写入器)auto        - [汇总图](#汇总图)auto        - [响应时间图](#响应时间图)auto        - [邮件观察仪](#邮件观察仪)auto        - [BeanShell监听器](#beanshell监听器)auto        - [汇总报告](#汇总报告)auto        - [保存响应到文件](#保存响应到文件)auto        - [JSR223监听器](#jsr223监听器)auto        - [生成概要结果](#生成概要结果)auto        - [比较断言可视化器](#比较断言可视化器)auto        - [后端监听器](#后端监听器)auto    - [18.4 配置元件](#184-配置元件)auto        - [CSV 数据文件设置](#csv-数据文件设置)auto        - [FTP请求默认值](#ftp请求默认值)auto        - [DNS缓存管理器](#dns缓存管理器)auto        - [HTTP授权管理器](#http授权管理器)auto        - [HTTP缓存管理器](#http缓存管理器)auto        - [HTTP Cookie管理器](#http-cookie管理器)auto        - [HTTP请求默认值](#http请求默认值)auto        - [HTTP信息头管理器](#http信息头管理器)auto        - [Java默认请求](#java默认请求)auto        - [JDBC连接配置](#jdbc连接配置)auto        - [密钥库配置](#密钥库配置)auto        - [登录配置元件](#登录配置元件)auto        - [LDAP默认请求](#ldap默认请求)auto        - [LDAP扩展请求默认值](#ldap扩展请求默认值)auto        - [TCP取样器配置](#tcp取样器配置)auto        - [用户定义的变量](#用户定义的变量)auto        - [随机变量](#随机变量)auto        - [计数器](#计数器)auto        - [简单配置元件](#简单配置元件)auto        - [MongoDB源配置（已弃用）](#mongodb源配置已弃用)auto    - [18.5 断言](#185-断言)auto        - [响应断言](#响应断言)auto        - [断言持续时间](#断言持续时间)auto        - [大小断言](#大小断言)auto        - [XML断言](#xml断言)auto        - [BeanShell断言](#beanshell断言)auto        - [MD5Hex断言](#md5hex断言)auto        - [HTML断言](#html断言)auto        - [XPath断言](#xpath断言)auto        - [XML Schema断言](#xml-schema断言)auto        - [JSR223断言](#jsr223断言)auto        - [比较断言](#比较断言)auto        - [SMIME断言](#smime断言)auto        - [JSON断言](#json断言)auto    - [18.6 定时器](#186-定时器)auto        - [固定定时器](#固定定时器)auto        - [高斯随机定时器](#高斯随机定时器)auto        - [统一随机定时器](#统一随机定时器)auto        - [常数吞吐量定时器](#常数吞吐量定时器)auto        - [准确的吞吐量定时器](#准确的吞吐量定时器)auto            - [测试计划中准确的吞吐量定时器的最佳位置](#测试计划中准确的吞吐量定时器的最佳位置)auto            - [生成调度](#生成调度)auto            - [加速和启动峰值](#加速和启动峰值)auto            - [多个线程组同时启动](#多个线程组同时启动)auto            - [每小时的迭代次数](#每小时的迭代次数)auto            - [线程数和思考时间](#线程数和思考时间)auto            - [测试低速率和可重复测试](#测试低速率和可重复测试)auto            - [测试高速率和/或长持续时间测试](#测试高速率和或长持续时间测试)auto            - [突发负载](#突发负载)auto            - [可变负载率](#可变负载率)auto            - [监控](#监控)auto        - [同步定时器](#同步定时器)auto        - [BeanShell定时器](#beanshell定时器)auto        - [JSR223定时器](#jsr223定时器)auto        - [泊松随机定时器](#泊松随机定时器)auto    - [18.7 前置处理器](#187-前置处理器)auto        - [HTML链接解析器](#html链接解析器)auto        - [HTTP URL 重写修饰符](#http-url-重写修饰符)auto        - [用户参数](#用户参数)auto        - [BeanShell预处理程序](#beanshell预处理程序)auto        - [JSR223预处理程序](#jsr223预处理程序)auto        - [JDBC预处理程序](#jdbc预处理程序)auto        - [正则表达式用户参数](#正则表达式用户参数)auto        - [取样器超时](#取样器超时)auto    - [18.8 后置处理器](#188-后置处理器)auto        - [正则表达式提取器](#正则表达式提取器)auto        - [CSS选择器提取器（即：CSS/JQuery提取器）](#css选择器提取器即cssjquery提取器)auto        - [XPath2 Extractor](#xpath2-extractor)auto        - [XPath提取器](#xpath提取器)auto        - [结果状态处理器](#结果状态处理器)auto        - [BeanShell后置处理程序](#beanshell后置处理程序)auto        - [JSR223后置处理程序](#jsr223后置处理程序)auto        - [JDBC后置处理程序](#jdbc后置处理程序)auto        - [JSON提取器](#json提取器)auto        - [边界提取器](#边界提取器)auto    - [18.9 其他功能](#189-其他功能)auto        - [测试计划](#测试计划)auto        - [线程组](#线程组)auto        - [工作台](#工作台)auto        - [SSL管理器](#ssl管理器)auto        - [HTTP(S)测试脚本录制器 （即：HTTP代理服务器）](#https测试脚本录制器-即http代理服务器)auto            - [HTTPS录制和证书](#https录制和证书)auto            - [安装用于HTTPS录制的JMeter CA证书](#安装用于https录制的jmeter-ca证书)auto                - [在Firefox中安装证书](#在firefox中安装证书)auto                - [在Chrome或Internet Explorer中安装证书](#在chrome或internet-explorer中安装证书)auto                - [在Opera中安装证书](#在opera中安装证书)auto            - [录制和重定向](#录制和重定向)auto            - [包含和排除](#包含和排除)auto            - [捕获二进制POST数据](#捕获二进制post数据)auto            - [添加定时器](#添加定时器)auto            - [样本在何处被记录？](#样本在何处被记录)auto            - [处理HTTP请求默认值](#处理http请求默认值)auto            - [用户定义的变量替换](#用户定义的变量替换)auto            - [我怎样才能同时记录服务器的响应？](#我怎样才能同时记录服务器的响应)auto            - [将请求与响应相关联](#将请求与响应相关联)auto            - [Cookie管理器](#cookie管理器)auto            - [授权管理器](#授权管理器)auto            - [上传文件](#上传文件)auto            - [记录JMeter中原生不支持的基于HTTP的非文本协议](#记录jmeter中原生不支持的基于http的非文本协议)auto        - [HTTP镜像服务器](#http镜像服务器)auto        - [属性显示](#属性显示)auto        - [调试取样器](#调试取样器)auto        - [调试后置处理程序](#调试后置处理程序)auto        - [测试片段](#测试片段)auto        - [setUp线程组](#setup线程组)auto        - [tearDown线程组](#teardown线程组)autoauto<!-- /TOC -->
+<b id="toc">目录：</b>
+
+  - [18 导言](#18-%E5%AF%BC%E8%A8%80)
+  - [18.1 取样器](#181-%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [FTP请求](#FTP%E8%AF%B7%E6%B1%82)
+    - [HTTP请求](#HTTP%E8%AF%B7%E6%B1%82)
+    - [JDBC 请求](#JDBC-%E8%AF%B7%E6%B1%82)
+    - [Java 请求](#Java-%E8%AF%B7%E6%B1%82)
+    - [LDAP请求](#LDAP%E8%AF%B7%E6%B1%82)
+    - [LDAP扩展请求](#LDAP%E6%89%A9%E5%B1%95%E8%AF%B7%E6%B1%82)
+    - [Access Log Sampler](#Access-Log-Sampler)
+    - [BeanShell取样器](#BeanShell%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [JRS223 取样器](#JRS223-%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [TCP 取样器](#TCP-%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [JMS 发布](#JMS-%E5%8F%91%E5%B8%83)
+    - [JMS 订阅](#JMS-%E8%AE%A2%E9%98%85)
+    - [JMS点到点](#JMS%E7%82%B9%E5%88%B0%E7%82%B9)
+    - [JUnit 请求](#JUnit-%E8%AF%B7%E6%B1%82)
+    - [邮件阅读者取样器](#%E9%82%AE%E4%BB%B6%E9%98%85%E8%AF%BB%E8%80%85%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [测试活动（Flow Control Action）](#%E6%B5%8B%E8%AF%95%E6%B4%BB%E5%8A%A8Flow-Control-Action)
+    - [SMTP 取样器](#SMTP-%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [OS进程取样器](#OS%E8%BF%9B%E7%A8%8B%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [MongoDB脚本（已弃用）](#MongoDB%E8%84%9A%E6%9C%AC%E5%B7%B2%E5%BC%83%E7%94%A8)
+  - [18.2 逻辑控制器](#182-%E9%80%BB%E8%BE%91%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [简单控制器](#%E7%AE%80%E5%8D%95%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [循环控制器](#%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [仅一次控制器](#%E4%BB%85%E4%B8%80%E6%AC%A1%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [交替控制器](#%E4%BA%A4%E6%9B%BF%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [随机控制器](#%E9%9A%8F%E6%9C%BA%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [随机顺序控制器](#%E9%9A%8F%E6%9C%BA%E9%A1%BA%E5%BA%8F%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [吞吐量控制器](#%E5%90%9E%E5%90%90%E9%87%8F%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [Runtime控制器](#Runtime%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [如果（If）控制器](#%E5%A6%82%E6%9E%9CIf%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [While控制器](#While%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [Switch控制器](#Switch%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [ForEach控制器](#ForEach%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [模块控制器](#%E6%A8%A1%E5%9D%97%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [Include控制器](#Include%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [事务控制器](#%E4%BA%8B%E5%8A%A1%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [录制控制器](#%E5%BD%95%E5%88%B6%E6%8E%A7%E5%88%B6%E5%99%A8)
+    - [临界部分控制器](#%E4%B8%B4%E7%95%8C%E9%83%A8%E5%88%86%E6%8E%A7%E5%88%B6%E5%99%A8)
+  - [18.3 监听器](#183-%E7%9B%91%E5%90%AC%E5%99%A8)
+      - [样本结果保存配置](#%E6%A0%B7%E6%9C%AC%E7%BB%93%E6%9E%9C%E4%BF%9D%E5%AD%98%E9%85%8D%E7%BD%AE)
+    - [图形结果](#%E5%9B%BE%E5%BD%A2%E7%BB%93%E6%9E%9C)
+    - [断言结果](#%E6%96%AD%E8%A8%80%E7%BB%93%E6%9E%9C)
+    - [查看结果树](#%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%E6%A0%91)
+    - [聚合报告](#%E8%81%9A%E5%90%88%E6%8A%A5%E5%91%8A)
+    - [用表格查看结果](#%E7%94%A8%E8%A1%A8%E6%A0%BC%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C)
+    - [简单数据写入器](#%E7%AE%80%E5%8D%95%E6%95%B0%E6%8D%AE%E5%86%99%E5%85%A5%E5%99%A8)
+    - [汇总图](#%E6%B1%87%E6%80%BB%E5%9B%BE)
+    - [响应时间图](#%E5%93%8D%E5%BA%94%E6%97%B6%E9%97%B4%E5%9B%BE)
+    - [邮件观察仪](#%E9%82%AE%E4%BB%B6%E8%A7%82%E5%AF%9F%E4%BB%AA)
+    - [BeanShell监听器](#BeanShell%E7%9B%91%E5%90%AC%E5%99%A8)
+    - [汇总报告](#%E6%B1%87%E6%80%BB%E6%8A%A5%E5%91%8A)
+    - [保存响应到文件](#%E4%BF%9D%E5%AD%98%E5%93%8D%E5%BA%94%E5%88%B0%E6%96%87%E4%BB%B6)
+    - [JSR223监听器](#JSR223%E7%9B%91%E5%90%AC%E5%99%A8)
+    - [生成概要结果](#%E7%94%9F%E6%88%90%E6%A6%82%E8%A6%81%E7%BB%93%E6%9E%9C)
+    - [比较断言可视化器](#%E6%AF%94%E8%BE%83%E6%96%AD%E8%A8%80%E5%8F%AF%E8%A7%86%E5%8C%96%E5%99%A8)
+    - [后端监听器](#%E5%90%8E%E7%AB%AF%E7%9B%91%E5%90%AC%E5%99%A8)
+  - [18.4 配置元件](#184-%E9%85%8D%E7%BD%AE%E5%85%83%E4%BB%B6)
+    - [CSV 数据文件设置](#CSV-%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E8%AE%BE%E7%BD%AE)
+    - [FTP请求默认值](#FTP%E8%AF%B7%E6%B1%82%E9%BB%98%E8%AE%A4%E5%80%BC)
+    - [DNS缓存管理器](#DNS%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86%E5%99%A8)
+    - [HTTP授权管理器](#HTTP%E6%8E%88%E6%9D%83%E7%AE%A1%E7%90%86%E5%99%A8)
+    - [HTTP缓存管理器](#HTTP%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86%E5%99%A8)
+    - [HTTP Cookie管理器](#HTTP-Cookie%E7%AE%A1%E7%90%86%E5%99%A8)
+    - [HTTP请求默认值](#HTTP%E8%AF%B7%E6%B1%82%E9%BB%98%E8%AE%A4%E5%80%BC)
+    - [HTTP信息头管理器](#HTTP%E4%BF%A1%E6%81%AF%E5%A4%B4%E7%AE%A1%E7%90%86%E5%99%A8)
+    - [Java默认请求](#Java%E9%BB%98%E8%AE%A4%E8%AF%B7%E6%B1%82)
+    - [JDBC连接配置](#JDBC%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE)
+    - [密钥库配置](#%E5%AF%86%E9%92%A5%E5%BA%93%E9%85%8D%E7%BD%AE)
+    - [登录配置元件](#%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%E5%85%83%E4%BB%B6)
+    - [LDAP默认请求](#LDAP%E9%BB%98%E8%AE%A4%E8%AF%B7%E6%B1%82)
+    - [LDAP扩展请求默认值](#LDAP%E6%89%A9%E5%B1%95%E8%AF%B7%E6%B1%82%E9%BB%98%E8%AE%A4%E5%80%BC)
+    - [TCP取样器配置](#TCP%E5%8F%96%E6%A0%B7%E5%99%A8%E9%85%8D%E7%BD%AE)
+    - [用户定义的变量](#%E7%94%A8%E6%88%B7%E5%AE%9A%E4%B9%89%E7%9A%84%E5%8F%98%E9%87%8F)
+    - [随机变量](#%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F)
+    - [计数器](#%E8%AE%A1%E6%95%B0%E5%99%A8)
+    - [简单配置元件](#%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE%E5%85%83%E4%BB%B6)
+    - [MongoDB源配置（已弃用）](#MongoDB%E6%BA%90%E9%85%8D%E7%BD%AE%E5%B7%B2%E5%BC%83%E7%94%A8)
+  - [18.5 断言](#185-%E6%96%AD%E8%A8%80)
+    - [响应断言](#%E5%93%8D%E5%BA%94%E6%96%AD%E8%A8%80)
+    - [断言持续时间](#%E6%96%AD%E8%A8%80%E6%8C%81%E7%BB%AD%E6%97%B6%E9%97%B4)
+    - [大小断言](#%E5%A4%A7%E5%B0%8F%E6%96%AD%E8%A8%80)
+    - [XML断言](#XML%E6%96%AD%E8%A8%80)
+    - [BeanShell断言](#BeanShell%E6%96%AD%E8%A8%80)
+    - [MD5Hex断言](#MD5Hex%E6%96%AD%E8%A8%80)
+    - [HTML断言](#HTML%E6%96%AD%E8%A8%80)
+    - [XPath断言](#XPath%E6%96%AD%E8%A8%80)
+    - [XML Schema断言](#XML-Schema%E6%96%AD%E8%A8%80)
+    - [JSR223断言](#JSR223%E6%96%AD%E8%A8%80)
+    - [比较断言](#%E6%AF%94%E8%BE%83%E6%96%AD%E8%A8%80)
+    - [SMIME断言](#SMIME%E6%96%AD%E8%A8%80)
+    - [JSON断言](#JSON%E6%96%AD%E8%A8%80)
+  - [18.6 定时器](#186-%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [固定定时器](#%E5%9B%BA%E5%AE%9A%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [高斯随机定时器](#%E9%AB%98%E6%96%AF%E9%9A%8F%E6%9C%BA%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [统一随机定时器](#%E7%BB%9F%E4%B8%80%E9%9A%8F%E6%9C%BA%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [常数吞吐量定时器](#%E5%B8%B8%E6%95%B0%E5%90%9E%E5%90%90%E9%87%8F%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [准确的吞吐量定时器](#%E5%87%86%E7%A1%AE%E7%9A%84%E5%90%9E%E5%90%90%E9%87%8F%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [同步定时器](#%E5%90%8C%E6%AD%A5%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [BeanShell定时器](#BeanShell%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [JSR223定时器](#JSR223%E5%AE%9A%E6%97%B6%E5%99%A8)
+    - [泊松随机定时器](#%E6%B3%8A%E6%9D%BE%E9%9A%8F%E6%9C%BA%E5%AE%9A%E6%97%B6%E5%99%A8)
+  - [18.7 前置处理器](#187-%E5%89%8D%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8)
+    - [HTML链接解析器](#HTML%E9%93%BE%E6%8E%A5%E8%A7%A3%E6%9E%90%E5%99%A8)
+    - [HTTP URL 重写修饰符](#HTTP-URL-%E9%87%8D%E5%86%99%E4%BF%AE%E9%A5%B0%E7%AC%A6)
+    - [用户参数](#%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0)
+    - [BeanShell预处理程序](#BeanShell%E9%A2%84%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F)
+    - [JSR223预处理程序](#JSR223%E9%A2%84%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F)
+    - [JDBC预处理程序](#JDBC%E9%A2%84%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F)
+    - [正则表达式用户参数](#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0)
+    - [取样器超时](#%E5%8F%96%E6%A0%B7%E5%99%A8%E8%B6%85%E6%97%B6)
+  - [18.8 后置处理器](#188-%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8)
+    - [正则表达式提取器](#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%8F%90%E5%8F%96%E5%99%A8)
+    - [CSS选择器提取器（即：CSS/JQuery提取器）](#CSS%E9%80%89%E6%8B%A9%E5%99%A8%E6%8F%90%E5%8F%96%E5%99%A8%E5%8D%B3CSSJQuery%E6%8F%90%E5%8F%96%E5%99%A8)
+    - [XPath2 Extractor](#XPath2-Extractor)
+    - [XPath提取器](#XPath%E6%8F%90%E5%8F%96%E5%99%A8)
+    - [结果状态处理器](#%E7%BB%93%E6%9E%9C%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86%E5%99%A8)
+    - [BeanShell后置处理程序](#BeanShell%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F)
+    - [JSR223后置处理程序](#JSR223%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F)
+    - [JDBC后置处理程序](#JDBC%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F)
+    - [JSON提取器](#JSON%E6%8F%90%E5%8F%96%E5%99%A8)
+    - [边界提取器](#%E8%BE%B9%E7%95%8C%E6%8F%90%E5%8F%96%E5%99%A8)
+  - [18.9 其他功能](#189-%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD)
+    - [测试计划](#%E6%B5%8B%E8%AF%95%E8%AE%A1%E5%88%92)
+    - [线程组](#%E7%BA%BF%E7%A8%8B%E7%BB%84)
+    - [工作台](#%E5%B7%A5%E4%BD%9C%E5%8F%B0)
+    - [SSL管理器](#SSL%E7%AE%A1%E7%90%86%E5%99%A8)
+    - [HTTP(S)测试脚本录制器 （即：HTTP代理服务器）](#HTTPS%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6%E5%99%A8-%E5%8D%B3HTTP%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8)
+    - [HTTP镜像服务器](#HTTP%E9%95%9C%E5%83%8F%E6%9C%8D%E5%8A%A1%E5%99%A8)
+    - [属性显示](#%E5%B1%9E%E6%80%A7%E6%98%BE%E7%A4%BA)
+    - [调试取样器](#%E8%B0%83%E8%AF%95%E5%8F%96%E6%A0%B7%E5%99%A8)
+    - [调试后置处理程序](#%E8%B0%83%E8%AF%95%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F)
+    - [测试片段](#%E6%B5%8B%E8%AF%95%E7%89%87%E6%AE%B5)
+    - [setUp线程组](#setUp%E7%BA%BF%E7%A8%8B%E7%BB%84)
+    - [tearDown线程组](#tearDown%E7%BA%BF%E7%A8%8B%E7%BB%84)
 
 ## 18 导言
 
@@ -43,7 +179,7 @@
 * [FTP默认请求](http://jmeter.apache.org/usermanual/component_reference.html#FTP_Request_Defaults)
 * [创建FTP测试计划](http://jmeter.apache.org/usermanual/build-ftp-test-plan.html)
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP请求
 
@@ -258,46 +394,46 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 * [HTTP请求默认值](http://jmeter.apache.org/usermanual/component_reference.html#HTTP_Request_Defaults)
 * [HTTP请求和会话ID：URL重写](http://jmeter.apache.org/usermanual/build-adv-web-test-plan.html#session_url_rewriting)
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
-### JDBC 请求
+### JDBC请求
 
 此取样器允许您将JDBC请求（SQL查询）发送到数据库。
 
-在使用之前，您需要设置 [JDBC连接配置](http://jmeter.apache.org/usermanual/component_reference.html#JDBC_Connection_Configuration)配置元件。
+在使用之前，您需要设置[JDBC Connection Configuration](http://jmeter.apache.org/usermanual/component_reference.html#JDBC_Connection_Configuration)配置元件。
 
 如果提供了“变量名称”列表，则对于Select语句返回的每一行，将使用相应列和对应的行数的值设置变量（如果提供变量名称）。例如，如果Select语句返回2行3列，并且变量列表是`A,,C`，则将设置以下变量：
 
-    A _＃= 2（行数）
-    A_1 =第1列，第1行
-    A_2 =第1列，第2行
-    C _＃= 2（行数）
-    C_1 =第3列，第1行
-    C_2 =第3列，第2行
+    A_#=2（行数）
+    A_1=第1列，第1行
+    A_2=第1列，第2行
+    C_#=2（行数）
+    C_1=第3列，第1行
+    C_2=第3列，第2行
 
-如果Select语句返回零行，则`A_＃`和`C_＃`变量将设置为`0`，并且不会设置其他变量。
+如果Select语句返回零行，则`A_#`和`C_#`变量将设置为`0`，并且不会设置其他变量。
 
-必要时清除旧变量 - 例如，如果第一个select检索六行而第二个select仅返回三行，则额外的第四行，第五行和第六行的变量将被删除。
+必要时清除旧变量 - 例如，如果第一个select检索到6行而第二个select仅返回3行，则额外的第4行，第5行和第6行的变量将被删除。
 
 > 延迟时间设置为获取连接所花费的时间。
 
 ![Screenshot for Control-Panel of JDBC Request](http://jmeter.apache.org/images/screenshots/jdbctest/jdbc-request.png)  
-*JDBC Request的控制面板的截图*
+*JDBC请求控制面板的截图*
 
 **参数**
 
-| 属性                                            | 描述                                                         | 是否必须                               |
+| 属性                                                         | 描述                                                         | 是否必须                               |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | :------------------------------------- |
 | name                                                         | 树中显示的此取样器的描述性名称。                             | 否                                     |
 | Variable Name of Pool declared in JDBC Connection Configuration | 连接池绑定的JMeter变量的名称。这必须与[JDBC Connection Configuration](http://jmeter.apache.org/usermanual/component_reference.html#JDBC_Connection_Configuration)的“ `Variable Name` ”字段一致。 | 是                                     |
-| Query Type                                                   | 根据语句类型设置：<ul><li>Select Statement</li><li>Update Statement - 也用于插入和删除</li><li>Callable Statement</li><li>Prepared Select Statement</li><li>Prepared Update Statement - 也用于插入和删除</li><li>Commit</li><li>Rollback</li><li>Autocommit(false)</li><li>Autocommit(true)</li><li>编辑 - 这应该是一个变量引用，其值为上述之一</li></ul> | 是                                     |
-| SQL Query                                                    | SQL查询语句。<blockquote>不要输入语句结束的分号。</blockquote>通常不需要使用`{`和`}`来封装Callable语句； 但是，如果数据库使用非标准语法，可以使用它们。<blockquote>如果语句封装在`{}`中，JDBC驱动程序会自动转换该语句。</blockquote>例如：<ul><li>`select * from t_customers where id=23`</li><li>`CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE (null, ?, ?, null, null, null)`<li><ul><li>参数值：`tablename`，`filename`</li><li>参数类型： `VARCHAR`，`VARCHAR`</li></ul></li></ul>第二个示例假设您正在使用Apache Derby。 | 是                                     |
-| Parameter values                                             | 以逗号分隔的参数值列表。使用`]NULL[`表示`NULL`参数。（如果需要，可以通过定义属性“`jdbcsampler.nullmarker`” 来更改空字符串。） <br/>如果任何值包含逗号或双引号，则列表必须用双引号括起来，并且任何内含的的双引号都必须加倍，例如：<pre><code>"Dbl-Quote: "" and Comma: ,"</code></pre><blockquote>即使您的参数是`OUT`，语句中的值也必须与占位符一样多。即使不使用该值，也必须确保设置该值（例如在Callable 语句中）。</blockquote> | 是，如果prepared或callable语句含有参数 |
-| Parameter types                                              | 以逗号分隔的SQL参数类型列表（例如`INTEGER`，`DATE`，`VARCHAR`，`DOUBLE`）或常量的整数值。当您使用驱动程序提供的自定义数据库类型时，可以使用这些整数值（例如`OracleTypes.CURSOR`可以用其整数值`-10`来表示）。<br /> 这些被定义为`java.sql.Types`类中的字段，例如参见：<br/>[java.sql.Types的Javadoc](http://docs.oracle.com/javase/8/docs/api/java/sql/Types.html)。<blockquote>注意：JMeter将使用运行时JVM定义的任何类型，因此如果您在不同的JVM上运行，请务必检查相应的文档</blockquote>**如果可调用语句具有`INOUT`或`OUT`参数，则必须为相应的参数类型添加前缀来指示这些参数，例如，使用“`INOUT INTEGER`”而不是“`INTEGER`”。**<br/>如果未指定，则假定为“`IN`”，即“`DATE`”与“`IN DATE`” 相同。 <br/>如果类型不是`java.sql.Types`中找到的字段之一，JMeter也接受相应的整数，例如，由于`OracleTypes.CURSOR == -10`，所以您可以使用“`INOUT -10`”。 <br/>类型必须同语句中的占位符一样多。 | 是，如果prepared或callable语句含有参数 |
-| Variable Names                                               | 以逗号分隔的变量名列表，用于保存Select语句，Prepared Select语句或Callable 语句的返回值。注意当与Callable 语句使用时，变量列表必须与调用返回的`OUT`参数的顺序相同。如果变量名称少于`OUT`参数，则只有和提供变量名称相同数目的结果会存储在线程上下文变量中。如果提供比`OUT`参数更多的变量名称，多余的变量将被忽略。 | 否                                     |
-| Result Variable Name                                         | 如果指定，这将创建一个包含行映射列表的Object变量。每个映射都以列名作为键，列数据作为值。用法：<pre><code>columnValue = vars.getObject("resultObject").get(0).get("Column Name")；</code></pre> | 否                                     |
+| Query Type                                                   | 根据语句类型设置：<ul><li>Select Statement</li><li>Update Statement - 也用于插入和删除</li><li>Callable Statement</li><li>Prepared Select Statement</li><li>Prepared Update Statement - 也用于插入和删除</li><li>Commit</li><li>Rollback</li><li>Autocommit(false)</li><li>Autocommit(true)</li><li>编辑 - 这应该是一个执行上述语句之一的变量引用</li></ul> | 是                                     |
+| SQL Query                                                    | SQL查询语句。<blockquote>不要输入语句结束的分号。</blockquote>通常不需要使用`{`和`}`来封装Callable语句； 但是，如果数据库使用非标准语法，可以使用它们。<blockquote>如果语句封装在`{}`中，JDBC驱动程序会自动转换该语句。</blockquote>例如：<ul><li>`select * from t_customers where id=23`</li><li>`CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE (null, ?, ?, null, null, null)`<li><ul><li>参数值：`tablename`，`filename`</li><li>参数类型：`VARCHAR`，`VARCHAR`</li></ul></li></ul>第二个示例假设您正在使用Apache Derby。 | 是                                     |
+| Parameter values                                             | 以逗号分隔的参数值列表。使用`]NULL[`表示`NULL`参数。（如果需要，可以通过定义属性"`jdbcsampler.nullmarker`"来更改空字符串。） <br/>如果任何值包含逗号或双引号，则列表必须用双引号括起来，并且任何内含的的双引号都必须加倍，例如：<pre><code>"Dbl-Quote: "" and Comma: ,"</code></pre><blockquote>即使您的参数是`OUT`类型，语句中的值也必须与占位符一样多。即使不使用该值，也必须确保设置该值（例如在Callable语句中）。</blockquote> | 是，如果prepared或callable语句含有参数 |
+| Parameter types                                              | 以逗号分隔的SQL参数类型列表（例如`INTEGER`，`DATE`，`VARCHAR`，`DOUBLE`）或常量的整数值。当您使用驱动程序提供的自定义数据库类型时，可以使用这些整数值（例如`OracleTypes.CURSOR`可以用其整数值`-10`来表示）。<br /> 这些被定义为`java.sql.Types`类中的字段，参见示例：[java.sql.Types的Javadoc](http://docs.oracle.com/javase/8/docs/api/java/sql/Types.html)。<blockquote>注意：JMeter将使用运行时JVM定义的任何类型，因此如果您在不同的JVM上运行，请务必查阅相应的文档</blockquote>**如果callable语句具有`INOUT`或`OUT`参数，则必须为相应的参数类型添加前缀来指示这些参数，例如，使用"`INOUT INTEGER`"而不是"`INTEGER`"。**<br/>如果未指定，则假定为“`IN`”，即“`DATE`”与“`IN DATE`” 相同。 <br/>如果类型不在`java.sql.Types`中，JMeter也接受相应的整数，例如，由于`OracleTypes.CURSOR == -10`，所以您可以使用“`INOUT -10`”。 <br/>类型必须同语句中的占位符一样多。 | 是，如果prepared或callable语句含有参数 |
+| Variable Names                                               | 以逗号分隔的变量名列表，用于保存Select语句，Prepared Select语句或Callable语句的返回值。注意当与Callable语句使用时，变量列表必须与调用返回的`OUT`参数的顺序相同。如果变量名称少于`OUT`参数，则只有和提供变量名称相同数目的结果会存储在线程上下文变量中。如果提供比`OUT`参数更多的变量名称，多余的变量将被忽略。 | 否                                     |
+| Result Variable Name                                         | 如果指定，这将创建一个包含行映射列表的对象变量。每个映射都以列名作为键，列数据作为值。用法：<pre><code>columnValue = vars.getObject("resultObject").get(0).get("Column Name")；</code></pre> | 否                                     |
 | Query timeout(s)                                             | 设置查询的超时秒数，空值表示0，为无限。`-1`表示不设置用例可能需要的任何查询超时，或者某些驱动程序不支持超时。默认值为0。 | 否                                     |
-| Handle ResultSet                                             | 定义如何处理从可调用语句返回的ResultSet：<ul><li>`存储为字符串`（默认） - “变量名称”列表中的所有变量都存储为字符串，当列表中存在时，不会遍历`ResultSet`。`CLOB`将转换为字符串。`BLOB`将被当做UTF-8编码的字节数组转换为字符串。`CLOB`和`BLOB`都将在在`jdbcsampler.max_retain_result_size`字节后被切断。</li><li>`存储为对象` - 变量名称列表上的`ResultSet`类型的变量将存储为对象，可以在后续测试/脚本中访问并迭代，不会遍历`ResultSet`。`CLOB`将像选择了`存储为字符串`一样被处理。`BLOB`将存储为字节数组。`CLOB`和`BLOB`都将在在`jdbcsampler.max_retain_result_size`字节后被切断。</li><li>`记录计数` - `ResultSet`类型的变量将通过显示结果的记录计数来迭代。变量将存储为字符串。对于`BLOB`，将存储对象的大小。</li></ul> | 否                                     |
+| Handle ResultSet                                             | 定义如何处理从可调用语句返回的ResultSet：<ul><li>`Store As String`（默认） - “变量名称”列表中的所有变量都存储为字符串，当列表中存在时，不会遍历`ResultSet`。`CLOB`将转换为字符串。`BLOB`将作为UTF-8编码的字节数组转换为字符串。`CLOB`和`BLOB`都将在在`jdbcsampler.max_retain_result_size`字节后被切断。</li><li>`Store As Object` - 变量名称列表上的`ResultSet`类型的变量将存储为对象，可以在后续测试/脚本中访问并迭代，不会遍历`ResultSet`。`CLOB`将像选择了`Store As String`一样被处理。`BLOB`将存储为字节数组。`CLOB`和`BLOB`都将在在`jdbcsampler.max_retain_result_size`字节后被切断。</li><li>`Count Records` - `ResultSet`类型的变量将通过显示记录计数作为结果来迭代。变量将存储为字符串。对于`BLOB`，将存储对象的大小。</li></ul> | 否                                     |
 
 **另请参阅：**
 
@@ -308,11 +444,11 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 
 > 确保变量名称在测试计划中是唯一的。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
-### Java 请求
+### Java请求
 
-此取样器允许您控制实现`org.apache.jmeter.protocol.java.sampler.JavaSamplerClient`接口的java类  。通过编写您自己的此接口实现，您可以用JMeter来使用多个线程，输入参数控制和数据收集。
+此取样器允许您控制实现`org.apache.jmeter.protocol.java.sampler.JavaSamplerClient`接口的java类  。通过编写您自己的此接口实现，您可以用JMeter来控制多个线程，输入参数控制和数据收集。
 
 下拉菜单提供了JMeter在其classpath中找到的所有此类实现的列表。可以在下面的表中指定参数 - 由您的实现定义。JMeter提供了两个简单示例（`JavaTest`和`SleepTest`）。 
 
@@ -349,13 +485,13 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | 属性 | 描述                                                         | 是否必须 |
 | ----------------- | ------------------------------------------------------------ | :------- |
 | Label             | 要使用的标签。如果提供，则覆盖`名称`                         | 否       |
-| ResponseCode      | 要取样的JavaSamplerClient接口的具体实现。                    | 否       |
-| ResponseCode      | 如果提供，则设置SampleResult ResponseCode。                  | 否       |
+| ResponseCode      | 如果提供，则设置SampleResult ResponseCode。 | 否       |
+| ResponseMessage | 如果提供，则设置SampleResult ResponseMessage。   | 否       |
 | Status            | 如果提供，则设置SampleResult Status。如果它等于“`OK` ”（忽略大小写），则状态设置为成功，否则样本被标记为失败。 | 否       |
 | SamplerData       | 如果提供，则设置SampleResult SamplerData。                   | 否       |
 | ResultData        | 如果提供，则设置SampleResult ResultData。                    | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### LDAP请求
 
@@ -399,7 +535,7 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 
     1. 内置测试：           
 
-        这将首先创建条目，然后搜索属性是否可用。它计算搜索查询的执行时间。在执行结束时，将从LDAP服务器中删除创建的条目。
+        这将首先创建条目，如果属性可用则执行搜索。计算搜索查询的执行时间。在执行结束时，将从LDAP服务器中删除创建的条目。
 
     2. 用户定义的测试：           
 
@@ -422,22 +558,22 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | 名称              | 树中显示的此取样器的描述性名称。                             | 否                                               |
 | 服务器名称或IP    | LDAP服务器的域名或IP地址。JMeter假定LDAP服务器正在监听默认端口（`389`）。 | 是                                               |
 | 端口              | 要连接的端口（默认为`389`）。                                | 是                                               |
-| 根DN              | 用于LDAP操作的基本DN                                         | 是                                               |
+| 根DN              | 用于LDAP操作的基本DN                                       | 是                                               |
 | 用户名            | LDAP服务器用户名。                                           | 通常是                                           |
-| 密码              | LDAP服务器密码。（注意，这在测试计划中未加密存储）           | 通常是                                           |
-| DN入口            | 要创建或修改的上下文的名称；可能不是空的。<blockquote>您必须自己设置对象的正确属性。因此，如果要添加`cn=apache`，`ou=test` ，则必须将`cn`和`apache`添加到表的`name`和`value`中。</blockquote> | 是，如果选择了用户定义的测试和添加测试或修改测试 |
-| 删除              | 要删除的上下文的名称；可能不是空的                           | 是，如果选择了用户定义的测试和删除测试           |
+| 密码              | LDAP服务器密码。（注意，这在测试计划中没有加密存储）          | 通常是                                           |
+| DN入口            | 要创建或修改的上下文的名称；可能不为空。<blockquote>您必须自己设置对象的正确属性。因此，如果要添加`cn=apache`，`ou=test` ，则必须将`cn`和`apache`添加到表的`name`和`value`中。</blockquote> | 是，如果选择了用户定义的测试和添加测试或修改测试 |
+| 删除              | 要删除的上下文的名称；可能不为空                          | 是，如果选择了用户定义的测试和删除测试           |
 | Search base       | 要搜索的上下文或对象的名称                                   | 是，如果选择了用户定义的测试和搜索测试           |
-| 搜索过滤器        | 用于搜索的过滤器表达式；可能不会为空                         | 是，如果选择了用户定义的测试和搜索测试           |
-| 添加测试          | 使用`name`，`value`这样的键值对在给定上下文中创建新对象      | 是，如果选择了用户定义的测试和添加测试           |
-| 修改测试          | 使用`name`，`value`这样的键值对来修改给定的上下文对象        | 是，如果选择了用户定义的测试和修改测试           |
+| 搜索过滤器        | 用于搜索的过滤器表达式；可能不为空                         | 是，如果选择了用户定义的测试和搜索测试           |
+| 添加测试          | 使用`name`，`value`键值对在给定上下文中创建新对象      | 是，如果选择了用户定义的测试和添加测试           |
+| 修改测试          | 使用`name`，`value`键值对来修改给定的上下文对象        | 是，如果选择了用户定义的测试和修改测试           |
 
 **另请参阅：**
 
 -  [构建LDAP测试计划](http://jmeter.apache.org/usermanual/build-ldap-test-plan.html) 
 -  [LDAP默认请求](http://jmeter.apache.org/usermanual/component_reference.html#LDAP_Request_Defaults) 
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### LDAP扩展请求
 
@@ -450,9 +586,9 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 
 定义了九个测试操作。这些操作如下：
 
- **线程绑定** 
+**线程绑定** 
 
-任何LDAP请求都是LDAP会话的一部分，因此首先要做的是启动与LDAP服务器的会话。使用线程绑定启动此会话，这相当于LDAP的“`bind`”操作。要求用户提供`username `（专有名称）和`password`，用于启动会话。如果未指定密码或密码错误，则会启动匿名会话。注意，省略密码不会使此测试失败，密码错误才会。（注意，这在测试计划中是未加密存储的）
+任何LDAP请求都是LDAP会话的一部分，因此首先要做的是启动与LDAP服务器的会话。使用线程绑定启动此会话，这相当于LDAP的“`bind`”操作。要求用户提供`username `（专有名称）和`password`，用于启动会话。如果未指定密码或密码错误，则会启动匿名会话。注意，省略密码不会使此测试失败，错误密码才会。（注意，这在测试计划中是没有加密存储的）
 
 **参数**
 
@@ -461,14 +597,14 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | 名称                                 | 树中显示的此取样器的描述性名称。                             | 否       |
 | 服务器名称                           | LDAP服务器的名称（或IP地址）。                               | 是       |
 | 端口                                 | LDAP服务器监听的端口号。如果省略，则JMeter假定LDAP服务器正在监听默认端口（`389`）。 | 否       |
-| DN                                   | 将用于任何后续操作的基础对象的可分辨名称。它可以用作所有操作的起点。您无法在比此DN更高的级别上启动任何操作！ | 否       |
-| Username                             | 要绑定的用户的完整可分辨名称。                               | 否       |
-| Password                             | 上述用户的密码。如果省略，将导致匿名绑定。如果不正确，则取样器将返回错误并恢复为匿名绑定。（注意，这在测试计划中是未加密存储的） | 否       |
+| DN                                   | 用于任何后续操作的基本对象的可分辨名称。它可以用作所有操作的起点。您无法在比此DN更高的级别上启动任何操作！ | 否       |
+| Username                             | 要绑定的用户的完整可分辨名称。                             | 否       |
+| Password                             | 上述用户的密码。如果省略，将导致匿名绑定。如果不正确，则取样器将返回错误并恢复为匿名绑定。（注意，这在测试计划中是没有加密存储的） | 否       |
 | Connection timeout (in milliseconds) | 连接超时时间，如果超时连接将中止                             | 否       |
 | Use Secure LDAP Protocol             | 使用`ldaps://`方案而不是`ldap://`                            | 否       |
 | Trust All Certificates               | 信任所有证书，仅在选中`Use Secure LDAP Protocol`时使用       | 否       |
 
- **线程解绑** 
+**线程解绑** 
 
 这只是结束会话的操作。它等于LDAP“`unbind`”操作。
 
@@ -478,7 +614,7 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | ----------------- | -------------------------------- | :------- |
 | 名称              | 树中显示的此取样器的描述性名称。 | 否       |
 
- **单绑定/解绑** 
+**单绑定/解绑** 
 
 这是LDAP“`bind`”和“`unbind`”操作的组合。它可用于任何用户的身份认证请求/密码检查。它将打开一个新会话，只是为了检查用户/密码组合的有效性，并再次结束会话。
 
@@ -488,9 +624,9 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | ----------------- | ------------------------------------------------------------ | :------- |
 | 名称              | 树中显示的此取样器的描述性名称。                             | 否       |
 | Username          | 要绑定的用户的完整可分辨名称。                               | 是       |
-| Password          | 上述用户的密码。如果省略，将导致匿名绑定。如果不正确，则取样器将返回错误。（注意，这在测试计划中是未加密存储的） | 否       |
+| Password          | 上述用户的密码。如果省略，将导致匿名绑定。如果不正确，则取样器将返回错误。（注意，这在测试计划中是没有加密存储的） | 否       |
 
- **重命名条目** 
+**重命名条目** 
 
 这是LDAP“`moddn`”操作。它可用于重命名条目，也可用于将条目或完整子树移动到LDAP树中的其他位置。
 
@@ -499,10 +635,10 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | 属性      | 描述                                                         | 是否必须 |
 | ---------------------- | ------------------------------------------------------------ | :------- |
 | 名称                   | 树中显示的此取样器的描述性名称。                             | 否       |
-| Old entry name         | 相对于线程绑定操作中的给定DN，要重命名或移动的对象的当前可分辨名称。 | 是       |
-| New distinguished name | 相对于线程绑定操作中的给定DN，要重命名或移动的对象的新可分辨名称。 | 是       |
+| Old entry name         | 相对于线程绑定操作中给定的DN，要重命名或移动的对象的当前可分辨名称。 | 是       |
+| New distinguished name | 相对于线程绑定操作中给定的DN，要重命名或移动的对象的新的可分辨名称。 | 是       |
 
- **添加测试** 
+**添加测试** 
 
 这是LDAP“`add`”操作。它可用于将任何类型的对象添加到LDAP服务器。
 
@@ -514,7 +650,7 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | DN入口            | 相对于线程绑定操作中的给定DN，要添加的对象的可分辨名称。     | 是       |
 | 添加测试          | 要用于对象的属性及其值的列表。如果需要添加多值属性，则需要将相同的属性及其各自的值多次添加到列表中。 | 是       |
 
- **删除测试** 
+**删除测试** 
 
 这是LDAP“`delete`”操作，它可用于从LDAP树中删除对象。
 
@@ -538,13 +674,13 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | Search Filter             | 搜索过滤必须在LDAP语法中指定。                               | 是       |
 | Scope                     | 使用`0`代表baseobject，`1`为onelevel和`2`为subtree的搜索。（默认=`0`） | 否       |
 | 大小限制                  | 指定要从服务器返回的最大结果数。（默认值=`0`，表示没有限制）当取样器达到最大结果数时，它将失败并返回错误代码`4` | 否       |
-| Time Limit                | 指定服务器可以在搜索上花费的最大（cpu）时间（以毫秒为单位）。注意这并没有说响应时间。（默认为`0`，表示没有限制） | 否       |
+| Time Limit                | 指定服务器在搜索上花费的最大（cpu）时间（以毫秒为单位）。注意这不是响应时间。（默认为`0`，表示没有限制） | 否       |
 | 属性                      | 指定要返回的属性，以分号分隔。空值将返回所有属性             | 否       |
 | Return object             | 返回（`true`）或不返回（`false`）对象。默认=`false`          | 否       |
 | 废弃的别名                | 如果为`true`，它将废弃别名，如果为`false`，则不会废弃（默认值=`false`） | 否       |
-| Parse the search results? | 如果为`true`，则搜索结果将添加到响应数据中。如果为`false`，则将标记 - 无论是否找到结果 - 添加到响应数据中。 | 否       |
+| Parse the search results? | 如果为`true`，则搜索结果将添加到响应数据中。如果为`false`，则将标记 - 无论结果是否找到 - 添加到响应数据中。 | 否       |
 
- **修改测试** 
+**修改测试** 
 
 这是LDAP“`modify`”操作。它可以用于修改对象。也可用于添加，删除或替换属性的值。
 
@@ -554,9 +690,9 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | ----------------- | ------------------------------------------------------------ | :------- |
 | 名称              | 树中显示的此取样器的描述性名称。                             | 否       |
 | DN入口            | 相对于线程绑定操作中的给定DN，要修改的对象的可分辨名称       | 是       |
-| 修改测试          | attribute-value-opCode三角。opCode可以是任何有效的LDAP operationCode（`add`，`delete/remove`或`replace`）。如果未指定`delete`操作的值，则将删除给定属性的所有值。如果指定了`delete`操作的值，则仅删除给定值。如果该值不存在，取样器将无法通过测试。 | 是       |
+| 修改测试          | 属性-值-opCode三角。opCode可以是任何有效的LDAP operationCode（`add`，`delete/remove`或`replace`）。如果未指定`delete`操作的值，则将删除给定属性的所有值。如果指定了`delete`操作的值，则仅删除给定值。如果该值不存在，取样器返回失败。 | 是       |
 
- **比较** 
+**比较** 
 
 这是LDAP“`compare`”操作。它可用于将给定属性的值与某个已知值进行比较。实际上，这主要用于检查某个人是否是某个组的成员。在这种情况下，您可以将用户的DN作为给定值与`groupOfNames`对象的“`member`”属性中的值进行比较。如果比较操作失败，则测试失败并返回错误代码`49`。
 
@@ -565,7 +701,7 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 | 属性 | 描述                             | 是否必须 |
 | ----------------- | -------------------------------- | :------- |
 | 名称              | 树中显示的此取样器的描述性名称。 | 否       |
-| DN入口            | 要绑定的用户的完整可分辨名称。   | 是       |
+| DN入口            | 相对于线程绑定操作中的给定DN，要比较属性的对象的当前可分辨名称。 | 是       |
 | 比较过滤器        | 格式为"`attribute=value`"        | 是       |
 
 **另请参阅：**
@@ -573,13 +709,13 @@ JMeter扫描内含资源的响应。它使用`HTTPResponse.parsers`属性，它�
 -  [构建LDAP测试计划](http://jmeter.apache.org/usermanual/build-ldapext-test-plan.html) 
 -  [LDAP扩展请求默认值](http://jmeter.apache.org/usermanual/component_reference.html#LDAP_Extended_Request_Defaults) 
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### Access Log Sampler
 
-AccessLogSampler 旨在读取访问日志并生成http请求。对于那些不熟悉访问日志的人来说，它是Web服务器记录它接受的每个请求的日志。这意味着每个图像，CSS文件，JavaScript文件，html文件，......
+AccessLogSampler旨在读取访问日志并生成http请求。对于那些不熟悉访问日志的人来说，它是Web服务器记录它接受的每个请求的日志。这意味着所有图像，CSS文件，JavaScript文件，html文件，......
 
-Tomcat使用通用格式的访问日志。这意味着使用通用日志格式的任何Web服务器都可以使用AccessLogSampler。使用通用日志格式的服务器包括：Tomcat，Resin，Weblogic和SunOne。常见的日志格式如下所示：
+Tomcat的访问日志使用通用格式。这意味着使用通用日志格式的任何Web服务器都可以使用AccessLogSampler。使用通用日志格式的服务器包括：Tomcat，Resin，Weblogic和SunOne。常见的日志格式如下所示：
 
     127.0.0.1 - - [21/Oct/2003:05:37:21 -0500] "GET /index.jsp?%2Findex.jsp= HTTP/1.1" 200 8343
 
@@ -590,7 +726,7 @@ Tomcat使用通用格式的访问日志。这意味着使用通用日志格式�
 -  `org.apache.jmeter.protocol.http.util.accesslog.LogParser `
 -  `org.apache.jmeter.protocol.http.util.accesslog.Generator`
 
-AccessLogSampler的当前实现使用生成器来创建新的HTTPSampler。服务器名称，端口和获取图像由AccessLogSampler设置。接下来，使用整数`1`调用解析器，告诉它解析一个条目。之后，调用`HTTPSampler.sample()`来发出请求。
+AccessLogSampler的当前实现使用生成器来创建新的HTTP取样器。服务器名称，端口和获取图像由AccessLogSampler设置。然后，使用整数`1`调用解析器，告诉它解析1个条目。之后，调用`HTTPSampler.sample()`来发出请求。
 
     samp = (HTTPSampler) GENERATOR.generateRequest();
     samp.setDomain(this.getDomain());
@@ -610,7 +746,7 @@ AccessLogSampler的当前实现使用生成器来创建新的HTTPSampler。服�
 ![Screenshot for Control-Panel of Access Log Sampler](http://jmeter.apache.org/images/screenshots/accesslogsampler.png)  
 *Access Log Sampler控制面板的截图*
 
-#### （Beta代码）
+<b align="center">（Beta代码）</b>
 
 **参数**
 
@@ -630,7 +766,7 @@ AccessLogSampler的当前实现使用生成器来创建新的HTTPSampler。服�
 
  `LogFilter`旨在允许通过文件名和正则表达式来过滤访问日志条目，以及允许替换文件扩展名。但是，目前无法通过GUI进行配置，因此无法真正使用它。 
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### BeanShell取样器
 
@@ -730,7 +866,7 @@ SampleResult和ResponseData根据脚本的返回值来设置。如果脚本返�
 
  有关各种类可用方法的详细信息（[JMeterVariables](http://jmeter.apache.org/api/org/apache/jmeter/threads/JMeterVariables.html)，[SampleResult](http://jmeter.apache.org/api/org/apache/jmeter/samplers/SampleResult.html)等），请查阅Javadoc或源代码。但要注意，滥用任何方法都可能导致难以发现的细微错误。 
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JRS223 取样器
 
@@ -824,7 +960,7 @@ JSR223测试元件具有可以显著提高性能的功能（编译）。要利�
 - `SampleResult.setResponseCode("code")`
 - `SampleResult.setResponseMessage("message")`
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### TCP 取样器
 
@@ -922,7 +1058,7 @@ TCP取样器打开与指定服务器的TCP/IP连接。然后发送文本，并�
 | 登录用户            | 用户名 - 默认实现不使用                                      | 否       |
 | 密码                | 密码 - 默认实现不使用（注意在测试计划中没有加密存储）        | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JMS 发布
 
@@ -985,7 +1121,7 @@ JMS发布将消息发布到给定目标（主题/队列）。对于那些不熟�
 | 队列参考                                       | dynamicQueues/QUEUENAME                                | [动态定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations)QUEUENAME到JNDI |
 | 主题参考                                       | dynamicTopics/TOPICNAME                                | [动态定义](http://activemq.apache.org/jndi-support.html#JNDISupport-Dynamicallycreatingdestinations)TOPICNAME到JNDI |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JMS 订阅
 
@@ -1021,7 +1157,7 @@ JMS订阅将订阅给定目标（主题或队列）中的消息。对于那些�
 | Reconnect on error codes (regex) | 强制重新连接的JMSException错误代码的正则表达式。如果为空则不会重新连接 | 否       |
 | Pause between errors (ms)        | 发生错误时，订阅服务器的暂停时间，以毫秒为单位               | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JMS点到点
 
@@ -1062,7 +1198,7 @@ JMeter 在创建队列连接时使用`java.naming.security.[principal|credential
 | JNDI properties                              | JNDI属性是底层JNDI实现的特定属性。                           | 否       |
 | Provider URL                                 | JMS提供方的URL。                                             | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JUnit 请求
 
@@ -1151,7 +1287,7 @@ JMeter 在创建队列连接时使用`java.naming.security.[principal|credential
 
 > 注意，当前版本JMeter直接运行测试方法，而不是将其留给JUnit。这是为了允许从采样时间中排除`setUp`/`tearDown`方法。因此，取样器时间排除了调用`setUp`/`tearDown`方法及基于其注释的替代方法所花费的时间。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 邮件阅读者取样器
 
@@ -1190,7 +1326,7 @@ JMeter 在创建队列连接时使用`java.naming.security.[principal|credential
 **关于`file`协议的特殊处理：** 
 JavaMail中`file`提供可用于从文件中读取原始邮件。`server`字段用于指定路径的父`folder`。应使用名称`n.msg`存储单个消息文件，其中`n`是消息编号。或者，`server`字段可以是包含单个消息的文件的名称。此实现非常基础，主要用于调试目的。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 测试活动（Flow Control Action）
 
@@ -1214,7 +1350,7 @@ JavaMail中`file`提供可用于从文件中读取原始邮件。`server`字段�
 | Action            | `Pause`/`Stop`/`Stop Now`/`Go to next loop iteration`        | 是               |
 | Duration          | 暂停多长时间（毫秒）                                         | 是，如果选择暂停 |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### SMTP 取样器
 
@@ -1268,7 +1404,7 @@ SMTP取样器可以使用SMTP/SMTPS协议发送邮件。可以为连接（SSL和
 | Calculate message size                     | 计算消息大小并将其存储在样本结果中。                         | 否                    |
 | Enable debug logging?                      | 如果设置，则“`mail.debug`”属性设置为“`true`”                 | 否                    |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### OS进程取样器
 
@@ -1317,13 +1453,13 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 | 预期返回代码             | 如果选中“`检查返回码` ” ，需要填写系统调用的预期返回代码。注意500在JMeter中用作错误指示器，因此您不应使用它。 | 否       |
 | Timeout                  | 命令超时时间（以毫秒为单位），默认为`0`，表示不设超时。如果命令执行完之前超时了，JMeter将尝试终止操作系统进程。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### MongoDB脚本（已弃用）
 
 略
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.2 逻辑控制器
 
@@ -1352,7 +1488,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 > ![Figure 6 Simple Controller Example](http://jmeter.apache.org/images/screenshots/logic-controller/simple-example.png)  
 > *图6简单控制器示例*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 循环控制器
 
@@ -1383,7 +1519,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 >
 > > 注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 仅一次控制器
 
@@ -1415,7 +1551,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 >
 > 注意，File Reporter配置为将结果存储在当前目录中名为“`loop-test.dat`”的文件中。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 交替控制器
 
@@ -1470,7 +1606,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 >
 > 但是，如果在主交替控制器上选中了“`忽略子控制器块`”，那么顺序将是：Home Page，Interleaved，Bug Page，Interleaved，CVS Page，Interleaved，和FAQ Page，Interleaved。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 随机控制器
 
@@ -1488,7 +1624,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 | 名称              | 树中显示的此取样器的描述性名称。                             | 否       |
 | 忽略子控制器块    | 如果选中，交替控制器将把子控制器当作单个请求元件来处理，并且每个控制器一次只允许一个请求。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 随机顺序控制器
 
@@ -1503,7 +1639,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 | ----------------- | -------------------------------- | :------- |
 | 名称              | 树中显示的此取样器的描述性名称。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 吞吐量控制器
 
@@ -1538,7 +1674,7 @@ OS进程取样器是一个可用于在本地计算机上执行命令的取样器
 | 吞吐量            | 一个数字。对于Percent executions模式，`0`到`100`之间的数字表示控制器执行的次数百分比。“`50`”表示控制器将在测试计划的一半迭代期间执行。对于Total executions模式，该数字表示控制器将执行的总次数。 | 是       |
 | Per User          | 如果选中，则每个用户将使控制器计算是否应在每个用户（每个线程）的基础上执行。如果未选中，则所有用户的计算都将是全局的。例如，如果使用Total executions模式，并取消选中“`per user`”，则为吞吐量指定的数字将是执行的总执行次数。如果选中“`per user`”，那么执行的总数将是用户数量乘以吞吐量的数量。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### Runtime控制器
 
@@ -1554,7 +1690,7 @@ Runtime控制器控制其子节点运行多长时间。控制器将运行其子�
 | 名称              | 树中显示的此取样器的描述性名称，同时用于命名事务。 | 是       |
 | Runtime (seconds) | 期望的运行时间。0表示不运行。                      | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 如果（If）控制器
 
@@ -1626,7 +1762,7 @@ If控制器将在内部使用javascript来计算条件，但这会导致性能�
 > - `${RESULT}`
 > - `${JMeterThread.last_sample_ok}` (检查最后一个样本是否成功)
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### While控制器
 
@@ -1661,7 +1797,7 @@ While控制器运行其子项，直到条件为“`false`”停止。
 | 名称              | 树中显示的此取样器的描述性名称。同时用于命名事务。 | 否       |
 | Condition         | 空白，`LAST`，或变量/函数                          | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### Switch控制器
 
@@ -1683,7 +1819,7 @@ Switch控制器的作用类似于[交替控制器](http://jmeter.apache.org/user
 | 名称              | 树中显示的此取样器的描述性名称。                           | 否       |
 | *Switch Value*    | 要调用的从属元件的值（或名称）。元件从0开始编号。默认值为0 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### ForEach控制器
 
@@ -1750,7 +1886,7 @@ ForEach控制器循环遍历一组相关变量的值。将取样器（或控制�
 >
 > `Sample 2`，`Regex 2`和`For 2`几乎相同，只是正则表达式变成“`(\w)\sx`”，这显然无法获得任何匹配。因此`For 2`样本将不会运行。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 模块控制器
 
@@ -1776,7 +1912,7 @@ ForEach控制器循环遍历一组相关变量的值。将取样器（或控制�
 | 名称              | 树中显示的此取样器的描述性名称。                             | 否       |
 | Module to Run     | 模块控制器提供加载到gui中的所有控制器的列表。在运行时选择要替换的那个。 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### Include控制器
 
@@ -1803,7 +1939,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 | 名称              | 树中显示的此取样器的描述性名称。 | 否       |
 | 文件名            | 要包含的文件。                   | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 事务控制器
 
@@ -1835,7 +1971,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 | Generate Parent Sample                                       | 如果选中，则生成样本作为其他样本的父项，否则样本将作为独立样本生成。 | 是       |
 | Include duration of timer and pre-post processors in generated sample | 是否在生成的样本中包括定时器，前置和后置处理延迟。默认值为`false` | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 录制控制器
 
@@ -1850,7 +1986,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 | ----------------- | -------------------------------- | :------- |
 | 名称              | 树中显示的此取样器的描述性名称。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 临界部分控制器
 
@@ -1877,7 +2013,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 
 > 临界部分控制器仅在一个JVM中获取锁，因此如果使用分布式测试，请确保您的用例不依赖于所有JVM阻塞的所有线程。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.3 监听器
 
@@ -1944,7 +2080,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 ![Screenshot for Control-Panel of Sample Result Save Configuration](http://jmeter.apache.org/images/screenshots/sample_result_config.png)  
 *样本结果保存配置的控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 图形结果
 
@@ -1969,7 +2105,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 
 图表左上角显示的值是响应时间第90百分位数的最大值。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 断言结果
 
@@ -1984,7 +2120,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 
 - [响应断言](http://jmeter.apache.org/usermanual/component_reference.html#Response_Assertion)
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 查看结果树
 
@@ -2039,7 +2175,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 ![Figure 9b Sample Document (here PDF) display](http://jmeter.apache.org/images/screenshots/view_results_tree_document.png)
 *图9b Document（此处为PDF）样本显示*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 聚合报告
 
@@ -2079,7 +2215,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 ![Sample "](http://jmeter.apache.org/images/screenshots/aggregate_report_grouped.png)
 *“`在标签中包含组名称？`”样本显示*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 用表格查看结果
 
@@ -2090,7 +2226,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 ![Screenshot for Control-Panel of View Results in Table](http://jmeter.apache.org/images/screenshots/table_results.png)  
 *用表格查看结果控制面板的截图*  
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 简单数据写入器
 
@@ -2099,7 +2235,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 ![Screenshot for Control-Panel of Simple Data Writer](http://jmeter.apache.org/images/screenshots/simpledatawriter.png)  
 *简单数据写入器控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 汇总图
 
@@ -2127,7 +2263,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 | Y轴设置           | 为Y轴定义自定义最大值。                                      | 否       |
 | 图例              | 定义图表图例的放置和字体设置                                 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 响应时间图
 
@@ -2157,7 +2293,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 | Y轴设置           | 为Y轴定义自定义最大值（以毫秒为单位）。定义比例的增量（以毫秒为单位）。显示或不显示Y轴标签中的数字分组。 | 否       |
 | 图例              | 定义图表图例的放置和字体设置                                 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 邮件观察仪
 
@@ -2185,7 +2321,7 @@ Include控制器旨在使用外部JMX文件。要使用它，在测试计划下�
 | Test Mail           | 按此按钮发送测试邮件                                         | 否       |
 | Failures            | 一个字段，用于保持迄今为止收到的故障总数。                   | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### BeanShell监听器
 
@@ -2232,7 +2368,7 @@ BeanShell监听器允许使用BeanShell处理样本以保存等。
 
 如果定义了属性`beanshell.listener.init`，则用于加载初始化文件，该文件可用于定义在BeanShell脚本中使用的方法等。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 汇总报告
 
@@ -2262,7 +2398,7 @@ BeanShell监听器允许使用BeanShell处理样本以保存等。
 ![Sample "](http://jmeter.apache.org/images/screenshots/summary_report_grouped.png)
 *“`包含组名称`”样本显示*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 保存响应到文件
 
@@ -2288,7 +2424,7 @@ BeanShell监听器允许使用BeanShell处理样本以保存等。
 | Add timestamp                                  | 如果选中，则日期将包含在文件后缀中，格式为`yyyyMMdd-HHmm_`   | 是       |
 | Don't Save Transaction Controller SampleResult | 如果选中，则将忽略事务控制器生成的取样结果                   | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JSR223监听器
 
@@ -2362,7 +2498,7 @@ JSR223 监听器允许将JSR223脚本代码应用于样本结果。
 
 有关上述每个变量的所有可用方法的详细信息，请查看Javadoc
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 生成概要结果
 
@@ -2426,7 +2562,7 @@ JMeter日志文件中的条目还包括时间戳。例如“`817 in 0:05:07 = 2.
 | ----------------- | ------------------------------------------------------------ | :------- |
 | 名称              | 树中显示的此元件的描述性名称。它在输出中显示为“`label`”。具有相同标签的所有元件的详细信息将加到一起。 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 比较断言可视化器
 
@@ -2441,7 +2577,7 @@ JMeter日志文件中的条目还包括时间戳。例如“`817 in 0:05:07 = 2.
 | ----------------- | ------------------------------ | :------- |
 | 名称              | 树中显示的此元件的描述性名称。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 后端监听器
 
@@ -2499,7 +2635,7 @@ JMeter日志文件中的条目还包括时间戳。例如“`817 in 0:05:07 = 2.
 
 有关更多详细信息，另请参阅[实时结果](http://jmeter.apache.org/usermanual/realtime-results.html)和[Grafana中的Influxdb注释](http://docs.grafana.org/reference/annotations/#influxdb-annotations)。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.4 配置元件
 
@@ -2554,14 +2690,14 @@ JMeter支持包含新行的带引号数据的CSV文件。
 | 遇到文件结束符停止线程？ | 如果再次循环设置为false，线程是否在`EOF`上停止（默认为`false`） | 是       |
 | 线程共享模式             | <ul><li>`所有线程` - （默认）文件在所有线程之间共享。</li><li>`当前线程组` - 为每个出现该元件的线程组打开一个文件</li><li>`当前线程` - 为每个线程单独打开每个文件</li><li>`标识符` - 共享相同标识符的所有线程共享同一文件。因此，例如，如果您有4个线程组，则可以使用两个或更多组的公共ID在它们之间共享文件。或者您可以使用线程编号在不同线程组中的相同线程编号之间共享文件。</li></ul> | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### FTP请求默认值
 
 ![Screenshot for Control-Panel of FTP Request Defaults](http://jmeter.apache.org/images/screenshots/ftp-config/ftp-request-defaults.png)  
 *FTP请求默认值控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### DNS缓存管理器
 
@@ -2603,7 +2739,7 @@ JMeter支持包含新行的带引号数据的CSV文件。
 | 添加静态主机按钮                | 将条目添加到静态主机表。                                     | N/A      |
 | 删除静态主机按钮                | 删除表中当前选定的静态主机。                                 | N/A      |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP授权管理器
 
@@ -2677,7 +2813,7 @@ SPNEGO默认禁用证书授权。可以通过将属性`kerberos.spnego.delegate_
 >
 > > 您可以下载测试计划，但由于它是作为本地服务器的测试而构建的，因此您将无法运行它。但是，您可以将其用作构建自己的测试计划的参考。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP缓存管理器
 
@@ -2701,7 +2837,7 @@ HTTP缓存管理器用于向其范围内的HTTP请求添加缓存功能，以模
 | Use Cache Control/Expires header when processing GET requests | 见上面的描述。                     | 是       |
 | 缓存中元素的最大数量                                         | 见上面的描述。                     | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP Cookie管理器
 
@@ -2737,7 +2873,7 @@ JMeter检查收到的cookie是否对URL有效。这意味着不存储跨域cooki
 | 载入按钮            | 加载以前保存的cookie表，并将条目添加到现有cookie表条目中。   | N/A                                |
 | 保存测试计划按钮    | 将当前cookie表保存到文件中（不保存从HTTP响应中提取的任何cookie）。 | N/A                                |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP请求默认值
 
@@ -2776,7 +2912,7 @@ JMeter检查收到的cookie是否对URL有效。这意味着不存储跨域cooki
 
 > 注意：单选按钮只有两种状态 - 开或关。这使得无法一致地覆盖设置 - 关闭意味着关闭，还是意味着使用当前默认设置？JMeter使用后者（否则默认值根本不起作用）。因此，如果按钮关闭，则后面的元件可以将其设置为打开，但如果按钮处于打开状态，则后面的元件无法将其设置为关闭。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP信息头管理器
 
@@ -2809,7 +2945,7 @@ JMeter检查收到的cookie是否对URL有效。这意味着不存储跨域cooki
 > ![Figure 13 - Header Manager Control Panel](http://jmeter.apache.org/images/screenshots/http-config/header-manager-example1b.png)
 > *图13 - 信息头管理器控制面板*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### Java默认请求
 
@@ -2818,7 +2954,7 @@ Java默认请求组件允许您为Java测试设置默认值。请参阅[Java请�
 ![Screenshot for Control-Panel of Java Request Defaults](http://jmeter.apache.org/images/screenshots/java_defaults.png)  
 *Java默认请求控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JDBC连接配置
 
@@ -2922,7 +3058,7 @@ Apache Derby
 
 > 以上可能不正确 - 请查看相关的JDBC驱动程序文档。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 密钥库配置
 
@@ -2957,7 +3093,7 @@ Apache Derby
 > - 在`jmeter.properties`或`user.properties`中设置了`https.use.cached.ssl.context=false`
 > - 您对HTTP请求使用HTTPClient 4实现
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 登录配置元件
 
@@ -2974,7 +3110,7 @@ Apache Derby
 | 用户名            | 默认要使用的用户名。                                 | 否       |
 | 密码              | 默认要使用的密码。（注意这在测试计划中没有加密存储） | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### LDAP默认请求
 
@@ -2983,7 +3119,7 @@ LDAP默认请求组件允许您为LDAP测试设置默认值。请参阅[LDAP请�
 ![Screenshot for Control-Panel of LDAP Request Defaults](http://jmeter.apache.org/images/screenshots/ldap_defaults.png)  
 *LDAP默认请求控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### LDAP扩展请求默认值
 
@@ -2992,7 +3128,7 @@ LDAP扩展请求默认值组件允许您为LDAP扩展测试设置默认值。请
 ![Screenshot for Control-Panel of LDAP Extended Request Defaults](http://jmeter.apache.org/images/screenshots/ldapext_defaults.png)  
 *LDAP扩展请求默认值控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### TCP取样器配置
 
@@ -3018,7 +3154,7 @@ TCP取样器配置为TCP取样器提供默认数据。
 | 设置无延迟          | 是否设置无延迟属性？                                         | 否       |
 | 要发送的文本        | 要发送的文本                                                 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 用户定义的变量
 
@@ -3054,7 +3190,7 @@ TCP取样器配置为TCP取样器提供默认数据。
 | 名称              | 树中显示的此元件的描述性名称。                               | 否       |
 | 用户定义的变量    | 变量名称/值对。“`名称`”列下的字符串是您需要放在`${...}`构造中的括号内以便稍后使用变量的内容。然后，整个`${...}`将被“`值`”列中的字符串替换。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 随机变量
 
@@ -3080,7 +3216,7 @@ Random.nextInt()`需要一个正整数。这意味着`最大值-最小值` - 即
 | 随机种子          | 随机数生成器的种子。如果将每线程设置为`true`使用相同的种子值，则每个线程将获得与每个[Random](http://docs.oracle.com/javase/8/docs/api/java/util/Random.html)类相同的值。<br/>如果未设置种子，则将使用Random的默认构造函数。 | 否       |
 | 每线程（用户）？  | 如果为`False`，则生成器在线程组中的所有线程之间共享。如果为`True`，则每个线程都有自己的随机生成器。 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 计数器
 
@@ -3104,7 +3240,7 @@ Random.nextInt()`需要一个正整数。这意味着`最大值-最小值` - 即
 | 与每用户独立的跟踪计数器     | 换句话说，这是一个全局计数器，还是每个用户都使用自己的计数器？如果未选中，则计数器是全局的（即，用户＃1将获得值“`1`”，并且用户＃2将在第一次迭代时获得值“`2`”）。如果选中，则每个用户都有一个独立的计数器 | 否       |
 | 在每个线程组迭代上重置计数器 | 此选项仅在每个用户跟踪计数器选中时可用，如果选中，则计数器将在每个线程组迭代时重置为“`起始`”值。当计数器在循环控制器中时，这可能很有用。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 简单配置元件
 
@@ -3121,11 +3257,11 @@ Random.nextInt()`需要一个正整数。这意味着`最大值-最小值` - 即
 | 参数名称          | 每个参数的名称。这些值是JMeter工作的内部值，通常不会记录。只有熟悉代码的人才会知道这些值。 | 是       |
 | 参数值            | 要应用于该参数的值。                                         | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### MongoDB源配置（已弃用）
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.5 断言
 
@@ -3219,7 +3355,7 @@ Random.nextInt()`需要一个正整数。这意味着`最大值-最小值` - 即
 > ![Figure 17 - Assertion Listener Results (Fail)](http://jmeter.apache.org/images/screenshots/assertion/example1c-fail.png)
 > *图17 - 断言监听器结果（失败）*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 断言持续时间
 
@@ -3235,7 +3371,7 @@ Random.nextInt()`需要一个正整数。这意味着`最大值-最小值` - 即
 | 名称              | 树中显示的此元件的描述性名称。               | 否       |
 | 持续时间（毫秒）  | 在标记为失败之前允许的每个响应的最大毫秒数。 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 大小断言
 
@@ -3255,7 +3391,7 @@ Random.nextInt()`需要一个正整数。这意味着`最大值-最小值` - 即
 | 字节大小          | 用于测试响应大小（或JMeter变量值）的字节数。                 | 是       |
 | 比较类型          | 是否测试响应是否等于，大于，小于或不等于指定的字节数。       | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### XML断言
 
@@ -3270,7 +3406,7 @@ XML断言测试响应数据由正式的XML文档组成。它不会基于DTD或�
 | ----------------- | ------------------------------ | :------- |
 | 名称              | 树中显示的此元件的描述性名称。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### BeanShell断言
 
@@ -3349,7 +3485,7 @@ BeanShell断言允许用户使用BeanShell脚本执行断言检查。
 - `String getSampleLabel()`
 - `setSampleLabel(String)`
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### MD5Hex断言
 
@@ -3365,7 +3501,7 @@ MD5Hex断言允许用户检查响应数据的MD5哈希值。
 | 名称              | 树中显示的此元件的描述性名称。                | 否       |
 | MD5Hex            | 表示MD5哈希的32位十六进制数字（不区分大小写） | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTML断言
 
@@ -3386,7 +3522,7 @@ HTML断言允许用户使用JTidy检查响应数据的HTML语法。
 | Warning threshold | 在将响应归类为失败之前允许的警告数 | 是       |
 | 文件名            | 写入报告的文件的名称               | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### XPath断言
 
@@ -3432,7 +3568,7 @@ XPath断言测试文档的格式是否良好，可以选择验证DTD，或者通
 >
 >             xpath.namespace.config=namespaces.properties
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### XML Schema断言
 
@@ -3448,7 +3584,7 @@ XML Schema断言允许用户验证针对XML Schema的响应。
 | 名称              | 树中显示的此元件的描述性名称。 | 否       |
 | 文件名            | 指定XML Schema的文件名         | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JSR223断言
 
@@ -3503,7 +3639,7 @@ JSR223断言允许使用JSR223脚本代码来检查上一个样本的状态。
 
 有关上述每个变量的所有可用方法的更多详细信息，请查看Javadoc。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 比较断言
 
@@ -3523,7 +3659,7 @@ JSR223断言允许使用JSR223脚本代码来检查上一个样本的状态。
 | 比较的时间        | 如果该值≥0，则检查响应时间差是否不大于该值。即如果值为`0`，则响应时间必须完全相等。 | 是       |
 | 比较过滤器        | 过滤器可用于从内容比较中删除字符串。例如，如果页面有时间戳，并且与以下内容匹配：“`Time: \d\d:\d\d:\d\d`”，它可以被替换为虚拟固定时间“`Time: HH:MM:SS`“。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### SMIME断言
 
@@ -3549,7 +3685,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 | Signer Certificate | “`No Check`”表示它不会执行签名验证。“`Check values`”用于根据提供的输入验证签名。并且“`Certificate file`”将针对特定证书文件执行验证。 | 是       |
 | Message Position   | Mail取样器可以在单个样本中检索多条消息。使用此字段指定要检查的邮件。消息从`0`开始编号，因此`0`表示第一条消息。负数从最后的消息开始计算； `-1`表示最后，`-2`表示倒数第二个等。 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JSON断言
 
@@ -3570,7 +3706,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 | Expect null                                          | 如果希望null，请选中复选框           | 否       |
 | Invert assertion (will fail if above conditions met) | 反转断言（如果符合上述条件，将失败） | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.6 定时器
 
@@ -3604,7 +3740,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 | 名称              | 树中显示的此定时器的描述性名称。 | 否       |
 | 线程延迟          | 暂停的毫秒数。                   | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 高斯随机定时器
 
@@ -3621,7 +3757,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 | 偏差              | 偏差，以毫秒为单位。           | 是       |
 | 固定延迟偏移      | 除随机延迟之外暂停的毫秒数。   | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 统一随机定时器
 
@@ -3638,7 +3774,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 | Random Delay Maximum  | 暂停的最大随机毫秒数。         | 是       |
 | Constant Delay Offset | 除随机延迟之外暂停的毫秒数。   | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 常数吞吐量定时器
 
@@ -3669,7 +3805,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 > 共享算法应该生成更准确的总体事务率。
 > 非共享算法应该跨线程生成更均匀的事务传播。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 准确的吞吐量定时器
 
@@ -3771,7 +3907,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 | 允许吞吐量过剩（百分比）               | 当需要超过“最大精确样本”样本时，定时器可能会生成比吞吐量指定的事件稍多的事件。 | 是       |
 | 随机种子（从0变为随机）                | 注意：不同的定时器最好使用不同的种子值。常量种子确保计时器在每次测试开始时产生相同的延迟。值“0”表示计时器是真正随机的（从一次执行到另一次执行不可重复）。 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 同步定时器
 
@@ -3792,7 +3928,7 @@ SMIME断言可用于评估邮件阅读者取样器的样本结果。此断言验
 
 > 同步定时器阻塞仅在一个JVM内，因此如果使用分布式测试，请确保永远不要将“`模拟用户组的数量`”设置为大于其包含的线程组（仅考虑1个注入器）的用户数的值。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### BeanShell定时器
 
@@ -3837,7 +3973,7 @@ BeanShell定时器可用于生成延迟。
 
 如果定义了属性`beanshell.listener.init`，则用于加载初始化文件，该文件可用于定义在BeanShell脚本中使用的方法等。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JSR223定时器
 
@@ -3878,7 +4014,7 @@ JSR223定时器可使用JSR223脚本语言生成延迟。
 
 有关上述每个变量的所有可用方法的详细信息，请查看Javadoc。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 泊松随机定时器
 
@@ -3897,7 +4033,7 @@ JSR223定时器可使用JSR223脚本语言生成延迟。
 | LAMBDA                | Lambda值，以毫秒为单位。         | 是       |
 | Constant Delay Offset | 除随机延迟之外暂停的毫秒数。     | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.7 前置处理器
 
@@ -3950,7 +4086,7 @@ JSR223定时器可使用JSR223脚本语言生成延迟。
 
 > 如果使用分布式测试，请切换模式（请参阅`jmeter.properties`）以确保其不在剥离模式下，请参阅[Bug 56376](https://bz.apache.org/bugzilla/show_bug.cgi?id=56376)。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 用户参数
 
@@ -3974,7 +4110,7 @@ JSR223定时器可使用JSR223脚本语言生成延迟。
 | 名称              | 树中显示的此元件的描述性名称。                               | 否       |
 | 每次迭代更新一次  | 一个标志，指示用户参数元件是否在每次迭代时更新其变量一次。如果将函数嵌入到用户参数中，则可能需要更好地控制变量值的更新频率。选中此框以确保每次通过用户参数的父控制器更新值。取消选中该框，用户参数将更新其[范围](http://jmeter.apache.org/usermanual/test_plan.html#scoping_rules)内的每个样本请求的参数。 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### BeanShell预处理程序
 
@@ -4021,7 +4157,7 @@ BeanShell预处理程序允许在采样之前应用任意代码。
 
 如果定义了属性`beanshell.listener.init`，则用于加载初始化文件，该文件可用于定义在BeanShell脚本中使用的方法等。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JSR223预处理程序
 
@@ -4067,7 +4203,7 @@ JSR223预处理程序允许在采样之前应用JSR223脚本代码。
 
 有关上述每个变量的所有可用方法的详细信息，请查看Javadoc
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JDBC预处理程序
 
@@ -4084,7 +4220,7 @@ JDBC预处理程序使您可以在样本运行之前运行一些SQL语句。如�
 ![Create Price Cut-Off Preprocessor](http://jmeter.apache.org/images/screenshots/jdbc-pre-processor.png)
 *Create Price Cut-Off预处理程序* 
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 正则表达式用户参数
 
@@ -4125,7 +4261,7 @@ JDBC预处理程序使您可以在样本运行之前运行一些SQL语句。如�
 
 - [展示如何使用正则表达式用户参数的测试计划](http://jmeter.apache.org/demos/RegEx-User-Parameters.jmx)
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 取样器超时
 
@@ -4146,7 +4282,7 @@ AJP，BeanShell，FTP，HTTP，Soap，AccessLog，邮件阅读者，JMS订阅，
 | 名称              | 树中显示的此定时器的描述性名称。 | 否       |
 | Sample Timeout    | 样本执行超出时间后，将被中断。   | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.8 后置处理器
 
@@ -4201,7 +4337,7 @@ AJP，BeanShell，FTP，HTTP，Soap，AccessLog，邮件阅读者，JMS订阅，
 
 有关如何指定修饰符及[关于JMeter正则表达式的更多信息](http://jmeter.apache.org/usermanual/regular_expressions.html)，请参阅[响应断言](http://jmeter.apache.org/usermanual/component_reference.html#Response_Assertion)。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### CSS选择器提取器（即：CSS/JQuery提取器）
 
@@ -4238,7 +4374,7 @@ AJP，BeanShell，FTP，HTTP，Soap，AccessLog，邮件阅读者，JMS订阅，
 
 请注意，在这种情况下，`refName`变量始终设置为默认值。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### XPath2 Extractor
 
@@ -4280,7 +4416,7 @@ XPath2 Extractor提供了一些有趣的工具，例如改进的语法和比它�
 
 要查看有关函数的更多信息，请参阅[xPath2函数](http://saxon.sourceforge.net/saxon7.9.1/functions.html)。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### XPath提取器
 
@@ -4365,7 +4501,7 @@ XPath是主要针对XSLT转换的查询语言。然而，它也可用作结构�
 
 `uri-for-namespace` `mynamespace`
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 结果状态处理器
 
@@ -4381,7 +4517,7 @@ XPath是主要针对XSLT转换的查询语言。然而，它也可用作结构�
 | 名称                       | 树中显示的此元件的描述性名称。                               | 否       |
 | 在取样器错误后要执行的动作 | 决定取样器发生错误（包括样本本身失败或断言失败）时发生什么。可能的选择是：<ul><li>`继续` - 忽略错误并继续测试</li><li>`启动下一进程循环`- 不执行当前迭代的错误取样器之后的取样器，并重新启动循环进入下一次迭代</li><li>`停止线程` - 退出当前线程</li><li>`停止测试` - 在任何当前样本结束时停止整个测试。</li><li>`立即停止测试` - 整个测试突然停止。可能的话，任何当前运行的取样器都会停止。</li></ul> | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### BeanShell后置处理程序
 
@@ -4430,7 +4566,7 @@ BeanShell后置处理程器不再忽略具有零长度结果数据的样本。
 
 如果定义了属性`beanshell.listener.init`，则用于加载初始化文件，该文件可用于定义在BeanShell脚本中使用的方法等。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JSR223后置处理程序
 
@@ -4478,7 +4614,7 @@ JSR223后置处理程序允许在获取样本后应用JSR223脚本代码。
 
 有关上述每个变量的所有可用方法的详细信息，请查看Javadoc
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JDBC后置处理程序
 
@@ -4493,7 +4629,7 @@ JDBC后置处理程序使您可以在样本运行后立即运行一些SQL语句�
 ![JDBC PostProcessor](http://jmeter.apache.org/images/screenshots/jdbc-post-processor.png)
 *JDBC后置处理程序*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### JSON提取器
 
@@ -4513,7 +4649,7 @@ JSON后置处理程序使您可以使用JSON-PATH语法从JSON响应中提取数
 ![JSON PostProcessor](http://jmeter.apache.org/images/screenshots/json-post-processor.png)
 *JSON后置处理程序*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 边界提取器
 
@@ -4550,7 +4686,7 @@ JSON后置处理程序使您可以使用JSON-PATH语法从JSON响应中提取数
 
 注意在这种情况下，`refName`变量始终设置为默认值，并且未设置关联的组变量。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ## 18.9 其他功能
 
@@ -4585,7 +4721,7 @@ JMeter属性还提供了一个用于加载其他classpath的条目。在`jmeter.
 ![Screenshot for Control-Panel of Test Plan](http://jmeter.apache.org/images/screenshots/testplan.png)  
 *测试计划控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 线程组
 
@@ -4632,11 +4768,11 @@ JMeter属性还提供了一个用于加载其他classpath的条目。在`jmeter.
 | 持续时间（秒）             | 如果选择了调度器复选框，则可以选择相对结束时间。JMeter将使用它来计算结束时间。 | 否               |
 | 启动延迟（秒）             | 如果选择了调度器复选框，则可以选择相对启动延迟。JMeter将使用它来计算开始时间。 | 否               |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 工作台
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### SSL管理器
 
@@ -4658,7 +4794,7 @@ SSL管理器是一种选择客户端证书的方法，以便您可以测试使�
 
 如果没有JDK附带的五个CA证书之一的签名，则必须正确安装证书颁发机构（CA）的证书。安装它的一种方法是将CA证书导入JKS文件，并将JKS文件命名为“`jssecacerts`”。将文件放在JRE的`lib/security`文件夹下。此文件将在同一目录中的“`cacerts`”文件之前读取。请记住，只要存在“`jssecacerts`”文件，就不会使用“`cacerts`”中安装的证书。这可能会给您带来麻烦。如果您不介意将CA证书导入“`cacerts`“文件，您可以对安装的所有CA证书进行身份验证。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP(S)测试脚本录制器 （即：HTTP代理服务器）
 
@@ -4894,7 +5030,7 @@ HTTP(S)测试脚本记录器抓取“`Authentication`”信息头，尝试计算
 
 您可能要记录JMeter默认不处理的HTTP协议（自定义二进制协议，Adobe Flex，Microsoft Silverlight，...）。虽然JMeter不提供记录这些协议的原生代理实现，但您可以通过实现自定义`SamplerCreator`来记录这些协议。此取样器生成器可以将二进制格式转换为可添加到JMeter测试用例的`HTTPSamplerBase`子类。有关更多详细信息，请参阅“扩展JMeter”。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### HTTP镜像服务器
 
@@ -4936,7 +5072,7 @@ HTTP镜像服务器是一个非常简单的HTTP服务器 - 它只是镜像发送
 | status            | 覆盖默认返回状态。例如`?status=404 Not Found`                | 否       |
 | v                 | 详细标志，将一些细节写入标准输出。例如，指定第一行和重定向位置 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 属性显示
 
@@ -4951,7 +5087,7 @@ HTTP镜像服务器是一个非常简单的HTTP服务器 - 它只是镜像发送
 | ----------------- | ------------------------------ | :------- |
 | 名称              | 树中显示的此元件的描述性名称。 | 否       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 调试取样器
 
@@ -4971,7 +5107,7 @@ HTTP镜像服务器是一个非常简单的HTTP服务器 - 它只是镜像发送
 | JMeter变量        | 包括JMeter变量？               | 是       |
 | 系统属性          | 包括系统属性？                 | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 调试后置处理程序
 
@@ -4992,7 +5128,7 @@ HTTP镜像服务器是一个非常简单的HTTP服务器 - 它只是镜像发送
 | 取样器属性        | 是否显示Sampler属性（默认为`true`）。 | 是       |
 | 系统属性          | 是否显示系统属性（默认为`false`）。   | 是       |
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### 测试片段
 
@@ -5009,7 +5145,7 @@ HTTP镜像服务器是一个非常简单的HTTP服务器 - 它只是镜像发送
 
 > 将测试片段与[模块控制器](http://jmeter.apache.org/usermanual/component_reference.html#Module_Controller)一起使用时，请确保禁用测试片段以防止执行测试片段本身。JMeter 2.13之后默认禁用。
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### setUp线程组
 
@@ -5018,7 +5154,7 @@ HTTP镜像服务器是一个非常简单的HTTP服务器 - 它只是镜像发送
 ![Screenshot for Control-Panel of setUp Thread Group](http://jmeter.apache.org/images/screenshots/setup_thread_group.png)  
 *setUp线程组控制面板的截图*
 
-[【返回目录】]()
+[【返回目录】](#toc)
 
 ### tearDown线程组
 
@@ -5032,4 +5168,4 @@ HTTP镜像服务器是一个非常简单的HTTP服务器 - 它只是镜像发送
 ![Figure 1 - Run tearDown Thread Groups after shutdown of main threads](http://jmeter.apache.org/images/screenshots/tear_down_on_shutdown.png)  
 *图1 - 主线程结束后运行tearDown线程组*
 
-[【返回目录】]()
+[【返回目录】](#toc)
